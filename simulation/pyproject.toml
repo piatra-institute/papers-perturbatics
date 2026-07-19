@@ -1,0 +1,9 @@
+[project]
+name = "perturbatics-sim"
+version = "0.1.0"
+description = "Deterministic gridworld demonstrator for Perturbatics: observationally identical systems separated only under informative probes, a do-Shapley realization map of agency across an assemblage (with a provably inert persona and planner-map synergy), a boundary sweep, and a richness-is-not-agency guard"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "matplotlib>=3.8",
+]

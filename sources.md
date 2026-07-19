@@ -1,0 +1,57 @@
+# Sources
+
+The frozen bibliography. Each entry in the form it takes in the paper's
+`## References`, with a one-line provenance note. See the workspace docs (`papers docs`): research-pipeline.md §4.
+Every in-text `et al.` maps to a co-authored entry here. All locators web-verified against the publisher/DOI/arXiv record on 2026-07-19 (26/26 verified, 0 corrected; verification log in `audit.md`).
+
+## Bibliography
+
+Ashby, W. R. (1956). *An Introduction to Cybernetics*. London: Chapman & Hall. — verified; requisite variety, the first cybernetics textbook. Supports regulation as the object cybernetics already studied.
+
+Baker, C. L., Saxe, R., and Tenenbaum, J. B. (2009). Action understanding as inverse planning. *Cognition*, 113(3), 329--349. — verified (DOI 10.1016/j.cognition.2009.07.005); goals recovered by inverting rational action. Supports the human agency-detector as inverse planning.
+
+Barandiaran, X. E., Di Paolo, E., and Rohde, M. (2009). Defining agency: individuality, normativity, asymmetry, and spatio-temporality in action. *Adaptive Behavior*, 17(5), 367--386. — verified (DOI 10.1177/1059712309343819); agency distinct from intelligence, consciousness, personhood. Supports the instrument's deliberate silence on the latter three.
+
+Barrett, J. L. (2000). Exploring the natural foundations of religion. *Trends in Cognitive Sciences*, 4(1), 29--34. — verified (DOI 10.1016/S1364-6613(99)01419-9); the hyperactive agency detection device. Supports the over-attribution the instrument corrects, and the grief-detector's parallel hyperactivity.
+
+Basiri, A., Behnam, N., de Rooij, R., Hochstein, L., Kosewski, L., Reynolds, J., and Rosenthal, C. (2016). Chaos engineering. *IEEE Software*, 33(3), 35--41. — verified (DOI 10.1109/MS.2016.60); fault injection to expose a distributed system's organization. The industrial neighbour of faultization.
+
+Conant, R. C., and Ashby, W. R. (1970). Every good regulator of a system must be a model of that system. *International Journal of Systems Science*, 1(2), 89--97. — verified (DOI 10.1080/00207727008920220); a regulated variable at rest is indistinguishable from one undisturbed. The observational-equivalence core.
+
+Dennett, D. C. (1987). *The Intentional Stance*. Cambridge, MA: MIT Press. — verified; agency as a predictive stance, not an inner substance. Supports the model-comparison reading of the score.
+
+Geiger, A., Lu, H., Icard, T., and Potts, C. (2021). Causal abstractions of neural networks. *Advances in Neural Information Processing Systems*, 34, 9574--9586. — verified (OpenReview RmuXDtjDhG); interchange interventions test whether a network realizes a high-level variable. A neighbour of the device the paper differentiates from.
+
+Hacking, I. (1983). *Representing and Intervening: Introductory Topics in the Philosophy of Natural Science*. Cambridge: Cambridge University Press. — verified (DOI 10.1017/CBO9780511814563); intervention as the ground of realism. Supports the interventional-epistemology framing.
+
+Heider, F., and Simmel, M. (1944). An experimental study of apparent behavior. *American Journal of Psychology*, 57(2), 243--259. — verified (JSTOR 1416950); agency read into mere motion. Opens the human-detector argument.
+
+Heskes, T., Sijben, E., Bucur, I. G., and Claassen, T. (2020). Causal Shapley values: exploiting causal knowledge to explain individual predictions of complex models. *Advances in Neural Information Processing Systems*, 33, 4778--4789. — verified; the interventional (do) value function for Shapley attribution. The realization-map formalism.
+
+Jung, Y., Kasiviswanathan, S., Tian, J., Janzing, D., Blöbaum, P., and Bareinboim, E. (2022). On measuring causal contributions via do-interventions. In *Proceedings of the 39th International Conference on Machine Learning*, PMLR 162, 10476--10501. — verified (PMLR 162); do-Shapley causal contribution.
+
+Kass, R. E., and Raftery, A. E. (1995). Bayes factors. *Journal of the American Statistical Association*, 90(430), 773--795. — verified (DOI 10.1080/01621459.1995.10476572); the agency score as a Bayes factor.
+
+Klyubin, A. S., Polani, D., and Nehaniv, C. L. (2005). Empowerment: a universal agent-centric measure of control. In *Proceedings of the 2005 IEEE Congress on Evolutionary Computation*, 1, 128--135. — verified (DOI 10.1109/CEC.2005.1554676); empowerment. An alternative operationalization of agency.
+
+Levin, M. (2019). The computational boundary of a "self": developmental bioelectricity drives multicellularity and scale-free cognition. *Frontiers in Psychology*, 10, 2688. — verified (DOI 10.3389/fpsyg.2019.02688); goal-directedness in tissue. The instrument's honest frontier (organoid, wound, regenerating organ).
+
+Lindley, D. V. (1956). On a measure of the information provided by an experiment. *The Annals of Mathematical Statistics*, 27(4), 986--1005. — verified (DOI 10.1214/aoms/1177728069); expected information gain. The probe-design criterion.
+
+MacDermott, M., Fox, J., Belardinelli, F., and Everitt, T. (2024). Measuring goal-directedness. *Advances in Neural Information Processing Systems*, 37. — verified (arXiv:2412.04758; DOI 10.52202/079017-0363); MEG, goal-directedness as predictability under a utility model. The nearest technical neighbour of the agency score.
+
+Maturana, H. R., and Varela, F. J. (1980). *Autopoiesis and Cognition: The Realization of the Living*. Dordrecht: D. Reidel. — verified (Boston Studies vol. 42); autopoietic closure. The boundary/individuation problem.
+
+Mayo, D. G. (2018). *Statistical Inference as Severe Testing: How to Get Beyond the Statistics Wars*. Cambridge: Cambridge University Press. — verified; severe testing. A model-separating probe as a severe test.
+
+Montévil, M., and Mossio, M. (2015). Biological organisation as closure of constraints. *Journal of Theoretical Biology*, 372, 179--191. — verified (DOI 10.1016/j.jtbi.2015.02.029); closure of constraints. A principled alternative to observer-declared boundaries.
+
+Pearl, J. (2009). *Causality: Models, Reasoning, and Inference* (2nd ed.). Cambridge: Cambridge University Press. — verified; the do-operator and the ladder of causation. Agency lives on the do-rung.
+
+Rosenblueth, A., Wiener, N., and Bigelow, J. (1943). Behavior, purpose and teleology. *Philosophy of Science*, 10(1), 18--24. — verified (DOI 10.1086/286788); purpose demonstrated by disturbing a system and watching it correct. The oldest form of the paper's method.
+
+Von Bertalanffy, L. (1968). *General System Theory: Foundations, Development, Applications*. New York: George Braziller. — verified; equifinality, one end by many means. The top-of-ladder criterion (rerouting). Cited "Von Bertalanffy" (capitalized particle, APA 7) so the reference reconciler parses it.
+
+Witter, R. T., Parafita, Á., Garriga, T., Muschalik, M., Fumagalli, F., Brando, A., and Rosenblatt, L. (2026). Exactly computing do-Shapley values. *arXiv preprint* arXiv:2602.07203. — verified (arXiv:2602.07203, 10 Feb 2026; seven authors, first author R. Teal Witter); exact do-Shapley via irreducible sets, identifiability from single-component interventions. Makes the realization map a computation.
+
+Woodward, J. (2003). *Making Things Happen: A Theory of Causal Explanation*. New York: Oxford University Press. — verified; manipulationist causation. The interventionist backbone.
