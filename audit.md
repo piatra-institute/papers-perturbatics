@@ -3,6 +3,22 @@
 Dated log of editorial passes and verification runs. Newest first.
 See the workspace docs (run `papers docs`): writing-pipeline.md §7 and refresh-pipeline.md.
 
+## 2026-07-19 — post-critique revision (v3)
+
+Scope: a second external critique (from two model tiers, converging) reviewed the shipped paper. Adopted its load-bearing improvements; rejected the overreaches. This was a substantive revision, including a simulation extension.
+
+Changes:
+- Probe separation: replaced the one-sided expected log Bayes factor with the prior-free information criterion, the mutual information I(H;Y|do(pi)) (Jensen-Shannon for two equal-prior hypotheses), and the robust probe objective that maximises separation from the strongest surviving null. Qualified the natural-experiment claim (a quasi-experiment serves as a probe only when a causal model licenses reading it as an intervention, with the usual exogeneity and locality cautions). Added a genuinely new formal object, the perturbational signature, perturbational equivalence, and the minimal-separating-battery design problem, so the principle is an apparatus rather than a near-definition.
+- Device readout: reframed the value function as a do-intervention on component configuration switches Z_i (active / baseline / revoked) rather than an informal "retain a component"; noted the Witter et al. graph compression must be shown to apply to a switch-based agent SCM, not assumed; corrected the affordability claim to distinguish coalition-value queries (bounded by identifiability from d singletons) from physical trials (not bounded).
+- The dual map (the critique's best point, and the simulation was extended to compute it): attribute a component's share of the agency evidence (phi_E) and, separately, its share of realized capacity (phi_C, goal attainment and rerouting); the difference L = phi_E - phi_C is a legibility term that makes agency theater a number. The persona was given a cheap-talk declaration channel (it announces its goal, raising the evidence without moving the agent), so it accounts for 0.23 of the evidence for agency and 0.00 of the capacity, L = 0.23, the largest in the assemblage, while the goal register realizes what it shows (L = 0.01). The boundary sweep and persona-swap analyses now run over realized capacity. Interaction reframed as non-additivity relative to the game and baseline, not metaphysical emergence.
+- MEG (MacDermott et al. 2024) reframed as a complement rather than a rival: it can supply the goal model inside the Bayes factor while perturbatics supplies the probe selection and the attribution.
+- Consciousness section recast as "the unperformable probe": added a moral-inadmissibility term to the probe objective (M(pi), with M = infinity for forbidden / irreversible / self-destroying probes), argued that grief is neither necessary nor sufficient for consciousness and marks a non-instrumental relation rather than phenomenal experience, and added the reversibility/identity qualification (shutdown may be reversible via copies and checkpoints, so the probe presupposes a theory of the individual, which returns to the boundary problem). Kept the "I think I just killed someone" image and the closing stance. Rejected the critique's proposal to build a live LLM demonstrator now (kept the gridworld as calibration, per the critique's own advice that claims should rest on it) and to change the title.
+- Figure 2 rebuilt as the dual map (phi_E vs phi_C, and L); figure 3 boundary panel now over capacity. Abstract, metadata abstract, and the web-entry abstract updated to the dual map and the unperformable probe.
+
+Verification:
+- voice: 0 errors, 0 review-candidates. refs: 25/25, 0 missing, 0 unused. claims: 15 prose decimals, 3 no-match (31.4, 0.25, 0.04), all negative sim values in results.json (mean evidence -31.37, map-memory interaction -0.249, boundary planner -0.036); the reconciler's unsigned regex cannot see the minus. build: 15 pages, 0 missing-character warnings. check => PASS.
+- Committed as `dev: update` (signed); PDF re-synced; web-entry abstract updated (web repo left uncommitted for the author).
+
 ## 2026-07-19 — first draft through publish
 
 Scope: authored the paper end to end from a design brief and its external critique (the seed `chats/chat.md` is a ChatGPT analysis of an earlier `perturbatics-brief.md`), through the full pipeline to a built and web-synced PDF with an accompanying simulation. This is a meta-paper: it names a method that recurs across the institute's corpus and builds an instrument out of it.

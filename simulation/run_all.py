@@ -42,12 +42,14 @@ def main() -> None:
           f"{sep['auroc_under_probe']}; mean evidence rest {sep['mean_evidence_rest_planner']}, "
           f"probe planner {sep['mean_evidence_probe_planner']}, probe passive "
           f"{sep['mean_evidence_probe_passive']}")
-    print("do-Shapley:", {k: round(v, 2) for k, v in rm["do_shapley"].items()})
+    print("evidence map phi_E:", {k: round(v, 2) for k, v in rm["evidence_map"].items()})
+    print("capacity map phi_C:", {k: round(v, 2) for k, v in rm["capacity_map"].items()})
+    print("legibility L=phi_E-phi_C:", {k: round(v, 2) for k, v in rm["legibility"].items()})
     print("interaction:", {k: round(v, 2) for k, v in rm["interaction_index"].items()})
-    print("boundary sweep:", results["boundary_sweep"])
-    print(f"persona: full {ps['evidence_full']}, swap-persona "
-          f"{ps['evidence_swap_persona_keep_model']}, swap-model "
-          f"{ps['evidence_swap_model_keep_persona']}")
+    print("boundary sweep (capacity):", results["boundary_sweep"])
+    print(f"persona: capacity full {ps['capacity_full']}, swap-persona "
+          f"{ps['capacity_swap_persona_keep_model']}, swap-model "
+          f"{ps['capacity_swap_model_keep_persona']}")
     print("richness:", rg["systems"], "corr", rg["complexity_agency_correlation"])
     print("wrote", OUT / "results.json")
 

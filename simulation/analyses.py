@@ -45,6 +45,8 @@ SEED = 0
 N = 13                     # grid side
 T = 40                     # steps per episode
 BETA = 1.5                 # inverse temperature of the trajectory models
+DECL_FRAC = 0.3            # cheap-talk (persona declaration) evidence, as a fraction of
+                           #   the full-assemblage movement evidence per probe
 N_INSTANCES = 40           # random (start, goal, moved-goal, wall) instances
 COMPONENTS = ["goal_register", "planner", "memory", "map", "harness", "persona"]
 
@@ -146,13 +148,7 @@ def run_episode(active, inst, probe):
                     best, best_d = nb, manhattan(nb, internal_goal)
             step = best if best not in true_walls else c
         if "harness" not in active and t % 2 == 1:
-            # degraded executor: on odd steps take the worst (anti-goal) move
-            worst, worst_d = c, -1.0
-            for d in MOVES[:4]:
-                nb = (c[0] + d[0], c[1] + d[1])
-                if _in_grid(nb) and nb not in true_walls and manhattan(nb, internal_goal) > worst_d:
-                    worst, worst_d = nb, manhattan(nb, internal_goal)
-            step = worst
+            step = c                     # degraded executor: drop every other action
         # persona has no effect on the step
         c = step
         traj.append(c)
@@ -198,30 +194,55 @@ def agency_evidence(traj, inst, probe):
     return A
 
 
-def nu(active, insts, probes, ref=None):
-    """Interventional value function: agency evidence with only `active` components
-    functioning. Each probe is weighted equally in the battery by normalising its
-    evidence against the full-assemblage reference `ref[probe]`, so no single probe
-    dominates the attribution; with ref=None the raw mean is returned."""
+def capacity(traj, inst, probe):
+    """Realized agency: the fraction of graph distance to the true current goal that
+    the trajectory closes. This is what the system actually achieves, as distinct
+    from the evidence it emits for being agentic."""
+    g0, g1 = inst["g0"], inst["g1"]
+    true_goal = g1 if probe == "move" else g0
+    walls = inst["walls"] if probe == "block" else set()
+    gdist = bfs_dist(true_goal, walls)
+
+    def d(c):
+        return gdist[c] if gdist[c] < np.inf else 3 * N
+
+    d0, dT = d(traj[0]), d(traj[-1])
+    return float((d0 - dT) / d0) if d0 > 0 else 0.0
+
+
+def nu(active, insts, probes, ref, kind, decl):
+    """Interventional value function for a target `kind`: 'E' for the agency evidence
+    (behavioural movement plus the persona's cheap-talk declarations) or 'C' for
+    realized capacity. Components not in `active` are held at their null (a
+    do-intervention on the configuration switch); each probe is weighted equally by
+    normalising against the full-assemblage reference `ref[probe]`."""
+    active = set(active)
     per = []
     for probe in probes:
-        vals = [agency_evidence(run_episode(set(active), inst, probe)[0], inst, probe)
-                for inst in insts]
-        m = float(np.mean(vals))
-        per.append(m / ref[probe] if ref else m)
+        vals = []
+        for inst in insts:
+            traj = run_episode(active, inst, probe)[0]
+            if kind == "E":
+                a = agency_evidence(traj, inst, probe)
+                if "persona" in active:
+                    a += decl[probe]              # cheap talk: announce the goal each step
+                vals.append(a)
+            else:
+                vals.append(capacity(traj, inst, probe))
+        per.append(float(np.mean(vals)) / ref[probe])
     return float(np.mean(per))
 
 
-def do_shapley(insts, probes, ref):
-    """Exact do-Shapley values of the six components over the agency-evidence value
-    function, and the interaction indices for a few key pairs."""
+def do_shapley(insts, probes, ref, kind, decl):
+    """Exact do-Shapley values of the six components over the `kind` value function,
+    and the interaction indices for a few key pairs."""
     comps = COMPONENTS
     n = len(comps)
     # cache nu over all 2^n coalitions
     cache = {}
     for r in range(n + 1):
         for S in combinations(range(n), r):
-            cache[frozenset(S)] = nu([comps[i] for i in S], insts, probes, ref)
+            cache[frozenset(S)] = nu([comps[i] for i in S], insts, probes, ref, kind, decl)
     from math import factorial
     phi = {}
     for i in range(n):
@@ -289,9 +310,9 @@ def analysis_separation(insts):
     }
 
 
-def analysis_boundary_sweep(insts, probes, ref):
-    """Fact 4a: the agency reading depends on the declared boundary. Nested units,
-    components outside the boundary held ablated."""
+def analysis_boundary_sweep(insts, probes, ref, decl):
+    """Fact 4a: the realized-agency reading depends on the declared boundary. Nested
+    units, components outside the boundary held at their null."""
     # the actuator sits inside every candidate acting unit; the boundary question is
     # how much of the cognitive apparatus (goal, world model, memory) is enclosed
     boundaries = [
@@ -300,7 +321,7 @@ def analysis_boundary_sweep(insts, probes, ref):
         ("+ map, memory", {"planner", "harness", "goal_register", "map", "memory"}),
         ("+ persona", set(COMPONENTS)),
     ]
-    return [(name, round(nu(b, insts, probes, ref), 6)) for name, b in boundaries]
+    return [(name, round(nu(b, insts, probes, ref, "C", decl), 6)) for name, b in boundaries]
 
 
 def _chaotic_traj(inst):
@@ -361,39 +382,51 @@ def analysis_richness_guard(insts):
             "complexity_agency_correlation": round(corr, 6)}
 
 
-def analysis_persona_swap(insts, probes, ref):
-    """Identity and functional agency separate: swapping the persona leaves the
-    evidence unchanged; swapping the model (planner -> reactive) collapses it."""
+def analysis_persona_swap(insts, probes, ref, decl):
+    """Identity and functional agency separate: swapping the persona leaves realized
+    capacity unchanged; swapping the model (planner -> reactive) collapses it."""
     full = set(COMPONENTS)
     swap_persona = full            # persona relabelled: functionally identical set
     swap_model = full - {"planner"}   # same persona, planner replaced by reactive
     return {
-        "evidence_full": round(nu(full, insts, probes, ref), 6),
-        "evidence_swap_persona_keep_model": round(nu(swap_persona, insts, probes, ref), 6),
-        "evidence_swap_model_keep_persona": round(nu(swap_model, insts, probes, ref), 6),
+        "capacity_full": round(nu(full, insts, probes, ref, "C", decl), 6),
+        "capacity_swap_persona_keep_model": round(nu(swap_persona, insts, probes, ref, "C", decl), 6),
+        "capacity_swap_model_keep_persona": round(nu(swap_model, insts, probes, ref, "C", decl), 6),
     }
 
 
 def run() -> dict:
     insts = make_instances()
     probes = ("move", "block")
-    # full-assemblage per-probe reference, so the battery weights each probe equally
-    ref = {p: float(np.mean([agency_evidence(run_episode(set(COMPONENTS), inst, p)[0], inst, p)
-                             for inst in insts])) for p in probes}
-    phi, inter, _ = do_shapley(insts, probes, ref)
+    full = set(COMPONENTS)
+    # per-probe references: full-assemblage movement evidence, the persona's cheap-talk
+    # declaration size (a fixed fraction of it), and full-assemblage realized capacity
+    ref_move = {p: float(np.mean([agency_evidence(run_episode(full, inst, p)[0], inst, p)
+                                  for inst in insts])) for p in probes}
+    decl = {p: DECL_FRAC * ref_move[p] for p in probes}
+    ref_E = {p: ref_move[p] + decl[p] for p in probes}   # full-assemblage total evidence
+    ref_C = {p: float(np.mean([capacity(run_episode(full, inst, p)[0], inst, p)
+                               for inst in insts])) for p in probes}
+    phi_E, inter, _ = do_shapley(insts, probes, ref_E, "E", decl)
+    phi_C, _, _ = do_shapley(insts, probes, ref_C, "C", decl)
+    legibility = {c: round(phi_E[c] - phi_C[c], 6) for c in COMPONENTS}
     sep = analysis_separation(insts)
-    boundary = analysis_boundary_sweep(insts, probes, ref)
+    boundary = analysis_boundary_sweep(insts, probes, ref_C, decl)
     richness = analysis_richness_guard(insts)
-    persona = analysis_persona_swap(insts, probes, ref)
+    persona = analysis_persona_swap(insts, probes, ref_C, decl)
     return {
-        "note": "Illustrative gridworld; components ablated by do-intervention; not fit to data. Deterministic.",
+        "note": "Illustrative gridworld; components held at their null by do-intervention; not fit to data. Deterministic.",
         "params": {"seed": SEED, "grid": N, "steps": T, "beta": BETA,
+                   "declaration_fraction": DECL_FRAC,
                    "n_instances": N_INSTANCES, "components": COMPONENTS,
                    "probes": list(probes),
-                   "probe_reference_evidence": {k: round(v, 6) for k, v in ref.items()}},
+                   "probe_reference_movement_evidence": {k: round(v, 6) for k, v in ref_move.items()}},
         "separation": {k: v for k, v in sep.items() if not k.startswith("_")},
-        "realization_map": {"do_shapley": {k: round(v, 6) for k, v in phi.items()},
-                            "interaction_index": {k: round(v, 6) for k, v in inter.items()}},
+        "realization_map": {
+            "evidence_map": {k: round(v, 6) for k, v in phi_E.items()},
+            "capacity_map": {k: round(v, 6) for k, v in phi_C.items()},
+            "legibility": legibility,
+            "interaction_index": {k: round(v, 6) for k, v in inter.items()}},
         "boundary_sweep": boundary,
         "richness_guard": richness,
         "persona_swap": persona,

@@ -54,35 +54,38 @@ def plot_separation(results: dict, path: str) -> None:
     plt.close(fig)
 
 
+CAP = "#2a9d8f"        # realized-capacity share
+
+
 def plot_realization_map(results: dict, path: str) -> None:
     rm = results["realization_map"]
-    phi = rm["do_shapley"]
-    inter = rm["interaction_index"]
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.4, 3.8),
-                                 gridspec_kw={"width_ratios": [1.6, 1]})
+    phiE, phiC, L = rm["evidence_map"], rm["capacity_map"], rm["legibility"]
+    comps = list(phiE.keys())
+    x = np.arange(len(comps))
+    labels = [c.replace("_", "\n") for c in comps]
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.8, 3.9),
+                                 gridspec_kw={"width_ratios": [1.55, 1]})
 
-    names = list(phi.keys())
-    vals = [phi[k] for k in names]
-    colors = [NEUTRAL if k == "persona" else AGENT for k in names]
-    a1.bar(range(len(names)), vals, color=colors, width=0.66)
+    w = 0.38
+    a1.bar(x - w / 2, [phiE[c] for c in comps], w, color=AGENT, label=r"evidence  $\phi^E$")
+    a1.bar(x + w / 2, [phiC[c] for c in comps], w, color=CAP, label=r"capacity  $\phi^C$")
     a1.axhline(0, color=INK, lw=0.8)
-    a1.set_xticks(range(len(names)))
-    a1.set_xticklabels([n.replace("_", "\n") for n in names], fontsize=8)
-    a1.set_ylabel("do-Shapley value (share of agency)")
-    a1.set_title("where the agency is realized", fontsize=10, color=INK)
-    a1.annotate("persona = 0\n(identity is inert)", xy=(5, 0.02), xytext=(4.1, 0.28),
-                fontsize=8.5, color=NEUTRAL,
-                arrowprops=dict(arrowstyle="->", color=NEUTRAL, lw=0.8))
+    a1.set_xticks(x)
+    a1.set_xticklabels(labels, fontsize=8)
+    a1.set_ylabel("do-Shapley share")
+    a1.set_title("what shows agency vs what realizes it", fontsize=10, color=INK)
+    a1.legend(frameon=False, fontsize=8.5, loc="upper right")
 
-    labels = ["planner\n× map", "map\n× memory", "goal reg.\n× planner"]
-    ivals = [inter["planner__map"], inter["map__memory"], inter["goal_register__planner"]]
-    icolors = [AGENT if v > 0.02 else (PASSIVE if v < -0.02 else NEUTRAL) for v in ivals]
-    a2.bar(range(3), ivals, color=icolors, width=0.6)
+    colors = [PASSIVE if L[c] > 0.15 else NEUTRAL for c in comps]
+    a2.bar(x, [L[c] for c in comps], 0.62, color=colors)
     a2.axhline(0, color=INK, lw=0.8)
-    a2.set_xticks(range(3))
+    a2.set_xticks(x)
     a2.set_xticklabels(labels, fontsize=8)
-    a2.set_ylabel("interaction index")
-    a2.set_title("synergy (+), redundancy (−), additivity (0)", fontsize=10, color=INK)
+    a2.set_ylabel(r"legibility  $L = \phi^E - \phi^C$")
+    a2.set_title("agency theater", fontsize=10, color=INK)
+    a2.annotate("persona:\nevidence, no capacity", xy=(5, L["persona"]), xytext=(1.9, 0.17),
+                fontsize=8, color=PASSIVE,
+                arrowprops=dict(arrowstyle="->", color=PASSIVE, lw=0.8))
     for ax in (a1, a2):
         _style(ax)
     fig.tight_layout()
