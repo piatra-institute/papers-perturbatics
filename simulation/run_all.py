@@ -4,7 +4,9 @@
     uv run run_all.py
 
 Writes output/results.json and output/figures/{separation,realization_map,
-guards}.png. Deterministic given the recorded seed; nothing is sampled.
+guards}.png. Deterministic given the recorded seed: the instances are drawn once
+from it and every episode is deterministic; a seed sweep reports the AUROC
+ranges across redrawn instance sets. A failed figure fails the run.
 """
 from __future__ import annotations
 
@@ -26,13 +28,10 @@ def main() -> None:
     (OUT / "figures").mkdir(parents=True, exist_ok=True)
     results = run()
     (OUT / "results.json").write_text(json.dumps(_strip_private(results), indent=2))
-    try:
-        from figures import plot_separation, plot_realization_map, plot_guards
-        plot_separation(results, str(OUT / "figures" / "separation.png"))
-        plot_realization_map(results, str(OUT / "figures" / "realization_map.png"))
-        plot_guards(results, str(OUT / "figures" / "guards.png"))
-    except Exception as e:  # figures are secondary to the numbers
-        print("figure step skipped:", e)
+    from figures import plot_separation, plot_realization_map, plot_guards
+    plot_separation(results, str(OUT / "figures" / "separation.png"))
+    plot_realization_map(results, str(OUT / "figures" / "realization_map.png"))
+    plot_guards(results, str(OUT / "figures" / "guards.png"))
 
     sep = results["separation"]
     rm = results["realization_map"]
@@ -53,6 +52,8 @@ def main() -> None:
           f"{ps['capacity_swap_persona_keep_model']}, swap-model "
           f"{ps['capacity_swap_model_keep_persona']}")
     print("richness:", rg["systems"], "corr", rg["complexity_agency_correlation"])
+    print("robustness:", results["separation_robustness"])
+    print("checks:", results["checks"])
     print("wrote", OUT / "results.json")
 
 

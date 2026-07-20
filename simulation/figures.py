@@ -28,7 +28,11 @@ def _style(ax) -> None:
 def plot_separation(results: dict, path: str) -> None:
     sep = results["_sep"]
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.2, 3.7), sharey=True)
-    bins = np.linspace(-90, 90, 31)
+    # bins span the data so no shipped score falls outside the panel
+    scores = (sep["_probe_planner"] + sep["_probe_passive"] + sep["_probe_reactive"]
+              + sep["_rest_planner"] + sep["_rest_passive"] + sep["_rest_reactive"])
+    lim = max(90.0, float(np.ceil(max(abs(min(scores)), abs(max(scores))) / 10) * 10))
+    bins = np.linspace(-lim, lim, 31)
 
     a1.hist(sep["_rest_passive"], bins=bins, color=PASSIVE, alpha=0.6, label="route script")
     a1.hist(sep["_rest_planner"], bins=bins, color=AGENT, alpha=0.6, label="goal planner")

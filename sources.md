@@ -24,6 +24,8 @@ Block, N. (1981). Psychologism and behaviorism. *The Philosophical Review*, 90(1
 
 Box, G. E. P., and Hill, W. J. (1967). Discrimination among mechanistic models. *Technometrics*, 9(1), 57--71. — verified (web, 2026-07-20; Technometrics 9(1):57); sequential design for discriminating mechanistic models.
 
+Casali, A. G., Gosseries, O., Rosanova, M., Boly, M., Sarasso, S., Casali, K. R., Casarotto, S., Bruno, M.-A., Laureys, S., Tononi, G., and Massimini, M. (2013). A theoretically based index of consciousness independent of sensory processing and behavior. *Science Translational Medicine*, 5(198), 198ra105. — verified (web, 2026-07-20; DOI 10.1126/scitranslmed.3006294); the perturbational complexity index. The human brain's perturbational consciousness index, calibrated on reporters; cited to bound the unperformable-probe claim to the class without a calibration set.
+
 Conant, R. C., and Ashby, W. R. (1970). Every good regulator of a system must be a model of that system. *International Journal of Systems Science*, 1(2), 89--97. — verified (DOI 10.1080/00207727008920220); the regulator holds a model of the regulated variable inside, where the record does not reach. The theorem behind the observational-equivalence core (the flat record itself is what perfect regulation means).
 
 Crawford, V. P., and Sobel, J. (1982). Strategic information transmission. *Econometrica*, 50(6), 1431--1451. — verified; cheap talk. Names the persona's declaration channel in the legibility correction.

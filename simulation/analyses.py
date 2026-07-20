@@ -59,8 +59,8 @@ COMPONENTS = ["goal_register", "planner", "memory", "map", "harness", "persona"]
 MOVES = [(-1, 0), (1, 0), (0, -1), (0, 1), (0, 0)]   # up, down, left, right, stay
 
 
-def _rng() -> np.random.Generator:
-    return np.random.default_rng(SEED)
+def _rng(seed: int = SEED) -> np.random.Generator:
+    return np.random.default_rng(seed)
 
 
 def _in_grid(c):
@@ -92,10 +92,13 @@ def manhattan(c, goal):
     return abs(c[0] - goal[0]) + abs(c[1] - goal[1])
 
 
-def make_instances():
+def make_instances(seed: int = SEED):
     """Deterministic set of episodes: a start, a baseline goal, a moved goal, and a
-    wall segment that blocks the straight route from start to the baseline goal."""
-    rng = _rng()
+    wall segment that blocks the straight route from start to the baseline goal.
+    The instances are drawn once from the seed; every episode is then deterministic.
+    A fixed seed makes the sample reproducible, not less of a sample, which is why
+    the seed sweep below reports the AUROC ranges across seeds."""
+    rng = _rng(seed)
     insts = []
     while len(insts) < N_INSTANCES:
         start = (rng.integers(0, 3), rng.integers(0, N))
@@ -189,7 +192,11 @@ def agency_evidence(traj, inst, probe):
     over the five action labels (four moves and stay), with invalid moves clamped
     to stay; the likelihood is proper over action labels rather than next states
     (several labels can share the stay outcome), and the two models share one
-    label space, so the comparison is like for like."""
+    label space, so the comparison is like for like. Marginalizing over the labels
+    that share the stay outcome would change nothing: a clamped move has zero
+    progress under both models, the same score the stay label has, so the summed
+    stay mass is k*exp(0) in both numerators and the log-ratio, the only quantity
+    used, is invariant to the marginalization."""
     g0, g1 = inst["g0"], inst["g1"]
     true_goal = g1 if probe == "move" else g0
     walls = inst["walls"] if probe == "block" else set()
@@ -353,6 +360,58 @@ def analysis_separation(insts):
     }
 
 
+def analysis_seed_robustness(n_seeds: int = 20):
+    """The reported AUROCs are properties of one drawn instance set. Redraw the
+    instances under seeds 0..n_seeds-1 and report the range of the pairwise
+    planner-vs-script separations, so the headline numbers carry their spread."""
+    pooled, move_only, block_only = [], [], []
+    for seed in range(n_seeds):
+        insts = make_instances(seed)
+        sep = analysis_separation(insts)
+        pooled.append(sep["auroc_under_probe"])
+        move_only.append(sep["auroc_per_probe"]["move"]["planner_vs_script"])
+        block_only.append(sep["auroc_per_probe"]["block"]["planner_vs_script"])
+
+    def rng_of(xs):
+        return {"min": round(min(xs), 6), "max": round(max(xs), 6)}
+
+    return {"n_seeds": n_seeds,
+            "planner_vs_script_pooled": rng_of(pooled),
+            "planner_vs_script_move": rng_of(move_only),
+            "planner_vs_script_block": rng_of(block_only)}
+
+
+def run_invariants(insts, phi_E, phi_C, cache_E, cache_C):
+    """Checks that fail loudly. Each is an identity the paper leans on: the rest
+    trajectories really are identical across the three systems (checked cell by
+    cell, the fact the at-rest panel rests on); at rest the two scoring models
+    coincide, so the evidence is zero for every trajectory, including an
+    arbitrary goal-indifferent one (the regime equivalence made literal, and
+    stated as such rather than sold as a finding); Shapley efficiency holds for
+    both maps; and the persona is a dummy player of the capacity game."""
+    all_comps = set(COMPONENTS)
+    reactive = {"goal_register", "map", "harness"}
+    rest_identical = all(
+        run_episode(all_comps, inst, "rest")[0]
+        == run_episode(reactive, inst, "rest")[0]
+        == route_script_traj(inst, "rest")
+        for inst in insts)
+    assert rest_identical, "rest trajectories differ across systems"
+    rest_zero = all(abs(agency_evidence(_chaotic_traj(inst), inst, "rest")) < 1e-9
+                    for inst in insts)
+    assert rest_zero, "at rest the two models should coincide for any trajectory"
+    n = len(COMPONENTS)
+    full, empty = frozenset(range(n)), frozenset()
+    eff_E = abs(sum(phi_E.values()) - (cache_E[full] - cache_E[empty]))
+    eff_C = abs(sum(phi_C.values()) - (cache_C[full] - cache_C[empty]))
+    assert eff_E < 1e-9 and eff_C < 1e-9, "Shapley efficiency violated"
+    assert abs(phi_C["persona"]) < 1e-12, "persona must be a capacity dummy"
+    return {"rest_trajectories_identical": rest_identical,
+            "rest_evidence_zero_for_any_trajectory": rest_zero,
+            "shapley_efficiency_max_error": round(max(eff_E, eff_C), 12),
+            "persona_capacity_dummy": True}
+
+
 def analysis_boundary_sweep(insts, probes, ref, decl):
     """Fact 4a: the realized-agency reading depends on the declared boundary. Nested
     units, components outside the boundary held at their null."""
@@ -459,6 +518,16 @@ def run() -> dict:
     # switch at baseline the residue still drifts against the goal)
     nu_empty_E = cache_E[frozenset()]
     nu_empty_C = cache_C[frozenset()]
+    # the boundary chain below is one path through the 2^6 enclosures the game
+    # computes; ship the whole landscape (capacity range per enclosure size)
+    n = len(COMPONENTS)
+    by_size = {}
+    for S, v in cache_C.items():
+        by_size.setdefault(len(S), []).append(v)
+    landscape = {str(k): {"min": round(min(vs), 6), "max": round(max(vs), 6)}
+                 for k, vs in sorted(by_size.items())}
+    checks = run_invariants(insts, phi_E, phi_C, cache_E, cache_C)
+    robustness = analysis_seed_robustness()
     sep = analysis_separation(insts)
     boundary = analysis_boundary_sweep(insts, probes, ref_C, decl)
     richness = analysis_richness_guard(insts)
@@ -481,7 +550,10 @@ def run() -> dict:
             "legibility": legibility,
             "interaction_index": {k: round(v, 6) for k, v in inter.items()}},
         "boundary_sweep": boundary,
+        "enclosure_landscape_capacity_by_size": landscape,
         "richness_guard": richness,
         "persona_swap": persona,
+        "separation_robustness": robustness,
+        "checks": checks,
         "_sep": sep,
     }

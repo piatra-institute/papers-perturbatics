@@ -104,6 +104,36 @@
       1.0
     ]
   ],
+  "enclosure_landscape_capacity_by_size": {
+    "0": {
+      "min": -0.035023,
+      "max": -0.035023
+    },
+    "1": {
+      "min": -0.036065,
+      "max": 0.645939
+    },
+    "2": {
+      "min": -0.036065,
+      "max": 0.647129
+    },
+    "3": {
+      "min": -0.036065,
+      "max": 0.981374
+    },
+    "4": {
+      "min": -0.036065,
+      "max": 1.0
+    },
+    "5": {
+      "min": 0.316806,
+      "max": 1.0
+    },
+    "6": {
+      "min": 1.0,
+      "max": 1.0
+    }
+  },
   "richness_guard": {
     "systems": {
       "planner": [
@@ -129,5 +159,26 @@
     "capacity_full": 1.0,
     "capacity_swap_persona_keep_model": 1.0,
     "capacity_swap_model_keep_persona": 0.647129
+  },
+  "separation_robustness": {
+    "n_seeds": 20,
+    "planner_vs_script_pooled": {
+      "min": 0.928047,
+      "max": 0.968125
+    },
+    "planner_vs_script_move": {
+      "min": 1.0,
+      "max": 1.0
+    },
+    "planner_vs_script_block": {
+      "min": 0.712187,
+      "max": 0.8725
+    }
+  },
+  "checks": {
+    "rest_trajectories_identical": true,
+    "rest_evidence_zero_for_any_trajectory": true,
+    "shapley_efficiency_max_error": 0.0,
+    "persona_capacity_dummy": true
   }
 }
