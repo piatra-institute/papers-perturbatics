@@ -81,3 +81,21 @@ Von Bertalanffy, L. (1968). *General System Theory: Foundations, Development, Ap
 Witter, R. T., Parafita, Á., Garriga, T., Muschalik, M., Fumagalli, F., Brando, A., and Rosenblatt, L. (2026). Exactly computing do-Shapley values. *arXiv preprint* arXiv:2602.07203. — verified (arXiv:2602.07203, v1 stamped 6 Feb 2026, preprint dated 10 Feb 2026; seven authors, first author R. Teal Witter); exact do-Shapley via irreducible sets, identifiability from single-component interventions. Makes the realization map a computation.
 
 Woodward, J. (2003). *Making Things Happen: A Theory of Causal Explanation*. New York: Oxford University Press. — verified; manipulationist causation. The interventionist backbone.
+
+## Prior art and lineage added in the v7 best-shape pass (2026-07-21)
+
+Seven references added to situate the dual map and to defend the term "legibility." All locators web-verified 2026-07-21 against the publisher or arXiv record.
+
+Dragan, A. D., Lee, K. C. T., and Srinivasa, S. S. (2013). Legibility and predictability of robot motion. In *Proc. 8th ACM/IEEE Int. Conf. on Human-Robot Interaction (HRI)*, 301--308. — verified (CMU Robotics Institute record; HRI '13). Legible motion is shaped so an observer reads the true goal quickly. The established technical sense of the coined word; the paper distinguishes its inverse use (readability in excess of realized capacity).
+
+Lundberg, S. M., and Lee, S.-I. (2017). A unified approach to interpreting model predictions. *NeurIPS* 30, 4765--4774. — verified (canonical SHAP). The foundational Shapley-for-explanation account the readout inherits from.
+
+Wang, J., Wiens, J., and Lundberg, S. (2021). Shapley Flow: a graph-based approach to interpreting model predictions. *AISTATS*, PMLR 130; arXiv:2010.14592. — verified (PMLR v130; the audit's "ACL 2026" locator was garbled). The causal-graph form of Shapley attribution; a method-neighbour of the do-Shapley readout.
+
+Horovicz, M. (2025). AgentSHAP: interpreting LLM agent tool importance with Monte Carlo Shapley value estimation. arXiv:2512.12597. — verified (arXiv, 14 Dec 2025). Shapley over an agent's tools; the domain-nearest attribution neighbour.
+
+Shah, J. (2026). Causal Agent Replay: counterfactual attribution for LLM-agent failures. arXiv:2606.08275. — verified (arXiv, 6 Jun 2026). Structural-causal do-intervention on agent steps with a Monte-Carlo Shapley split; the other domain-nearest neighbour.
+
+Kenton, Z., Kumar, R., Farquhar, S., Richens, J., MacDermott, M., and Everitt, T. (2023). Discovering agents. *Artificial Intelligence*, 322, 103963. — verified (DOI 10.1016/j.artint.2023.103963; arXiv:2208.08345). A causal, interventional criterion for agenthood, from the same group as the goal-directedness measure already cited (MacDermott et al., 2024); the closest neighbour to the whole thesis.
+
+Butlin, P., Long, R., et al. (2023). Consciousness in artificial intelligence: insights from the science of consciousness. arXiv:2308.08708. — verified (arXiv, 17 authors incl. Bengio, Birch, Chalmers). The indicator-properties program for AI consciousness; the interlocutor the consciousness section now concedes before narrowing its claim to the irreversible probe.

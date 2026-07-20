@@ -125,7 +125,7 @@ def plot_guards(results: dict, path: str) -> None:
     a2.axhline(0, color=NEUTRAL, lw=0.9)
     a2.set_xlabel("trajectory complexity (bits)")
     a2.set_ylabel("agency evidence")
-    a2.set_title(f"richness does not track agency (r = {results['richness_guard']['complexity_agency_correlation']:.2f})",
+    a2.set_title("richness does not track agency",
                  fontsize=10, color=INK)
     for ax in (a1, a2):
         _style(ax)
