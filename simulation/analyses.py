@@ -397,7 +397,7 @@ def run_invariants(insts, phi_E, phi_C, cache_E, cache_C):
         == route_script_traj(inst, "rest")
         for inst in insts)
     assert rest_identical, "rest trajectories differ across systems"
-    rest_zero = all(abs(agency_evidence(_chaotic_traj(inst), inst, "rest")) < 1e-9
+    rest_zero = all(abs(agency_evidence(_chaotic_traj(inst, "rest"), inst, "rest")) < 1e-9
                     for inst in insts)
     assert rest_zero, "at rest the two models should coincide for any trajectory"
     n = len(COMPONENTS)
@@ -426,17 +426,23 @@ def analysis_boundary_sweep(insts, probes, ref, decl):
     return [(name, round(nu(b, insts, probes, ref, "C", decl), 6)) for name, b in boundaries]
 
 
-def _chaotic_traj(inst):
-    """A high-complexity walker driven by a logistic map; ignores goals and probes."""
+def _chaotic_traj(inst, probe):
+    """A high-complexity walker driven by a logistic map; ignores the goal but
+    obeys the same physics as every other system, so under the block probe it
+    cannot walk through a wall. An earlier version checked only the grid bound,
+    letting chaos teleport through walls; the scorer then charged those illegal
+    steps as forced stays, an artifact that punished complexity for a bug rather
+    than for a fact about agency."""
     x = 0.37
     c = inst["start"]
     traj = [c]
+    walls = inst["walls"] if probe == "block" else set()
     for _ in range(T):
         x = 3.9 * x * (1 - x)
         k = int(x * 4) % 4
         d = MOVES[k]
         nb = (c[0] + d[0], c[1] + d[1])
-        c = nb if _in_grid(nb) else c
+        c = nb if _in_grid(nb) and nb not in walls else c
         traj.append(c)
     return traj
 
@@ -474,7 +480,7 @@ def analysis_richness_guard(insts):
     comp, agen = [], []
     for inst in insts:
         for probe in ("move", "block"):
-            tr = _chaotic_traj(inst)
+            tr = _chaotic_traj(inst, probe)
             comp.append(_complexity(tr))
             agen.append(agency_evidence(tr, inst, probe))
     rows["chaotic"] = (float(np.mean(comp)), float(np.mean(agen)))
@@ -510,8 +516,8 @@ def run() -> dict:
     ref_E = {p: ref_move[p] + decl[p] for p in probes}   # full-assemblage total evidence
     ref_C = {p: float(np.mean([capacity(run_episode(full, inst, p)[0], inst, p)
                                for inst in insts])) for p in probes}
-    phi_E, inter, cache_E = do_shapley(insts, probes, ref_E, "E", decl)
-    phi_C, _, cache_C = do_shapley(insts, probes, ref_C, "C", decl)
+    phi_E, inter_E, cache_E = do_shapley(insts, probes, ref_E, "E", decl)
+    phi_C, inter_C, cache_C = do_shapley(insts, probes, ref_C, "C", decl)
     legibility = {c: round(phi_E[c] - phi_C[c], 6) for c in COMPONENTS}
     # the maps are marginal contributions, not fractions of a whole: they sum to
     # nu(full) - nu(empty), and the empty coalition is not nothing (with every
@@ -548,7 +554,8 @@ def run() -> dict:
             "empty_coalition": {"evidence": round(nu_empty_E, 6),
                                 "capacity": round(nu_empty_C, 6)},
             "legibility": legibility,
-            "interaction_index": {k: round(v, 6) for k, v in inter.items()}},
+            "interaction_index": {k: round(v, 6) for k, v in inter_C.items()},
+            "interaction_index_evidence_game": {k: round(v, 6) for k, v in inter_E.items()}},
         "boundary_sweep": boundary,
         "enclosure_landscape_capacity_by_size": landscape,
         "richness_guard": richness,

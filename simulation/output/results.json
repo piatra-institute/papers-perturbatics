@@ -81,6 +81,11 @@
       "persona": 0.230769
     },
     "interaction_index": {
+      "planner__map": 0.179743,
+      "map__memory": -0.16441,
+      "goal_register__planner": -0.0
+    },
+    "interaction_index_evidence_game": {
       "planner__map": 0.304696,
       "map__memory": -0.249176,
       "goal_register__planner": -0.0
@@ -149,11 +154,11 @@
         -31.372105
       ],
       "chaotic": [
-        2.12188,
-        -63.720678
+        2.130872,
+        -3.715893
       ]
     },
-    "complexity_agency_correlation": -0.675438
+    "complexity_agency_correlation": -0.091038
   },
   "persona_swap": {
     "capacity_full": 1.0,

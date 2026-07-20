@@ -34,6 +34,8 @@ Dennett, D. C. (1987). *The Intentional Stance*. Cambridge, MA: MIT Press. — v
 
 Geiger, A., Lu, H., Icard, T., and Potts, C. (2021). Causal abstractions of neural networks. *Advances in Neural Information Processing Systems*, 34, 9574--9586. — verified (OpenReview RmuXDtjDhG); interchange interventions test whether a network realizes a high-level variable. A neighbour of the device the paper differentiates from.
 
+Gergely, G., Nádasdy, Z., Csibra, G., and Bíró, S. (1995). Taking the intentional stance at 12 months of age. *Cognition*, 56(2), 165--193. — verified (DOI 10.1016/0010-0277(95)00661-H); infants at 12 months expect an agent to take the shortest available path to its goal and dishabituate when it does not. The developmental primary source for the infant shortest-path expectation, correcting a v5.3 misattribution to Baker, Saxe and Tenenbaum (2009), which is adult inverse planning. Added in the v6 referee-audit pass.
+
 Grabisch, M., and Roubens, M. (1999). An axiomatic approach to the concept of interaction among players in cooperative games. *International Journal of Game Theory*, 28(4), 547--565. — verified (web, 2026-07-20; DOI 10.1007/s001820050125); the Shapley interaction index, now named at the readout's formula.
 
 Hacking, I. (1983). *Representing and Intervening: Introductory Topics in the Philosophy of Natural Science*. Cambridge: Cambridge University Press. — verified (DOI 10.1017/CBO9780511814563); intervention as the ground of realism. Supports the interventional-epistemology framing.

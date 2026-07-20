@@ -82,7 +82,7 @@ def plot_realization_map(results: dict, path: str) -> None:
     a1.axhline(0, color=INK, lw=0.8)
     a1.set_xticks(x)
     a1.set_xticklabels(labels, fontsize=8)
-    a1.set_ylabel("do-Shapley share")
+    a1.set_ylabel("normalized contribution")
     a1.set_title("what shows agency vs what realizes it", fontsize=10, color=INK)
     a1.legend(frameon=False, fontsize=8.5, loc="upper right")
 
@@ -125,7 +125,7 @@ def plot_guards(results: dict, path: str) -> None:
     a2.axhline(0, color=NEUTRAL, lw=0.9)
     a2.set_xlabel("trajectory complexity (bits)")
     a2.set_ylabel("agency evidence")
-    a2.set_title(f"richness is a false friend (r = {results['richness_guard']['complexity_agency_correlation']:.2f})",
+    a2.set_title(f"richness does not track agency (r = {results['richness_guard']['complexity_agency_correlation']:.2f})",
                  fontsize=10, color=INK)
     for ax in (a1, a2):
         _style(ax)
