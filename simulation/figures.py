@@ -30,24 +30,30 @@ def plot_separation(results: dict, path: str) -> None:
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.2, 3.7), sharey=True)
     bins = np.linspace(-90, 90, 31)
 
-    a1.hist(sep["_rest_passive"], bins=bins, color=PASSIVE, alpha=0.6, label="passive")
+    a1.hist(sep["_rest_passive"], bins=bins, color=PASSIVE, alpha=0.6, label="route script")
     a1.hist(sep["_rest_planner"], bins=bins, color=AGENT, alpha=0.6, label="goal planner")
+    # the reactive controller coincides with the others where trajectories are
+    # identical, so it is drawn as an outline on top rather than a filled bar
+    a1.hist(sep["_rest_reactive"], bins=bins, histtype="step", color=INK,
+            lw=1.4, label="reactive (outline)")
     a1.axvline(0, color=NEUTRAL, lw=0.9)
-    a1.set_title(f"at rest: AUROC = {results['separation']['auroc_at_rest']:.2f}",
+    a1.set_title(f"at rest: every pairwise AUROC = {results['separation']['auroc_at_rest']:.2f}",
                  fontsize=10, color=INK)
     a1.set_xlabel("agency evidence (log Bayes factor)")
     a1.set_ylabel("episodes")
     a1.legend(frameon=False, fontsize=8.5, loc="upper left")
 
-    a2.hist(sep["_probe_passive"], bins=bins, color=PASSIVE, alpha=0.6, label="passive")
+    a2.hist(sep["_probe_passive"], bins=bins, color=PASSIVE, alpha=0.6, label="route script")
     a2.hist(sep["_probe_planner"], bins=bins, color=AGENT, alpha=0.6, label="goal planner")
+    a2.hist(sep["_probe_reactive"], bins=bins, histtype="step", color=INK,
+            lw=1.4, label="reactive (outline)")
     a2.axvline(0, color=NEUTRAL, lw=0.9)
-    a2.set_title(f"under an informative probe: AUROC = {results['separation']['auroc_under_probe']:.2f}",
+    a2.set_title(f"under the battery: planner vs script AUROC = {results['separation']['auroc_under_probe']:.2f}",
                  fontsize=10, color=INK)
     a2.set_xlabel("agency evidence (log Bayes factor)")
     for ax in (a1, a2):
         _style(ax)
-    fig.suptitle("the same systems: indistinguishable at rest, separated by a probe",
+    fig.suptitle("the same systems: indistinguishable at rest, separated by the battery",
                  fontsize=11, color=INK, y=1.02)
     fig.tight_layout()
     fig.savefig(path, dpi=200, bbox_inches="tight")
@@ -104,7 +110,7 @@ def plot_guards(results: dict, path: str) -> None:
     a1.axhline(0, color=NEUTRAL, lw=0.9)
     a1.set_xticks(range(len(names)))
     a1.set_xticklabels(names, fontsize=8)
-    a1.set_ylabel("agency evidence of the enclosed unit")
+    a1.set_ylabel("realized capacity of the enclosed unit")
     a1.set_title("the reading depends on the declared boundary", fontsize=10, color=INK)
 
     for name, (cx, ay) in rg.items():

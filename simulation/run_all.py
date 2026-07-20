@@ -38,10 +38,12 @@ def main() -> None:
     rm = results["realization_map"]
     rg = results["richness_guard"]
     ps = results["persona_swap"]
-    print(f"separation: AUROC at rest {sep['auroc_at_rest']}, under probe "
-          f"{sep['auroc_under_probe']}; mean evidence rest {sep['mean_evidence_rest_planner']}, "
-          f"probe planner {sep['mean_evidence_probe_planner']}, probe passive "
-          f"{sep['mean_evidence_probe_passive']}")
+    print(f"separation: AUROC at rest {sep['auroc_at_rest']}, planner-vs-script pooled "
+          f"{sep['auroc_under_probe']}; per-probe {sep['auroc_per_probe']}; "
+          f"mean evidence rest {sep['mean_evidence_rest_planner']}, "
+          f"probe planner {sep['mean_evidence_probe_planner']}, probe script "
+          f"{sep['mean_evidence_probe_passive']}, probe reactive "
+          f"{sep['mean_evidence_probe_reactive']}")
     print("evidence map phi_E:", {k: round(v, 2) for k, v in rm["evidence_map"].items()})
     print("capacity map phi_C:", {k: round(v, 2) for k, v in rm["capacity_map"].items()})
     print("legibility L=phi_E-phi_C:", {k: round(v, 2) for k, v in rm["legibility"].items()})

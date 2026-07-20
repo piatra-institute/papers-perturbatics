@@ -1,22 +1,27 @@
 """Deterministic demonstrator for *Perturbatics*.
 
 A gridworld holds three systems that trace the same path at rest and so cannot be
-told apart by watching: a route-script that replays a stored path, a reactive
-controller that greedily descends toward a fixed target, and a goal planner that
-represents a goal and replans. The demonstrator establishes four facts, each a
-claim the paper makes precise.
+told apart by watching: a route-script that replays its stored path, a reactive
+controller that greedily tracks the current target (wall-blind, no planning), and
+a goal planner that represents a goal and replans. The demonstrator establishes
+four facts, each a claim the paper makes precise.
 
-  1. The Probe Separation Principle. At rest a classifier separates the planner
-     from the passive systems at chance; under an informative probe (move the
-     goal, block the path) the same classifier separates them perfectly. Agency
-     is not on the observational record; it appears under intervention.
+  1. The Probe Separation Principle, in the shape the battery formalism
+     predicts. At rest no pair of systems separates (identical trajectories,
+     AUROC 0.50). No single probe separates every pair either: the moved goal
+     exposes the route script (AUROC 1.0) but leaves the two goal-trackers
+     trajectory-identical (0.50), and the blocked path exposes the planner
+     (0.78) but collapses the two wall-blind systems together (0.50). The
+     battery separates every pair; the pooled planner-vs-script AUROC is 0.95.
 
   2. The do-Shapley realization map. The planner assemblage is decomposed into
      six components (goal register, planner, memory, map, harness, persona). Each
      component's causal contribution to the agency evidence is its do-Shapley
      value under the interventional value function nu(S) = E[A | do(ablate the
-     complement of S)]. The persona is provably inert (its value is zero), so
-     performed identity and functional agency separate.
+     complement of S)]. The persona is inert by construction, not by discovery:
+     it has no motor channel (capacity share 0 by design) and its evidence share
+     is a cheap-talk dial (DECL_FRAC/(1+DECL_FRAC) identically, 0.23 at 0.3), so
+     the dual map displays the identity/agency separation rather than finds it.
 
   3. Synergy. Agency is non-additive. The planner and the map are complementary:
      neither alone can route around an obstacle, so their do-Shapley interaction
@@ -24,11 +29,12 @@ claim the paper makes precise.
      The map and the memory are substitutes, so their interaction is negative.
 
   4. Two guards. Richness is a false friend: a chaotic walker with the highest
-     trajectory complexity has among the lowest agency, so agency does not track
-     complexity. And the reading depends on the declared boundary: swept over
-     nested candidate units, the agency evidence is near zero when the boundary
-     is drawn around the planner alone and rises only when the goal register and
-     the map are enclosed with it.
+     trajectory complexity has the lowest agency, so agency does not track
+     complexity. And the reading depends on the declared boundary, swept as an
+     enclosure (components outside the candidate unit held at their null, the
+     lesion form of the boundary question): the realized capacity is near zero
+     when the boundary is drawn around the planner alone and rises only when
+     the goal register and the map are enclosed with it.
 
 Everything is deterministic given the recorded seed. The models are illustrative
 and instantiate the paper's definitions; they are not fit to data. Every reported
@@ -155,13 +161,35 @@ def run_episode(active, inst, probe):
     return traj, true_walls
 
 
+def route_script_traj(inst, probe):
+    """The route script proper: it stores the path it traced at rest and replays
+    it cell by cell. A stored step into a wall, or one it can no longer reach
+    after bumping, leaves it holding position. (On these instances the replay
+    coincides extensionally with wall-blind greedy descent toward the frozen
+    goal; it is implemented as a replay so the mechanism matches the name.)"""
+    stored = run_episode({"map", "harness"}, inst, "rest")[0]
+    true_walls = inst["walls"] if probe == "block" else set()
+    c = stored[0]
+    traj = [c]
+    for nxt in stored[1:]:
+        adjacent = abs(nxt[0] - c[0]) + abs(nxt[1] - c[1]) <= 1
+        step = nxt if (adjacent and nxt not in true_walls) else c
+        c = step
+        traj.append(c)
+    return traj
+
+
 def agency_evidence(traj, inst, probe):
     """A = sum_t [ log P(step | goal model) - log P(step | inertial model) ].
 
     Goal model: prefers steps that reduce graph distance to the true current goal
     (wall-aware, so it rewards a detour). Inertial model: prefers steps that reduce
     straight-line distance to the baseline goal (wall-blind, so it penalizes a
-    detour and expects the original heading)."""
+    detour and expects the original heading). Both models are softmax policies
+    over the five action labels (four moves and stay), with invalid moves clamped
+    to stay; the likelihood is proper over action labels rather than next states
+    (several labels can share the stay outcome), and the two models share one
+    label space, so the comparison is like for like."""
     g0, g1 = inst["g0"], inst["g1"]
     true_goal = g1 if probe == "move" else g0
     walls = inst["walls"] if probe == "block" else set()
@@ -276,22 +304,25 @@ def do_shapley(insts, probes, ref, kind, decl):
 
 
 def analysis_separation(insts):
-    """Fact 1: observational equivalence, interventional separation."""
+    """Fact 1: observational equivalence at rest; separation by the battery and by
+    no single probe. Three systems: the goal planner (full assemblage), the
+    reactive controller (goal register but no planner: tracks the current target
+    greedily, wall-blind), and the route script (replays its stored path)."""
     all_comps = set(COMPONENTS)
-    a_rest_planner, a_rest_passive = [], []
-    a_probe_planner, a_probe_passive = [], []
+    reactive = {"goal_register", "map", "harness"}
+
+    def traj(system, inst, probe):
+        if system == "script":
+            return route_script_traj(inst, probe)
+        active = all_comps if system == "planner" else reactive
+        return run_episode(active, inst, probe)[0]
+
+    ev = {s: {p: [] for p in ("rest", "move", "block")}
+          for s in ("planner", "reactive", "script")}
     for inst in insts:
-        # planner = full assemblage; passive = route-script (no goal register, no planner)
-        passive = {"map", "harness"}
-        tr_p, _ = run_episode(all_comps, inst, "rest")
-        tr_q, _ = run_episode(passive, inst, "rest")
-        a_rest_planner.append(agency_evidence(tr_p, inst, "rest"))
-        a_rest_passive.append(agency_evidence(tr_q, inst, "rest"))
-        for probe in ("move", "block"):
-            tp, _ = run_episode(all_comps, inst, probe)
-            tq, _ = run_episode(passive, inst, probe)
-            a_probe_planner.append(agency_evidence(tp, inst, probe))
-            a_probe_passive.append(agency_evidence(tq, inst, probe))
+        for probe in ("rest", "move", "block"):
+            for s in ev:
+                ev[s][probe].append(agency_evidence(traj(s, inst, probe), inst, probe))
 
     def auroc(pos, neg):
         pos, neg = np.array(pos), np.array(neg)
@@ -299,14 +330,26 @@ def analysis_separation(insts):
         ties = float((pos[:, None] == neg[None, :]).sum())
         return float((wins + 0.5 * ties) / (len(pos) * len(neg)))
 
+    pairs = [("planner", "script"), ("planner", "reactive"), ("reactive", "script")]
+    auroc_rest_pairs = {f"{a}_vs_{b}": round(auroc(ev[a]["rest"], ev[b]["rest"]), 6)
+                        for a, b in pairs}
+    auroc_per_probe = {p: {f"{a}_vs_{b}": round(auroc(ev[a][p], ev[b][p]), 6)
+                           for a, b in pairs}
+                       for p in ("move", "block")}
+    pooled = {s: ev[s]["move"] + ev[s]["block"] for s in ev}
     return {
-        "auroc_at_rest": round(auroc(a_rest_planner, a_rest_passive), 6),
-        "auroc_under_probe": round(auroc(a_probe_planner, a_probe_passive), 6),
-        "mean_evidence_rest_planner": round(float(np.mean(a_rest_planner)), 6),
-        "mean_evidence_probe_planner": round(float(np.mean(a_probe_planner)), 6),
-        "mean_evidence_probe_passive": round(float(np.mean(a_probe_passive)), 6),
-        "_rest_planner": a_rest_planner, "_rest_passive": a_rest_passive,
-        "_probe_planner": a_probe_planner, "_probe_passive": a_probe_passive,
+        "auroc_at_rest": round(auroc(ev["planner"]["rest"], ev["script"]["rest"]), 6),
+        "auroc_at_rest_pairs": auroc_rest_pairs,
+        "auroc_under_probe": round(auroc(pooled["planner"], pooled["script"]), 6),
+        "auroc_per_probe": auroc_per_probe,
+        "mean_evidence_rest_planner": round(float(np.mean(ev["planner"]["rest"])), 6),
+        "mean_evidence_probe_planner": round(float(np.mean(pooled["planner"])), 6),
+        "mean_evidence_probe_passive": round(float(np.mean(pooled["script"])), 6),
+        "mean_evidence_probe_reactive": round(float(np.mean(pooled["reactive"])), 6),
+        "_rest_planner": ev["planner"]["rest"], "_rest_passive": ev["script"]["rest"],
+        "_rest_reactive": ev["reactive"]["rest"],
+        "_probe_planner": pooled["planner"], "_probe_passive": pooled["script"],
+        "_probe_reactive": pooled["reactive"],
     }
 
 
@@ -354,16 +397,17 @@ def _complexity(traj):
 def analysis_richness_guard(insts):
     """Fact 4b: agency does not track complexity."""
     systems = {
-        "planner": set(COMPONENTS),
-        "reactive": {"goal_register", "map", "harness"},
-        "route_script": {"map", "harness"},
+        "planner": lambda inst, probe: run_episode(set(COMPONENTS), inst, probe)[0],
+        "reactive": lambda inst, probe: run_episode(
+            {"goal_register", "map", "harness"}, inst, probe)[0],
+        "route_script": route_script_traj,
     }
     rows = {}
-    for name, active in systems.items():
+    for name, get_traj in systems.items():
         comp, agen = [], []
         for inst in insts:
             for probe in ("move", "block"):
-                tr, _ = run_episode(active, inst, probe)
+                tr = get_traj(inst, probe)
                 comp.append(_complexity(tr))
                 agen.append(agency_evidence(tr, inst, probe))
         rows[name] = (float(np.mean(comp)), float(np.mean(agen)))
@@ -407,9 +451,14 @@ def run() -> dict:
     ref_E = {p: ref_move[p] + decl[p] for p in probes}   # full-assemblage total evidence
     ref_C = {p: float(np.mean([capacity(run_episode(full, inst, p)[0], inst, p)
                                for inst in insts])) for p in probes}
-    phi_E, inter, _ = do_shapley(insts, probes, ref_E, "E", decl)
-    phi_C, _, _ = do_shapley(insts, probes, ref_C, "C", decl)
+    phi_E, inter, cache_E = do_shapley(insts, probes, ref_E, "E", decl)
+    phi_C, _, cache_C = do_shapley(insts, probes, ref_C, "C", decl)
     legibility = {c: round(phi_E[c] - phi_C[c], 6) for c in COMPONENTS}
+    # the maps are marginal contributions, not fractions of a whole: they sum to
+    # nu(full) - nu(empty), and the empty coalition is not nothing (with every
+    # switch at baseline the residue still drifts against the goal)
+    nu_empty_E = cache_E[frozenset()]
+    nu_empty_C = cache_C[frozenset()]
     sep = analysis_separation(insts)
     boundary = analysis_boundary_sweep(insts, probes, ref_C, decl)
     richness = analysis_richness_guard(insts)
@@ -425,6 +474,10 @@ def run() -> dict:
         "realization_map": {
             "evidence_map": {k: round(v, 6) for k, v in phi_E.items()},
             "capacity_map": {k: round(v, 6) for k, v in phi_C.items()},
+            "evidence_map_sum": round(sum(phi_E.values()), 6),
+            "capacity_map_sum": round(sum(phi_C.values()), 6),
+            "empty_coalition": {"evidence": round(nu_empty_E, 6),
+                                "capacity": round(nu_empty_C, 6)},
             "legibility": legibility,
             "interaction_index": {k: round(v, 6) for k, v in inter.items()}},
         "boundary_sweep": boundary,

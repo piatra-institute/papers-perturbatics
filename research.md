@@ -33,7 +33,16 @@ A claim that reaches the paper rests on a T1 or T2 source. All locators web-veri
 
 ### Simulation (this paper's own computation; not literature)
 
-- Separation: AUROC 0.50 at rest, 0.945 under an informative probe; mean evidence +29.8 (planner) vs -31.4 (passive). Realization map (do-Shapley): goal register 0.53, planner 0.30, map/memory/harness small, persona 0.00. Interaction: planner-map +0.15 (synergy), map-memory -0.22 (redundancy), goal-register-planner 0 (additive). Persona swap 1.0/1.0, model swap 0.26. Boundary sweep -0.79 to 1.0. Richness-agency correlation -0.68. All keys in `simulation/output/results.json`.
+- Numbers current as of the v4 (2026-07-20) run; earlier entries in this block reported the v1 simulation and were stale against the shipped paper.
+- Separation, battery-shaped: every pairwise AUROC 0.50 at rest. Per probe: move exposes the script (planner and reactive vs script both 1.0) and leaves planner vs reactive at 0.50 (trajectory-identical); block exposes the planner (0.78 vs both) and leaves reactive vs script at 0.50. Planner vs script pooled 0.945. Mean probe evidence: planner +29.8, script -31.4, reactive +26.1.
+- Realization map (dual, do-Shapley): evidence phi_E goal register 0.70, planner 0.36, persona 0.23 (= DECL_FRAC/(1+DECL_FRAC), the cheap-talk dial, by construction); capacity phi_C goal register 0.68, planner 0.23, persona 0.00 (no motor channel, by design). Legibility L: persona 0.23 (largest), planner 0.13 (second), goal register 0.01; harness -0.03 evidence / +0.01 capacity (executor sign flip). Maps are marginal contributions: phi_E sums to 1.45, empty coalition -0.45.
+- Interaction: planner-map +0.30 (synergy), map-memory -0.25 (redundancy), goal-register-planner 0 (additive). Persona swap 1.0 (identity by design), model swap 0.65. Boundary sweep (capacity, enclosure form) -0.04 to 1.0. Richness-agency correlation -0.68 over four systems (the rank fact is the result). All keys in `simulation/output/results.json`.
+
+### Neighbours added in the audit pass (2026-07-20)
+
+- [T2] Martin (1994, *Phil. Quarterly* 44(174):1-8); Lewis (1997, *Phil. Quarterly* 47(187):143-158); Johnston (1992, *Phil. Studies* 68(3):221-263); Bird (1998, *Phil. Quarterly* 48(191):227-234). Finks, masks/antidotes, mimics: the dispositions literature's pathologies. Agency theater is a mimic; a probe that installs a capacity is a fink. Locators web-verified 2026-07-20.
+- [T2] Box & Hill (1967, *Technometrics* 9(1):57-71); Atkinson & Fedorov (1975, *Biometrika* 62(1):57-70). Experiment design for discriminating rival models, T-optimality: the probe-selection objective's statistical ancestor. Moore (1956, *Automata Studies* 34:129-153): distinguishing experiments for machines, and machines no experiment tells apart, the ancestor of the battery and of perturbational equivalence. Ljung (1999): persistency of excitation, the one-regime claim in engineering form.
+- [T2] Block (1981, *Phil. Review* 90(1):5-43): the lookup-table interlocutor; grounds the retrieval null. Crawford & Sobel (1982, *Econometrica* 50(6):1431-1451): cheap talk; names the persona's declaration channel. Grabisch & Roubens (1999, *Int. J. Game Theory* 28(4):547-565): the Shapley interaction index used in the readout.
 
 ### Note on the consciousness boundary-case
 
