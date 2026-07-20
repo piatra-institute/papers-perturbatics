@@ -95,9 +95,12 @@ def manhattan(c, goal):
 def make_instances(seed: int = SEED):
     """Deterministic set of episodes: a start, a baseline goal, a moved goal, and a
     wall segment that blocks the straight route from start to the baseline goal.
-    The instances are drawn once from the seed; every episode is then deterministic.
-    A fixed seed makes the sample reproducible, not less of a sample, which is why
-    the seed sweep below reports the AUROC ranges across seeds."""
+    An instance is kept only if the frozen rest path actually meets the wall, so
+    every blocked episode genuinely forces a detour and "blocked" is never a
+    misnomer for a gap-aligned straight run. The instances are drawn once from the
+    seed; every episode is then deterministic. A fixed seed makes the sample
+    reproducible, not less of a sample, which is why the seed sweep below reports
+    the AUROC ranges across seeds."""
     rng = _rng(seed)
     insts = []
     while len(insts) < N_INSTANCES:
@@ -110,8 +113,13 @@ def make_instances(seed: int = SEED):
         row = N // 2
         gap = int(rng.integers(1, N - 1))
         walls = {(row, j) for j in range(N) if j != gap and j != gap - 1}
-        insts.append({"start": tuple(map(int, start)), "g0": tuple(map(int, g0)),
-                      "g1": tuple(map(int, g1)), "walls": walls, "wall_row": row})
+        inst = {"start": tuple(map(int, start)), "g0": tuple(map(int, g0)),
+                "g1": tuple(map(int, g1)), "walls": walls, "wall_row": row}
+        # keep only instances the block probe actually blocks: the frozen rest path
+        # must hit the wall, or "blocked" is a misnomer for a gap-aligned straight run
+        if not any(cell in walls for cell in route_script_traj(inst, "rest")[1:]):
+            continue
+        insts.append(inst)
     return insts
 
 

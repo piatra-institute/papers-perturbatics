@@ -20,8 +20,8 @@
       "block"
     ],
     "probe_reference_movement_evidence": {
-      "move": 54.601777,
-      "block": 4.90878
+      "move": 55.210264,
+      "block": 4.842738
     }
   },
   "separation": {
@@ -31,7 +31,7 @@
       "planner_vs_reactive": 0.5,
       "reactive_vs_script": 0.5
     },
-    "auroc_under_probe": 0.945781,
+    "auroc_under_probe": 0.946562,
     "auroc_per_probe": {
       "move": {
         "planner_vs_script": 1.0,
@@ -39,66 +39,66 @@
         "reactive_vs_script": 1.0
       },
       "block": {
-        "planner_vs_script": 0.783125,
-        "planner_vs_reactive": 0.783125,
+        "planner_vs_script": 0.78625,
+        "planner_vs_reactive": 0.78625,
         "reactive_vs_script": 0.5
       }
     },
     "mean_evidence_rest_planner": 0.0,
-    "mean_evidence_probe_planner": 29.755278,
-    "mean_evidence_probe_passive": -31.372105,
-    "mean_evidence_probe_reactive": 26.144994
+    "mean_evidence_probe_planner": 30.026501,
+    "mean_evidence_probe_passive": -31.90248,
+    "mean_evidence_probe_reactive": 26.384062
   },
   "realization_map": {
     "evidence_map": {
-      "goal_register": 0.695414,
-      "planner": 0.360775,
-      "memory": 0.081859,
-      "map": 0.111599,
-      "harness": -0.028142,
+      "goal_register": 0.700953,
+      "planner": 0.36873,
+      "memory": 0.083599,
+      "map": 0.114375,
+      "harness": -0.021132,
       "persona": 0.230769
     },
     "capacity_map": {
-      "goal_register": 0.682078,
-      "planner": 0.227242,
-      "memory": 0.053712,
-      "map": 0.062832,
+      "goal_register": 0.813046,
+      "planner": 0.252024,
+      "memory": 0.059908,
+      "map": 0.069028,
       "harness": 0.009159,
       "persona": 0.0
     },
-    "evidence_map_sum": 1.452275,
-    "capacity_map_sum": 1.035023,
+    "evidence_map_sum": 1.477293,
+    "capacity_map_sum": 1.203165,
     "empty_coalition": {
-      "evidence": -0.452275,
-      "capacity": -0.035023
+      "evidence": -0.477293,
+      "capacity": -0.203165
     },
     "legibility": {
-      "goal_register": 0.013336,
-      "planner": 0.133534,
-      "memory": 0.028147,
-      "map": 0.048767,
-      "harness": -0.037302,
+      "goal_register": -0.112094,
+      "planner": 0.116706,
+      "memory": 0.023691,
+      "map": 0.045347,
+      "harness": -0.030292,
       "persona": 0.230769
     },
     "interaction_index": {
-      "planner__map": 0.179743,
-      "map__memory": -0.16441,
+      "planner__map": 0.19833,
+      "map__memory": -0.182996,
       "goal_register__planner": -0.0
     },
     "interaction_index_evidence_game": {
-      "planner__map": 0.304696,
-      "map__memory": -0.249176,
+      "planner__map": 0.311753,
+      "map__memory": -0.254355,
       "goal_register__planner": -0.0
     }
   },
   "boundary_sweep": [
     [
       "planner",
-      -0.036065
+      -0.204207
     ],
     [
       "+ goal register",
-      0.647129
+      0.609956
     ],
     [
       "+ map, memory",
@@ -111,27 +111,27 @@
   ],
   "enclosure_landscape_capacity_by_size": {
     "0": {
-      "min": -0.035023,
-      "max": -0.035023
+      "min": -0.203165,
+      "max": -0.203165
     },
     "1": {
-      "min": -0.036065,
-      "max": 0.645939
+      "min": -0.204207,
+      "max": 0.608765
     },
     "2": {
-      "min": -0.036065,
-      "max": 0.647129
+      "min": -0.204207,
+      "max": 0.609956
     },
     "3": {
-      "min": -0.036065,
+      "min": -0.204207,
       "max": 0.981374
     },
     "4": {
-      "min": -0.036065,
+      "min": -0.204207,
       "max": 1.0
     },
     "5": {
-      "min": 0.316806,
+      "min": 0.185838,
       "max": 1.0
     },
     "6": {
@@ -142,42 +142,42 @@
   "richness_guard": {
     "systems": {
       "planner": [
-        1.266249,
-        29.755278
+        1.255662,
+        30.026501
       ],
       "reactive": [
-        0.777496,
-        26.144994
+        0.722075,
+        26.384062
       ],
       "route_script": [
-        0.905956,
-        -31.372105
+        0.864839,
+        -31.90248
       ],
       "chaotic": [
-        2.130872,
-        -3.715893
+        2.126158,
+        -2.838158
       ]
     },
-    "complexity_agency_correlation": -0.091038
+    "complexity_agency_correlation": -0.069242
   },
   "persona_swap": {
     "capacity_full": 1.0,
     "capacity_swap_persona_keep_model": 1.0,
-    "capacity_swap_model_keep_persona": 0.647129
+    "capacity_swap_model_keep_persona": 0.609956
   },
   "separation_robustness": {
     "n_seeds": 20,
     "planner_vs_script_pooled": {
-      "min": 0.928047,
-      "max": 0.968125
+      "min": 0.9325,
+      "max": 0.970781
     },
     "planner_vs_script_move": {
       "min": 1.0,
       "max": 1.0
     },
     "planner_vs_script_block": {
-      "min": 0.712187,
-      "max": 0.8725
+      "min": 0.73,
+      "max": 0.883125
     }
   },
   "checks": {
