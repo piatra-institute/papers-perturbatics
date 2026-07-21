@@ -86,7 +86,9 @@ def plot_realization_map(results: dict, path: str) -> None:
     a1.set_title("what shows agency vs what realizes it", fontsize=10, color=INK)
     a1.legend(frameon=False, fontsize=8.5, loc="upper right")
 
-    colors = [PASSIVE if L[c] > 0.15 else NEUTRAL for c in comps]
+    # highlight by a principled rule, not a plotting threshold: red marks the pure
+    # channel, the component whose capacity share is exactly zero (dummy player)
+    colors = [PASSIVE if abs(phiC[c]) < 1e-9 else NEUTRAL for c in comps]
     a2.bar(x, [L[c] for c in comps], 0.62, color=colors)
     a2.axhline(0, color=INK, lw=0.8)
     a2.set_xticks(x)
@@ -125,7 +127,7 @@ def plot_guards(results: dict, path: str) -> None:
     a2.axhline(0, color=NEUTRAL, lw=0.9)
     a2.set_xlabel("trajectory complexity (bits)")
     a2.set_ylabel("agency evidence")
-    a2.set_title("richness does not track agency",
+    a2.set_title("complexity is no proxy for agency",
                  fontsize=10, color=INK)
     for ax in (a1, a2):
         _style(ax)

@@ -99,3 +99,11 @@ Shah, J. (2026). Causal Agent Replay: counterfactual attribution for LLM-agent f
 Kenton, Z., Kumar, R., Farquhar, S., Richens, J., MacDermott, M., and Everitt, T. (2023). Discovering agents. *Artificial Intelligence*, 322, 103963. — verified (DOI 10.1016/j.artint.2023.103963; arXiv:2208.08345). A causal, interventional criterion for agenthood, from the same group as the goal-directedness measure already cited (MacDermott et al., 2024); the closest neighbour to the whole thesis.
 
 Butlin, P., Long, R., et al. (2023). Consciousness in artificial intelligence: insights from the science of consciousness. arXiv:2308.08708. — verified (arXiv, 17 authors incl. Bengio, Birch, Chalmers). The indicator-properties program for AI consciousness; the interlocutor the consciousness section now concedes before narrowing its claim to the irreversible probe.
+
+## Neighbours added in the v8 re-audit pass (2026-07-21)
+
+Two references added on the second adversarial audit's findings. Locators web-verified 2026-07-21.
+
+Yang, Y., Huang, B., Qi, S., et al. (2025). Understanding and optimizing agentic workflows via Shapley value. arXiv:2502.00510. — verified (arXiv; 17 authors, first Yingxuan Yang; earlier version titled "Who's the MVP? A Game-Theoretic Evaluation Benchmark for Modular Attribution in LLM Agents", the CapaBench benchmark, 1,500+ workflows). Shapley values and interactions over an agent's planning, reasoning, action, and reflection modules, valued by task performance. The closest neighbour of the capacity map; the paper's remaining distinction is the paired evidence game and the reading of the difference. This is also the work the first audit's garbled "ShapleyFlow ACL" locator pointed at, distinct from Wang, Wiens and Lundberg (2021).
+
+Yeh, C.-K., Lee, K.-Y., Liu, F., and Ravikumar, P. (2022). Threading the needle of on and off-manifold value functions for Shapley explanations. *AISTATS*, PMLR 151:1485--1502. — verified (PMLR). Shapley attributions move with the chosen value function and misbehave off-manifold; grounds the paper's new coalition-validity condition (every coalition the game evaluates must be a realizable configuration; baselines are design choices the maps inherit).

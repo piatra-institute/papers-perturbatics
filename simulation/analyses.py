@@ -11,8 +11,9 @@ four facts, each a claim the paper makes precise.
      AUROC 0.50). No single probe separates every pair either: the moved goal
      exposes the route script (AUROC 1.0) but leaves the two goal-trackers
      trajectory-identical (0.50), and the blocked path exposes the planner
-     (0.78) but collapses the two wall-blind systems together (0.50). The
-     battery separates every pair; the pooled planner-vs-script AUROC is 0.95.
+     (0.79) but collapses the two wall-blind systems together (0.50). The
+     battery separates every pair; under an equal mixture of the two probes
+     the planner-vs-script AUROC is 0.95.
 
   2. The do-Shapley realization map. The planner assemblage is decomposed into
      six components (goal register, planner, memory, map, harness, persona). Each
@@ -23,18 +24,21 @@ four facts, each a claim the paper makes precise.
      is a cheap-talk dial (DECL_FRAC/(1+DECL_FRAC) identically, 0.23 at 0.3), so
      the dual map displays the identity/agency separation rather than finds it.
 
-  3. Synergy. Agency is non-additive. The planner and the map are complementary:
-     neither alone can route around an obstacle, so their do-Shapley interaction
-     index is strongly positive, and no single component "owns" the rerouting.
-     The map and the memory are substitutes, so their interaction is negative.
+  3. Synergy. Agency is non-additive. The planner and the map have a positive
+     average interaction in the capacity game: when memory is absent, only the
+     two together can route around an obstacle. The complementarity is
+     conditional, not exclusive (memory nearly substitutes for the map by
+     learning walls on contact, which is why the map-memory interaction is
+     negative), and no single component "owns" the rerouting.
 
   4. Two guards. Richness is a false friend: a chaotic walker with the highest
-     trajectory complexity has the lowest agency, so agency does not track
-     complexity. And the reading depends on the declared boundary, swept as an
+     trajectory complexity emits negative agency evidence while the simplest
+     system scores among the most agentic, so complexity is no proxy for
+     agency. And the reading depends on the declared boundary, swept as an
      enclosure (components outside the candidate unit held at their null, the
-     lesion form of the boundary question): the realized capacity is near zero
-     when the boundary is drawn around the planner alone and rises only when
-     the goal register and the map are enclosed with it.
+     lesion form of the boundary question): the realized capacity is negative
+     when the boundary encloses only the planner and its actuator and rises
+     only when the goal register and the map are enclosed with it.
 
 Everything is deterministic given the recorded seed. The models are illustrative
 and instantiate the paper's definitions; they are not fit to data. Every reported
@@ -71,10 +75,20 @@ def _neighbors(c):
     return [(c[0] + d[0], c[1] + d[1]) for d in MOVES]
 
 
+_BFS_CACHE: dict = {}
+
+
 def bfs_dist(goal, walls):
-    """Shortest-path distance from every cell to goal, respecting walls. inf if blocked."""
+    """Shortest-path distance from every cell to goal, respecting walls. inf if blocked.
+    Memoized on (goal, walls): the sweep re-visits the same few wall sets thousands of
+    times across coalitions and seeds, and the returned array is only ever read."""
+    key = (goal, frozenset(walls))
+    hit = _BFS_CACHE.get(key)
+    if hit is not None:
+        return hit
     dist = np.full((N, N), np.inf)
     if goal in walls:
+        _BFS_CACHE[key] = dist
         return dist
     dist[goal] = 0
     q = deque([goal])
@@ -85,6 +99,7 @@ def bfs_dist(goal, walls):
             if _in_grid(nb) and nb not in walls and dist[nb] == np.inf:
                 dist[nb] = dist[c] + 1
                 q.append(nb)
+    _BFS_CACHE[key] = dist
     return dist
 
 
@@ -194,11 +209,15 @@ def agency_evidence(traj, inst, probe):
     """A = sum_t [ log P(step | goal model) - log P(step | inertial model) ].
 
     Goal model: prefers steps that reduce graph distance to the true current goal
-    (wall-aware, so it rewards a detour). Inertial model: prefers steps that reduce
-    straight-line distance to the baseline goal (wall-blind, so it penalizes a
-    detour and expects the original heading). Both models are softmax policies
-    over the five action labels (four moves and stay), with invalid moves clamped
-    to stay; the likelihood is proper over action labels rather than next states
+    (wall-aware, so it rewards a detour). Passive rival: prefers steps that reduce
+    straight-line distance to the baseline goal, relaxation toward a fixed
+    attractor, blind to walls in its metric though not in its physics: both
+    models share the same physically clamped label space, so a commanded step
+    into a wall scores zero progress under both, and the comparison stays like
+    for like. Both models are softmax policies over the five action labels (four
+    moves and stay), with invalid moves clamped to stay; the observed data are
+    state transitions, from which the acted label is reconstructed (ties resolve
+    to stay), and the likelihood is proper over action labels rather than next states
     (several labels can share the stay outcome), and the two models share one
     label space, so the comparison is like for like. Marginalizing over the labels
     that share the stay outcome would change nothing: a clamped move has zero
@@ -389,6 +408,42 @@ def analysis_seed_robustness(n_seeds: int = 20):
             "planner_vs_script_block": rng_of(block_only)}
 
 
+def analysis_map_robustness(n_seeds: int = 20):
+    """The maps are properties of one drawn instance set too, and the paper's ranking
+    claims should carry their spread. Redraw the instances under seeds 0..n_seeds-1
+    and recompute both Shapley maps and the legibility term. The persona's shares are
+    theorems (constant across draws, by the pure-channel proposition); the earned
+    components move with the draw, so the claim that the persona's L is the largest
+    is an empirical ranking to be counted, not assumed."""
+    L_by_comp = {c: [] for c in COMPONENTS}
+    largest = []
+    for seed in range(n_seeds):
+        insts = make_instances(seed)
+        probes = ("move", "block")
+        full = set(COMPONENTS)
+        ref_move = {p: float(np.mean([agency_evidence(run_episode(full, i, p)[0], i, p)
+                                      for i in insts])) for p in probes}
+        decl = {p: DECL_FRAC * ref_move[p] for p in probes}
+        ref_E = {p: ref_move[p] + decl[p] for p in probes}
+        ref_C = {p: float(np.mean([capacity(run_episode(full, i, p)[0], i, p)
+                                   for i in insts])) for p in probes}
+        phi_E, _, _ = do_shapley(insts, probes, ref_E, "E", decl)
+        phi_C, _, _ = do_shapley(insts, probes, ref_C, "C", decl)
+        L = {c: phi_E[c] - phi_C[c] for c in COMPONENTS}
+        for c in COMPONENTS:
+            L_by_comp[c].append(L[c])
+        largest.append(max(COMPONENTS, key=lambda c: L[c]))
+
+    def rng_of(xs):
+        return {"min": round(min(xs), 6), "max": round(max(xs), 6)}
+
+    return {"n_seeds": n_seeds,
+            "legibility_ranges": {c: rng_of(L_by_comp[c]) for c in COMPONENTS},
+            "persona_L_largest_in": largest.count("persona"),
+            "largest_L_exceptions": {str(i): largest[i] for i in range(n_seeds)
+                                     if largest[i] != "persona"}}
+
+
 def run_invariants(insts, phi_E, phi_C, cache_E, cache_C):
     """Checks that fail loudly. Each is an identity the paper leans on: the rest
     trajectories really are identical across the three systems (checked cell by
@@ -405,6 +460,9 @@ def run_invariants(insts, phi_E, phi_C, cache_E, cache_C):
         == route_script_traj(inst, "rest")
         for inst in insts)
     assert rest_identical, "rest trajectories differ across systems"
+    # tested on the chaotic trajectories; the universal statement is derived
+    # (at rest the two per-action score vectors coincide identically), the test
+    # is a spot check of the derivation on the least goal-like walker available
     rest_zero = all(abs(agency_evidence(_chaotic_traj(inst, "rest"), inst, "rest")) < 1e-9
                     for inst in insts)
     assert rest_zero, "at rest the two models should coincide for any trajectory"
@@ -413,11 +471,16 @@ def run_invariants(insts, phi_E, phi_C, cache_E, cache_C):
     eff_E = abs(sum(phi_E.values()) - (cache_E[full] - cache_E[empty]))
     eff_C = abs(sum(phi_C.values()) - (cache_C[full] - cache_C[empty]))
     assert eff_E < 1e-9 and eff_C < 1e-9, "Shapley efficiency violated"
-    assert abs(phi_C["persona"]) < 1e-12, "persona must be a capacity dummy"
+    # the dummy property is per-coalition, not per-value: a zero Shapley value
+    # can hide cancellation, so check every marginal contribution directly
+    p = COMPONENTS.index("persona")
+    dummy_err = max(abs(cache_C[S | frozenset([p])] - cache_C[S])
+                    for S in cache_C if p not in S)
+    assert dummy_err < 1e-12, "persona must be a capacity dummy in every coalition"
     return {"rest_trajectories_identical": rest_identical,
-            "rest_evidence_zero_for_any_trajectory": rest_zero,
+            "rest_evidence_zero_on_tested_trajectories": rest_zero,
             "shapley_efficiency_max_error": round(max(eff_E, eff_C), 12),
-            "persona_capacity_dummy": True}
+            "persona_capacity_dummy_all_coalitions_max_error": round(dummy_err, 12)}
 
 
 def analysis_boundary_sweep(insts, probes, ref, decl):
@@ -426,7 +489,7 @@ def analysis_boundary_sweep(insts, probes, ref, decl):
     # the actuator sits inside every candidate acting unit; the boundary question is
     # how much of the cognitive apparatus (goal, world model, memory) is enclosed
     boundaries = [
-        ("planner", {"planner", "harness"}),
+        ("planner + harness", {"planner", "harness"}),
         ("+ goal register", {"planner", "harness", "goal_register"}),
         ("+ map, memory", {"planner", "harness", "goal_register", "map", "memory"}),
         ("+ persona", set(COMPONENTS)),
@@ -500,14 +563,16 @@ def analysis_richness_guard(insts):
 
 
 def analysis_persona_swap(insts, probes, ref, decl):
-    """Identity and functional agency separate: swapping the persona leaves realized
-    capacity unchanged; swapping the model (planner -> reactive) collapses it."""
+    """Identity and functional agency separate. No persona substitution is executed:
+    the persona is a capacity dummy by construction, so replacing it with any other
+    pure channel leaves the realized capacity identical, and the first row below is
+    that identity, not an experiment. Swapping the model (planner -> reactive) is
+    the intervention actually run, and it collapses the capacity."""
     full = set(COMPONENTS)
-    swap_persona = full            # persona relabelled: functionally identical set
     swap_model = full - {"planner"}   # same persona, planner replaced by reactive
     return {
         "capacity_full": round(nu(full, insts, probes, ref, "C", decl), 6),
-        "capacity_swap_persona_keep_model": round(nu(swap_persona, insts, probes, ref, "C", decl), 6),
+        "capacity_persona_identity": round(nu(full, insts, probes, ref, "C", decl), 6),
         "capacity_swap_model_keep_persona": round(nu(swap_model, insts, probes, ref, "C", decl), 6),
     }
 
@@ -542,6 +607,7 @@ def run() -> dict:
                  for k, vs in sorted(by_size.items())}
     checks = run_invariants(insts, phi_E, phi_C, cache_E, cache_C)
     robustness = analysis_seed_robustness()
+    map_robustness = analysis_map_robustness()
     sep = analysis_separation(insts)
     boundary = analysis_boundary_sweep(insts, probes, ref_C, decl)
     richness = analysis_richness_guard(insts)
@@ -569,6 +635,7 @@ def run() -> dict:
         "richness_guard": richness,
         "persona_swap": persona,
         "separation_robustness": robustness,
+        "map_robustness": map_robustness,
         "checks": checks,
         "_sep": sep,
     }

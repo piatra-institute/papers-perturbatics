@@ -48,11 +48,12 @@ def main() -> None:
     print("legibility L=phi_E-phi_C:", {k: round(v, 2) for k, v in rm["legibility"].items()})
     print("interaction:", {k: round(v, 2) for k, v in rm["interaction_index"].items()})
     print("boundary sweep (capacity):", results["boundary_sweep"])
-    print(f"persona: capacity full {ps['capacity_full']}, swap-persona "
-          f"{ps['capacity_swap_persona_keep_model']}, swap-model "
+    print(f"persona: capacity full {ps['capacity_full']}, persona-identity "
+          f"{ps['capacity_persona_identity']}, swap-model "
           f"{ps['capacity_swap_model_keep_persona']}")
     print("richness:", rg["systems"], "corr", rg["complexity_agency_correlation"])
     print("robustness:", results["separation_robustness"])
+    print("map robustness:", results["map_robustness"])
     print("checks:", results["checks"])
     print("wrote", OUT / "results.json")
 

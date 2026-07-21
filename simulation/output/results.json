@@ -93,7 +93,7 @@
   },
   "boundary_sweep": [
     [
-      "planner",
+      "planner + harness",
       -0.204207
     ],
     [
@@ -162,7 +162,7 @@
   },
   "persona_swap": {
     "capacity_full": 1.0,
-    "capacity_swap_persona_keep_model": 1.0,
+    "capacity_persona_identity": 1.0,
     "capacity_swap_model_keep_persona": 0.609956
   },
   "separation_robustness": {
@@ -180,10 +180,43 @@
       "max": 0.883125
     }
   },
+  "map_robustness": {
+    "n_seeds": 20,
+    "legibility_ranges": {
+      "goal_register": {
+        "min": -0.541216,
+        "max": -0.056225
+      },
+      "planner": {
+        "min": 0.0267,
+        "max": 0.268629
+      },
+      "memory": {
+        "min": 0.000492,
+        "max": 0.061104
+      },
+      "map": {
+        "min": 0.020278,
+        "max": 0.087303
+      },
+      "harness": {
+        "min": -0.040554,
+        "max": -0.024334
+      },
+      "persona": {
+        "min": 0.230769,
+        "max": 0.230769
+      }
+    },
+    "persona_L_largest_in": 19,
+    "largest_L_exceptions": {
+      "12": "planner"
+    }
+  },
   "checks": {
     "rest_trajectories_identical": true,
-    "rest_evidence_zero_for_any_trajectory": true,
+    "rest_evidence_zero_on_tested_trajectories": true,
     "shapley_efficiency_max_error": 0.0,
-    "persona_capacity_dummy": true
+    "persona_capacity_dummy_all_coalitions_max_error": 0.0
   }
 }
