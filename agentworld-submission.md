@@ -15,7 +15,7 @@ Honest caveat: the paper is a bullseye for the *agency / subjectivity / decompos
 
 ## Proposal (≤500 words, ready to paste)
 
-**Perturbatics: Reading Agency in Assemblages That Cannot Be Read at Rest**
+**Perturbatics: An Agentoscope for Reading Agency**
 
 An artificial agent reveals nothing of its agency at rest. It answers as though one mind stood behind its tokens, while what stands there is a composite of a model, a persona, a memory, a harness, permissions, and tools, and the properties worth knowing, whether it pursues a goal, whether it is competent, who authored its output, are the ones its surface cannot carry. This paper gives a method for reading them.
 
@@ -48,7 +48,7 @@ The journal is web-first and design-forward and explicitly welcomes "software...
 ## Author block to fill in
 
 ```
-Title:        Perturbatics: Reading Agency in Assemblages That Cannot Be Read at Rest
+Title:        Perturbatics: An Agentoscope for Reading Agency
 Author(s):    <name or "Piatra Institute">
 Affiliation:  <Piatra Institute, ...>
 Contact:      <email>  (lead/contact person: <name>)

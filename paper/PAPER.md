@@ -1,7 +1,7 @@
 ---
 title: |
   Perturbatics:\
-  Reading Agency in Assemblages That Cannot Be Read at Rest
+  An Agentoscope for Reading Agency
 author: PIATRA . INSTITUTE
 date: July 2026
 ---

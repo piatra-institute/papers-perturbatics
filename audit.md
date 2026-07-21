@@ -3,6 +3,10 @@
 Dated log of editorial passes and verification runs. Newest first.
 See the workspace docs (run `papers docs`): writing-pipeline.md §7 and refresh-pipeline.md.
 
+## 2026-07-21 — retitled: "Perturbatics: An Agentoscope for Reading Agency" (v8.1)
+
+Author's choice, replacing "Reading Agency in Assemblages That Cannot Be Read at Rest." The new subtitle names the instrument and teaches the coinage on first contact; the dropped clause loses nothing, since the thesis opens the abstract ("At rest, a system reveals nothing of its own agency") and survives nearly verbatim as the first section's heading, now stated at the level where its channel- and regime-relativity is given rather than over a title's absolute. Propagated everywhere the title lives: PAPER.md frontmatter (a clean two-line title page, which also retires the orphaned-wrap problem of the long subtitle), metadata.yaml, README.md opening (whose stale 0.78 was also brought to 0.79), the web listing entry, the Agentworld submission draft, and the GitHub repo description ("Piatra Papers • Perturbatics: An Agentoscope for Reading Agency"). Rebuilt, `check` PASS, web PDF and listing re-synced.
+
 ## 2026-07-21 — second adversarial re-audit (ChatGPT Pro) triaged: adopted, partially adopted, and rebutted (v8)
 
 Scope: a structured re-audit run against the v7.2 paper and code, using the R55-style prompt (reproduce, verify the prior fixes, find what remains, both axes). The audit reproduced `results.json` byte-for-byte (SHA-256 match), confirmed all v6/v7 fixes computationally, and returned a "major revision" verdict resting on one Critical finding plus a set of Major/Moderate/Minor ones. Every checkable claim was re-verified here before action; its map-robustness numbers reproduce exactly (persona L largest in 19 of 20 seeds, exception seed 12 planner L 0.268629, goal-register L range -0.541216 to -0.056225, to the sixth decimal).
