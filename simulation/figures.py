@@ -153,6 +153,57 @@ def plot_sham_control(results: dict, path: str) -> None:
     plt.close(fig)
 
 
+HUMAN = "#6a3d9a"      # the operator, when it holds goal authority
+
+
+def plot_centaur(results: dict, path: str) -> None:
+    ct = results["centaur"]
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10.0, 3.9),
+                                 gridspec_kw={"width_ratios": [1.25, 1]})
+
+    cells = [("operator", "human"), ("goal_register", "human"),
+             ("operator", "machine"), ("goal_register", "machine")]
+    phiC = [ct["maps"][a]["capacity_map"][c] for c, a in cells]
+    L = [ct["maps"][a]["legibility"][c] for c, a in cells]
+    x = np.arange(len(cells))
+    w = 0.38
+    a1.bar(x - w / 2, phiC, w, color=CAP, label=r"realized capacity  $\phi^C$")
+    a1.bar(x + w / 2, L, w, color=PASSIVE, label=r"legibility  $L$")
+    a1.axhline(0, color=INK, lw=0.8)
+    a1.axvline(1.5, color=NEUTRAL, lw=0.8, ls=":")
+    a1.set_xticks(x)
+    a1.set_xticklabels(["operator", "register", "operator", "register"], fontsize=8.5)
+    a1.annotate("human holds the goal", (0.5, 0.03), xycoords=("data", "axes fraction"),
+                ha="center", fontsize=8.5, color=HUMAN)
+    a1.annotate("machine holds the goal", (2.5, 0.03), xycoords=("data", "axes fraction"),
+                ha="center", fontsize=8.5, color=AGENT)
+    a1.set_ylabel("normalized contribution")
+    a1.set_title("the legibility follows the authority, not the substrate",
+                 fontsize=9.5, color=INK)
+    a1.legend(frameon=False, fontsize=8.5, loc="upper right")
+    a1.set_ylim(-0.25, 1.12)
+
+    pts = [(k, d) for k, d in ct["crossover_decoy_rate_by_latency"] if d is not None]
+    ks = [p[0] for p in pts]
+    ds = [p[1] for p in pts]
+    a2.plot(ks, ds, "o-", color=HUMAN, lw=1.8, ms=4)
+    first = ct["first_latency_with_a_crossover"]
+    if first is not None:
+        a2.axvspan(0, first, color=NEUTRAL, alpha=0.13)
+        a2.annotate("delay is free\n(slack in the horizon)", (first / 2, 0.62),
+                    ha="center", fontsize=8, color=NEUTRAL)
+    a2.set_xlabel("operator delay (steps before the goal is re-issued)")
+    a2.set_ylabel("decoy rate at which human authority wins")
+    a2.set_title("when a slow, sceptical authority is worth its delay",
+                 fontsize=9.5, color=INK)
+    a2.set_ylim(0, 0.85)
+    for ax in (a1, a2):
+        _style(ax)
+    fig.tight_layout()
+    fig.savefig(path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+
+
 def plot_guards(results: dict, path: str) -> None:
     bs = results["boundary_sweep"]
     rg = results["richness_guard"]["systems"]

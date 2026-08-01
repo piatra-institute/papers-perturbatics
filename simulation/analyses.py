@@ -511,6 +511,209 @@ def analysis_sham_control(insts):
             "_ev": ev, "_resp": mean_resp}
 
 
+CENTAUR_COMPONENTS = ["operator", "goal_register", "planner", "map", "memory", "harness"]
+OPERATOR_LATENCY = 6       # steps a human operator takes to notice a goal has moved
+DECOY_RATES = [i / 20 for i in range(21)]
+
+
+def _centaur_roles(authority):
+    """Goal authority is a role rather than a part. Whichever of the two candidates
+    holds it moves the goal; the other displays it and moves nothing, which makes the
+    non-holder a pure channel in the sense of the proposition above."""
+    return ("operator", "goal_register") if authority == "human" else ("goal_register", "operator")
+
+
+def run_episode_centaur(active, inst, probe, authority, latency):
+    """The same gridworld with goal authority assigned to a declared role.
+
+    Two configurations, and the difference between them is a design choice stated
+    rather than derived. Under 'machine' authority the goal register is slaved to the
+    declared target channel: it re-aims the instant a target is announced, which makes
+    it fast and makes it credulous, since a decoy announced on that channel is a
+    target as far as the register can tell. Under 'human' authority an operator who
+    knows the mission re-issues the goal instead: slower by `latency` steps, and
+    unmoved by a decoy. Everything downstream of the goal, the planner, the map, the
+    memory, and the executor, is identical in both.
+    """
+    holder, _channel = _centaur_roles(authority)
+    start, g0, g1 = inst["start"], inst["g0"], inst["g1"]
+    true_walls = inst["walls"] if probe == "block" else set()
+    if authority == "machine":
+        goal_moves = probe in ("move", "sham") and holder in active
+        lat = 0
+    else:
+        goal_moves = probe == "move" and holder in active
+        lat = latency
+
+    known = set()
+    if "map" in active:
+        known |= true_walls
+    traj = [start]
+    c = start
+    for t in range(T):
+        internal_goal = g1 if (goal_moves and t >= lat) else g0
+        if "planner" in active:
+            dist = bfs_dist(internal_goal, known)
+            best, best_d = c, dist[c] if dist[c] < np.inf else np.inf
+            for d in MOVES[:4]:
+                nb = (c[0] + d[0], c[1] + d[1])
+                if _in_grid(nb) and nb not in known and dist[nb] < best_d:
+                    best, best_d = nb, dist[nb]
+            step = best
+            if step in true_walls:
+                if "memory" in active:
+                    known.add(step)
+                    step = c
+                else:
+                    step = c
+        else:
+            best, best_d = c, manhattan(c, internal_goal)
+            for d in MOVES[:4]:
+                nb = (c[0] + d[0], c[1] + d[1])
+                if _in_grid(nb) and manhattan(nb, internal_goal) < best_d:
+                    best, best_d = nb, manhattan(nb, internal_goal)
+            step = best if best not in true_walls else c
+        if "harness" not in active and t % 2 == 1:
+            step = c
+        c = step
+        traj.append(c)
+    return traj
+
+
+def _shapley(comps, value_fn):
+    """Exact Shapley values over a full coalition cache of `value_fn`."""
+    n = len(comps)
+    cache = {}
+    for r in range(n + 1):
+        for S in combinations(range(n), r):
+            cache[frozenset(S)] = value_fn([comps[i] for i in S])
+    from math import factorial
+    phi = {}
+    for i in range(n):
+        others = [j for j in range(n) if j != i]
+        val = 0.0
+        for r in range(len(others) + 1):
+            w = factorial(r) * factorial(n - r - 1) / factorial(n)
+            for S in combinations(others, r):
+                fs = frozenset(S)
+                val += w * (cache[fs | {i}] - cache[fs])
+        phi[comps[i]] = float(val)
+    return phi, cache
+
+
+def nu_centaur(active, insts, probes, ref, kind, decl, authority, latency):
+    """Interventional value function for the centaur assemblage. The component that
+    does not hold goal authority contributes its declaration to the evidence and
+    nothing to the trajectory."""
+    active = set(active)
+    _holder, channel = _centaur_roles(authority)
+    per = []
+    for probe in probes:
+        vals = []
+        for inst in insts:
+            traj = run_episode_centaur(active, inst, probe, authority, latency)
+            if kind == "E":
+                a = agency_evidence(traj, inst, probe)
+                if channel in active:
+                    a += decl[probe]
+                vals.append(a)
+            else:
+                vals.append(capacity(traj, inst, probe))
+        per.append(float(np.mean(vals)) / ref[probe])
+    return float(np.mean(per))
+
+
+def _centaur_raw_capacity(active, insts, probe, authority, latency):
+    """Unnormalised realized capacity, so the two authorities can be compared to each
+    other rather than each to itself."""
+    return float(np.mean([capacity(run_episode_centaur(set(active), i, probe, authority, latency), i, probe)
+                          for i in insts]))
+
+
+def analysis_centaur(insts, latency: int = OPERATOR_LATENCY):
+    """The centaur condition: the human as a switched component rather than as the
+    reader of the maps.
+
+    Two results. The first is that the legibility term follows the authority and not
+    the substrate. Whichever of the operator and the goal register holds the goal
+    realizes the capacity; the other announces it, realizes none, and takes the whole
+    of its evidence share back as legibility. The number is the same in both
+    configurations, so the proposition that convicts a narrating persona of agency
+    theater convicts a supervising human by the same arithmetic.
+
+    The second is a crossover. Machine authority is immediate and credulous, human
+    authority is delayed and sceptical, so which to prefer depends on how often the
+    environment announces a target that is not one. Sweeping the decoy rate locates
+    the rate at which a given operator delay starts paying for itself.
+    """
+    probes = ("move", "block")
+    full = set(CENTAUR_COMPONENTS)
+    maps = {}
+    for authority in ("human", "machine"):
+        holder, channel = _centaur_roles(authority)
+        ref_move = {p: float(np.mean([agency_evidence(run_episode_centaur(full, i, p, authority, latency), i, p)
+                                      for i in insts])) for p in probes}
+        decl = {p: DECL_FRAC * ref_move[p] for p in probes}
+        ref_E = {p: ref_move[p] + decl[p] for p in probes}
+        ref_C = {p: float(np.mean([capacity(run_episode_centaur(full, i, p, authority, latency), i, p)
+                                   for i in insts])) for p in probes}
+        phi_E, _ = _shapley(CENTAUR_COMPONENTS,
+                            lambda S: nu_centaur(S, insts, probes, ref_E, "E", decl, authority, latency))
+        phi_C, _ = _shapley(CENTAUR_COMPONENTS,
+                            lambda S: nu_centaur(S, insts, probes, ref_C, "C", decl, authority, latency))
+        maps[authority] = {
+            "authority_holder": holder,
+            "pure_channel": channel,
+            "evidence_map": {k: round(v, 6) for k, v in phi_E.items()},
+            "capacity_map": {k: round(v, 6) for k, v in phi_C.items()},
+            "legibility": {c: round(phi_E[c] - phi_C[c], 6) for c in CENTAUR_COMPONENTS},
+        }
+
+    # The crossover. In a regime that is a mixture of genuine goal moves and decoys,
+    # expected capacity is linear in the decoy rate for both authorities, so the rate
+    # at which the slower and more sceptical authority overtakes the faster and more
+    # credulous one is solved rather than scanned. It exists only once the operator's
+    # delay costs something, which it does not while the horizon has slack, so the
+    # answer is a curve over the delay rather than a single rate.
+    def _crossover(lat):
+        hm = _centaur_raw_capacity(full, insts, "move", "human", lat)
+        hs = _centaur_raw_capacity(full, insts, "sham", "human", lat)
+        mm = _centaur_raw_capacity(full, insts, "move", "machine", 0)
+        ms = _centaur_raw_capacity(full, insts, "sham", "machine", 0)
+        denom = (hs - ms) - (hm - mm)
+        if abs(denom) < 1e-12:
+            return None, (hm, hs, mm, ms)
+        d = (mm - hm) / denom
+        return (round(d, 6) if 0.0 <= d <= 1.0 else None), (hm, hs, mm, ms)
+
+    latencies = list(range(0, T + 1, 2))
+    crossovers = []
+    for k in latencies:
+        d, _ = _crossover(k)
+        crossovers.append((k, d))
+    # the first delay at which handing goal authority to the human costs anything at
+    # all, and so the first at which the question of who should hold it has an answer
+    first_costly = next((k for k, d in crossovers if d is not None and d > 0.0), None)
+    d_here, (hm, hs, mm, ms) = _crossover(latency)
+    curves = {
+        "human": [round((1 - d) * hm + d * hs, 6) for d in DECOY_RATES],
+        "machine": [round((1 - d) * mm + d * ms, 6) for d in DECOY_RATES],
+    }
+    return {
+        "latency": latency,
+        "maps": maps,
+        "capacity_by_probe": {"human": {"move": round(hm, 6), "sham": round(hs, 6)},
+                              "machine": {"move": round(mm, 6), "sham": round(ms, 6)}},
+        "decoy_rates": DECOY_RATES,
+        "expected_capacity_by_decoy_rate": curves,
+        "crossover_decoy_rate_at_reported_latency": d_here,
+        "crossover_decoy_rate_by_latency": crossovers,
+        "first_latency_with_a_crossover": first_costly,
+        "human_capacity_by_latency_no_decoys": [
+            (k, round(_centaur_raw_capacity(full, insts, "move", "human", k), 6)) for k in latencies],
+    }
+
+
 def analysis_seed_robustness(n_seeds: int = 20):
     """The reported AUROCs are properties of one drawn instance set. Redraw the
     instances under seeds 0..n_seeds-1 and report the range of the pairwise
@@ -766,6 +969,19 @@ def run() -> dict:
     richness = analysis_richness_guard(insts)
     persona = analysis_persona_swap(insts, probes, ref_C, decl)
     sham = analysis_sham_control(insts)
+    centaur = analysis_centaur(insts)
+    # the legibility of the component that does not hold goal authority is the same
+    # number whether that component is a human supervisor or a machine register: the
+    # instrument reads the role and is indifferent to the substrate filling it
+    channel_L = [centaur["maps"][a]["legibility"][centaur["maps"][a]["pure_channel"]]
+                 for a in ("human", "machine")]
+    centaur_symmetry = abs(channel_L[0] - channel_L[1])
+    assert centaur_symmetry < 1e-9, "the channel's legibility must not depend on its substrate"
+    # and it is the persona's number, because it is the same proposition
+    centaur_matches_persona = abs(channel_L[0] - legibility["persona"])
+    assert centaur_matches_persona < 1e-6, "channel legibility must equal the pure-channel value"
+    checks["centaur_channel_legibility_substrate_gap"] = round(centaur_symmetry, 12)
+    checks["centaur_channel_matches_persona_gap"] = round(centaur_matches_persona, 12)
     return {
         "note": "Illustrative gridworld; components held at their null by do-intervention; not fit to data. Deterministic.",
         "params": {"seed": SEED, "grid": N, "steps": T, "beta": BETA,
@@ -788,6 +1004,7 @@ def run() -> dict:
         "enclosure_landscape_capacity_by_size": landscape,
         "richness_guard": richness,
         "sham_control": {k: v for k, v in sham.items() if not k.startswith("_")},
+        "centaur": centaur,
         "persona_swap": persona,
         "separation_robustness": robustness,
         "map_robustness": map_robustness,

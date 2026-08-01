@@ -29,11 +29,12 @@ def main() -> None:
     results = run()
     (OUT / "results.json").write_text(json.dumps(_strip_private(results), indent=2))
     from figures import (plot_separation, plot_realization_map, plot_guards,
-                         plot_sham_control)
+                         plot_sham_control, plot_centaur)
     plot_separation(results, str(OUT / "figures" / "separation.png"))
     plot_realization_map(results, str(OUT / "figures" / "realization_map.png"))
     plot_guards(results, str(OUT / "figures" / "guards.png"))
     plot_sham_control(results, str(OUT / "figures" / "sham_control.png"))
+    plot_centaur(results, str(OUT / "figures" / "centaur.png"))
 
     sep = results["separation"]
     rm = results["realization_map"]
@@ -59,6 +60,12 @@ def main() -> None:
     print("sham selectivity:", sc["selectivity_move_minus_sham"])
     for s, v in sc["verdict"].items():
         print(f"  {s:15s} {v}")
+    ct = results["centaur"]
+    for a in ("human", "machine"):
+        m = ct["maps"][a]
+        print(f"centaur {a:8s} holder={m['authority_holder']:14s} "
+              f"channel={m['pure_channel']:14s} L(channel)={m['legibility'][m['pure_channel']]}")
+    print("centaur crossover by latency:", ct["crossover_decoy_rate_by_latency"])
     print("robustness:", results["separation_robustness"])
     print("map robustness:", results["map_robustness"])
     print("checks:", results["checks"])

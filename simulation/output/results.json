@@ -212,6 +212,322 @@
       "marker_tracker": "responds to probe and sham alike: change-sensitive"
     }
   },
+  "centaur": {
+    "latency": 6,
+    "maps": {
+      "human": {
+        "authority_holder": "operator",
+        "pure_channel": "goal_register",
+        "evidence_map": {
+          "operator": 0.736696,
+          "goal_register": 0.230769,
+          "planner": 0.36873,
+          "map": 0.114375,
+          "memory": 0.083599,
+          "harness": -0.030927
+        },
+        "capacity_map": {
+          "operator": 0.813046,
+          "goal_register": 0.0,
+          "planner": 0.252024,
+          "map": 0.069028,
+          "memory": 0.059908,
+          "harness": 0.009159
+        },
+        "legibility": {
+          "operator": -0.076351,
+          "goal_register": 0.230769,
+          "planner": 0.116706,
+          "map": 0.045347,
+          "memory": 0.023691,
+          "harness": -0.040086
+        }
+      },
+      "machine": {
+        "authority_holder": "goal_register",
+        "pure_channel": "operator",
+        "evidence_map": {
+          "operator": 0.230769,
+          "goal_register": 0.700953,
+          "planner": 0.36873,
+          "map": 0.114375,
+          "memory": 0.083599,
+          "harness": -0.021132
+        },
+        "capacity_map": {
+          "operator": 0.0,
+          "goal_register": 0.813046,
+          "planner": 0.252024,
+          "map": 0.069028,
+          "memory": 0.059908,
+          "harness": 0.009159
+        },
+        "legibility": {
+          "operator": 0.230769,
+          "goal_register": -0.112094,
+          "planner": 0.116706,
+          "map": 0.045347,
+          "memory": 0.023691,
+          "harness": -0.030292
+        }
+      }
+    },
+    "capacity_by_probe": {
+      "human": {
+        "move": 1.0,
+        "sham": 1.0
+      },
+      "machine": {
+        "move": 1.0,
+        "sham": 0.348407
+      }
+    },
+    "decoy_rates": [
+      0.0,
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95,
+      1.0
+    ],
+    "expected_capacity_by_decoy_rate": {
+      "human": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "machine": [
+        1.0,
+        0.96742,
+        0.934841,
+        0.902261,
+        0.869681,
+        0.837102,
+        0.804522,
+        0.771942,
+        0.739363,
+        0.706783,
+        0.674203,
+        0.641624,
+        0.609044,
+        0.576464,
+        0.543885,
+        0.511305,
+        0.478725,
+        0.446146,
+        0.413566,
+        0.380987,
+        0.348407
+      ]
+    },
+    "crossover_decoy_rate_at_reported_latency": 0.0,
+    "crossover_decoy_rate_by_latency": [
+      [
+        0,
+        0.0
+      ],
+      [
+        2,
+        0.0
+      ],
+      [
+        4,
+        0.0
+      ],
+      [
+        6,
+        0.0
+      ],
+      [
+        8,
+        0.0
+      ],
+      [
+        10,
+        0.0
+      ],
+      [
+        12,
+        0.0
+      ],
+      [
+        14,
+        0.0
+      ],
+      [
+        16,
+        0.0
+      ],
+      [
+        18,
+        0.0
+      ],
+      [
+        20,
+        0.0
+      ],
+      [
+        22,
+        0.048667
+      ],
+      [
+        24,
+        0.118388
+      ],
+      [
+        26,
+        0.216415
+      ],
+      [
+        28,
+        0.312321
+      ],
+      [
+        30,
+        0.403129
+      ],
+      [
+        32,
+        0.490813
+      ],
+      [
+        34,
+        0.562429
+      ],
+      [
+        36,
+        0.623576
+      ],
+      [
+        38,
+        0.675091
+      ],
+      [
+        40,
+        0.714203
+      ]
+    ],
+    "first_latency_with_a_crossover": 22,
+    "human_capacity_by_latency_no_decoys": [
+      [
+        0,
+        1.0
+      ],
+      [
+        2,
+        1.0
+      ],
+      [
+        4,
+        1.0
+      ],
+      [
+        6,
+        1.0
+      ],
+      [
+        8,
+        1.0
+      ],
+      [
+        10,
+        1.0
+      ],
+      [
+        12,
+        1.0
+      ],
+      [
+        14,
+        1.0
+      ],
+      [
+        16,
+        1.0
+      ],
+      [
+        18,
+        1.0
+      ],
+      [
+        20,
+        1.0
+      ],
+      [
+        22,
+        0.966667
+      ],
+      [
+        24,
+        0.9125
+      ],
+      [
+        26,
+        0.82004
+      ],
+      [
+        28,
+        0.704067
+      ],
+      [
+        30,
+        0.559912
+      ],
+      [
+        32,
+        0.371919
+      ],
+      [
+        34,
+        0.162479
+      ],
+      [
+        36,
+        -0.079413
+      ],
+      [
+        38,
+        -0.353869
+      ],
+      [
+        40,
+        -0.628325
+      ]
+    ]
+  },
   "persona_swap": {
     "capacity_full": 1.0,
     "capacity_persona_identity": 1.0,
@@ -273,6 +589,8 @@
     "sham_leaves_every_coalition_at_rest": true,
     "marker_tracker_hidden_from_declared_battery": true,
     "sham_separates_marker_tracker": true,
-    "move_probe_evidence_vs_marker_rival_max_abs": 0.0
+    "move_probe_evidence_vs_marker_rival_max_abs": 0.0,
+    "centaur_channel_legibility_substrate_gap": 0.0,
+    "centaur_channel_matches_persona_gap": 0.0
   }
 }
