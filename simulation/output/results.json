@@ -160,6 +160,58 @@
     },
     "complexity_agency_correlation": -0.069242
   },
+  "sham_control": {
+    "auroc_reactive_vs_marker_tracker_by_probe": {
+      "rest": 0.5,
+      "move": 0.5,
+      "block": 0.5,
+      "sham": 1.0
+    },
+    "mean_response_to_probe": {
+      "planner": {
+        "rest": 0.0,
+        "move": 0.841463,
+        "block": 0.295732,
+        "sham": 0.0
+      },
+      "reactive": {
+        "rest": 0.0,
+        "move": 0.841463,
+        "block": 0.878659,
+        "sham": 0.0
+      },
+      "route_script": {
+        "rest": 0.0,
+        "move": 0.0,
+        "block": 0.878659,
+        "sham": 0.0
+      },
+      "marker_tracker": {
+        "rest": 0.0,
+        "move": 0.841463,
+        "block": 0.878659,
+        "sham": 0.841463
+      }
+    },
+    "selectivity_move_minus_sham": {
+      "planner": 0.841463,
+      "reactive": 0.841463,
+      "route_script": 0.0,
+      "marker_tracker": 0.0
+    },
+    "largest_response_to_any_probe": {
+      "planner": 0.841463,
+      "reactive": 0.878659,
+      "route_script": 0.878659,
+      "marker_tracker": 0.878659
+    },
+    "verdict": {
+      "planner": "responds to the probe and withholds under the sham: selective",
+      "reactive": "responds to the probe and withholds under the sham: selective",
+      "route_script": "silent under both: this pair is uninformative, and the capability is established elsewhere in the battery",
+      "marker_tracker": "responds to probe and sham alike: change-sensitive"
+    }
+  },
   "persona_swap": {
     "capacity_full": 1.0,
     "capacity_persona_identity": 1.0,
@@ -217,6 +269,10 @@
     "rest_trajectories_identical": true,
     "rest_evidence_zero_on_tested_trajectories": true,
     "shapley_efficiency_max_error": 0.0,
-    "persona_capacity_dummy_all_coalitions_max_error": 0.0
+    "persona_capacity_dummy_all_coalitions_max_error": 0.0,
+    "sham_leaves_every_coalition_at_rest": true,
+    "marker_tracker_hidden_from_declared_battery": true,
+    "sham_separates_marker_tracker": true,
+    "move_probe_evidence_vs_marker_rival_max_abs": 0.0
   }
 }

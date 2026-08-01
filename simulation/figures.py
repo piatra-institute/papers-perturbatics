@@ -105,6 +105,54 @@ def plot_realization_map(results: dict, path: str) -> None:
     plt.close(fig)
 
 
+SHAM = "#8a6d3b"       # the matched sham condition
+
+
+def plot_sham_control(results: dict, path: str) -> None:
+    sc = results["sham_control"]
+    auroc = sc["auroc_reactive_vs_marker_tracker_by_probe"]
+    resp = sc["mean_response_to_probe"]
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.6, 3.8),
+                                 gridspec_kw={"width_ratios": [1, 1.25]})
+
+    probes = ["rest", "move", "block", "sham"]
+    vals = [auroc[p] for p in probes]
+    cols = [SHAM if p == "sham" else NEUTRAL for p in probes]
+    a1.bar(range(len(probes)), vals, 0.6, color=cols)
+    a1.axhline(0.5, color=INK, lw=0.9, ls="--")
+    a1.set_xticks(range(len(probes)))
+    a1.set_xticklabels(probes, fontsize=9)
+    a1.set_ylim(0, 1.05)
+    a1.set_ylabel("AUROC, goal tracker vs marker tracker")
+    a1.set_title("the declared battery does not reach the mimic", fontsize=10, color=INK)
+
+    systems = ["planner", "reactive", "route_script", "marker_tracker"]
+    x = np.arange(len(systems))
+    w = 0.38
+    a2.bar(x - w / 2, [resp[s]["move"] for s in systems], w, color=AGENT,
+           label="response to the moved goal")
+    a2.bar(x + w / 2, [resp[s]["sham"] for s in systems], w, color=SHAM,
+           label="response to the matched sham")
+    # a system silent under both leaves two empty slots, which reads as missing data
+    # rather than as the finding it is; say so on the panel
+    for k, s in enumerate(systems):
+        if resp[s]["move"] < 1e-9 and resp[s]["sham"] < 1e-9:
+            a2.annotate("silent under\nboth", xy=(k, 0.02), fontsize=8, color=NEUTRAL,
+                        ha="center", va="bottom")
+    a2.set_xticks(x)
+    a2.set_xticklabels([s.replace("_", "\n") for s in systems], fontsize=8)
+    a2.set_ylim(0, 1.12)
+    a2.set_ylabel("fraction of cells departing the rest path")
+    a2.set_title("three ways to fail: no response, equal response, selective response",
+                 fontsize=9.5, color=INK)
+    a2.legend(frameon=False, fontsize=8.5, loc="upper right")
+    for ax in (a1, a2):
+        _style(ax)
+    fig.tight_layout()
+    fig.savefig(path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+
+
 def plot_guards(results: dict, path: str) -> None:
     bs = results["boundary_sweep"]
     rg = results["richness_guard"]["systems"]

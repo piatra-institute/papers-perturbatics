@@ -40,6 +40,23 @@ four facts, each a claim the paper makes precise.
      when the boundary encloses only the planner and its actuator and rises
      only when the goal register and the map are enclosed with it.
 
+  5. The matched sham, and the mimic the battery cannot reach. A fourth system
+     tracks the cell where the target marker was last seen, with no goal
+     register and no notion that the marker denotes a goal. Under the moved
+     goal the marker moves because the goal moved, so the goal model and the
+     marker model are the same model and the probe's evidence about the pair is
+     exactly zero; the marker tracker is trajectory-identical to the reactive
+     controller at rest, under the moved goal, and under the blocked path. The
+     whole declared battery leaves the pair untouched. The matched sham, a
+     decoy marker at the same cell while the goal stays put, separates them,
+     and it separates them because it is the one intervention that dissociates
+     the marker from the goal. The three systems that fail here fail in three
+     different ways, which is why the sham is reported beside a response
+     measure: the route script does not respond at all (an incapacity), the
+     marker tracker responds to the probe and responds identically to the sham
+     (a disposition without selectivity), and the goal-directed systems respond
+     to the probe and not to the sham.
+
 Everything is deterministic given the recorded seed. The models are illustrative
 and instantiate the paper's definitions; they are not fit to data. Every reported
 number is a key in results.json.
@@ -205,8 +222,38 @@ def route_script_traj(inst, probe):
     return traj
 
 
-def agency_evidence(traj, inst, probe):
-    """A = sum_t [ log P(step | goal model) - log P(step | inertial model) ].
+def marker_tracker_traj(inst, probe):
+    """The change-tracking mimic. It descends, wall-blind, toward the cell where the
+    target marker was last seen. It holds no goal register and has no notion that the
+    marker denotes a goal, so it cannot tell a goal that moved from a decoy that
+    appeared. Same physics as every other system: a step into a wall leaves it in
+    place. Under 'rest', 'move' and 'block' it is trajectory-identical to the reactive
+    controller, which is asserted cell by cell in the invariants rather than claimed;
+    under the sham it walks to the decoy while every goal-directed system stays."""
+    marker = inst["g1"] if probe in ("move", "sham") else inst["g0"]
+    true_walls = inst["walls"] if probe == "block" else set()
+    c = inst["start"]
+    traj = [c]
+    for _ in range(T):
+        best, best_d = c, manhattan(c, marker)
+        for d in MOVES[:4]:
+            nb = (c[0] + d[0], c[1] + d[1])
+            if _in_grid(nb) and manhattan(nb, marker) < best_d:
+                best, best_d = nb, manhattan(nb, marker)
+        c = best if best not in true_walls else c
+        traj.append(c)
+    return traj
+
+
+def _auroc(pos, neg):
+    pos, neg = np.array(pos), np.array(neg)
+    wins = float((pos[:, None] > neg[None, :]).sum())
+    ties = float((pos[:, None] == neg[None, :]).sum())
+    return float((wins + 0.5 * ties) / (len(pos) * len(neg)))
+
+
+def agency_evidence(traj, inst, probe, rival="inertial"):
+    """A = sum_t [ log P(step | goal model) - log P(step | rival model) ].
 
     Goal model: prefers steps that reduce graph distance to the true current goal
     (wall-aware, so it rewards a detour). Passive rival: prefers steps that reduce
@@ -223,9 +270,18 @@ def agency_evidence(traj, inst, probe):
     that share the stay outcome would change nothing: a clamped move has zero
     progress under both models, the same score the stay label has, so the summed
     stay mass is k*exp(0) in both numerators and the log-ratio, the only quantity
-    used, is invariant to the marginalization."""
+    used, is invariant to the marginalization.
+
+    `rival` names the model in the denominator. 'inertial' is the paper's passive
+    account, descent toward the frozen baseline goal. 'marker' is the change-tracking
+    mimic added by the sham control: descent toward the cell where the target marker
+    was last seen, which is the moved goal under the 'move' probe and the decoy under
+    the sham. Under 'move' the marker and the goal are the same cell, so the two
+    models in the ratio are one model and A is identically zero; that exact zero is
+    the point of the control rather than a numerical accident."""
     g0, g1 = inst["g0"], inst["g1"]
     true_goal = g1 if probe == "move" else g0
+    marker = g1 if probe in ("move", "sham") else g0
     walls = inst["walls"] if probe == "block" else set()
     gdist = bfs_dist(true_goal, walls)
 
@@ -239,6 +295,8 @@ def agency_evidence(traj, inst, probe):
             if model == "goal":
                 prog = (gdist[c] if gdist[c] < np.inf else 3 * N) - \
                        (gdist[nb] if gdist[nb] < np.inf else 3 * N)
+            elif model == "marker":   # descent toward the last-seen marker, wall-blind
+                prog = manhattan(c, marker) - manhattan(nb, marker)
             else:  # inertial: straight-line progress to baseline goal, wall-blind
                 prog = manhattan(c, g0) - manhattan(nb, g0)
             scores.append(BETA * prog)
@@ -252,7 +310,7 @@ def agency_evidence(traj, inst, probe):
 
     A = 0.0
     for t in range(len(traj) - 1):
-        A += logp(traj[t], traj[t + 1], "goal") - logp(traj[t], traj[t + 1], "inertial")
+        A += logp(traj[t], traj[t + 1], "goal") - logp(traj[t], traj[t + 1], rival)
     return A
 
 
@@ -358,12 +416,7 @@ def analysis_separation(insts):
             for s in ev:
                 ev[s][probe].append(agency_evidence(traj(s, inst, probe), inst, probe))
 
-    def auroc(pos, neg):
-        pos, neg = np.array(pos), np.array(neg)
-        wins = float((pos[:, None] > neg[None, :]).sum())
-        ties = float((pos[:, None] == neg[None, :]).sum())
-        return float((wins + 0.5 * ties) / (len(pos) * len(neg)))
-
+    auroc = _auroc
     pairs = [("planner", "script"), ("planner", "reactive"), ("reactive", "script")]
     auroc_rest_pairs = {f"{a}_vs_{b}": round(auroc(ev[a]["rest"], ev[b]["rest"]), 6)
                         for a, b in pairs}
@@ -385,6 +438,77 @@ def analysis_separation(insts):
         "_probe_planner": pooled["planner"], "_probe_passive": pooled["script"],
         "_probe_reactive": pooled["reactive"],
     }
+
+
+def analysis_sham_control(insts):
+    """Fact 5: the matched sham, and the mimic the declared battery cannot reach.
+
+    Two readouts, because the sham answers a different question from the battery.
+
+    The first is model evidence against the change-tracking rival. Under the moved
+    goal the goal model and the marker model are the same model, so the log ratio is
+    identically zero and the probe carries no information about the pair; under the
+    sham they come apart. Reported as the AUROC separating the reactive controller
+    (which tracks a goal) from the marker tracker (which tracks a change) at each
+    probe, scored against the marker rival.
+
+    The second is a response measure, the fraction of trajectory cells at which a
+    system departs from its own rest path. Selectivity is the response to the
+    relevant probe less the response to the matched sham, and it is what tells the
+    three failure modes apart: a system that responds to neither may simply be
+    incapable, a system that responds to both is change-sensitive rather than
+    goal-directed, and only a system that responds to the probe and withholds under
+    the sham has shown the disposition the probe was built to elicit."""
+    all_comps = set(COMPONENTS)
+    reactive = {"goal_register", "map", "harness"}
+    systems = ("planner", "reactive", "route_script", "marker_tracker")
+    probes = ("rest", "move", "block", "sham")
+
+    def traj(system, inst, probe):
+        if system == "route_script":
+            return route_script_traj(inst, probe)
+        if system == "marker_tracker":
+            return marker_tracker_traj(inst, probe)
+        active = all_comps if system == "planner" else reactive
+        return run_episode(active, inst, probe)[0]
+
+    ev = {s: {p: [] for p in probes} for s in systems}
+    resp = {s: {p: [] for p in probes} for s in systems}
+    for inst in insts:
+        rest = {s: traj(s, inst, "rest") for s in systems}
+        for p in probes:
+            for s in systems:
+                tr = traj(s, inst, p)
+                ev[s][p].append(agency_evidence(tr, inst, p, rival="marker"))
+                resp[s][p].append(float(np.mean([a != b for a, b in zip(tr, rest[s])])))
+
+    auroc_marker_rival = {p: round(_auroc(ev["reactive"][p], ev["marker_tracker"][p]), 6)
+                          for p in probes}
+    mean_resp = {s: {p: round(float(np.mean(resp[s][p])), 6) for p in probes}
+                 for s in systems}
+    selectivity = {s: round(mean_resp[s]["move"] - mean_resp[s]["sham"], 6) for s in systems}
+    # the reading a bare selectivity number cannot give: zero from no response at all
+    # is an incapacity, zero from equal response is a disposition without selectivity.
+    # A system silent under both is only diagnosed once some probe has moved it at
+    # all, which is what the capability column records.
+    capability = {s: round(max(mean_resp[s][p] for p in probes), 6) for s in systems}
+    verdict = {}
+    for s in systems:
+        if mean_resp[s]["move"] < 1e-9 and mean_resp[s]["sham"] < 1e-9:
+            verdict[s] = ("silent under both: this pair is uninformative, and the "
+                          "capability is established elsewhere in the battery"
+                          if capability[s] > 1e-9 else
+                          "silent throughout: capability never established")
+        elif selectivity[s] < 1e-9:
+            verdict[s] = "responds to probe and sham alike: change-sensitive"
+        else:
+            verdict[s] = "responds to the probe and withholds under the sham: selective"
+    return {"auroc_reactive_vs_marker_tracker_by_probe": auroc_marker_rival,
+            "mean_response_to_probe": mean_resp,
+            "selectivity_move_minus_sham": selectivity,
+            "largest_response_to_any_probe": capability,
+            "verdict": verdict,
+            "_ev": ev, "_resp": mean_resp}
 
 
 def analysis_seed_robustness(n_seeds: int = 20):
@@ -477,10 +601,39 @@ def run_invariants(insts, phi_E, phi_C, cache_E, cache_C):
     dummy_err = max(abs(cache_C[S | frozenset([p])] - cache_C[S])
                     for S in cache_C if p not in S)
     assert dummy_err < 1e-12, "persona must be a capacity dummy in every coalition"
+    # the sham is a sham: for every coalition it leaves the episode exactly as it was
+    # at rest, which is what makes it matched rather than a second probe in disguise
+    sham_inert = all(
+        run_episode(set(S), inst, "sham")[0] == run_episode(set(S), inst, "rest")[0]
+        for inst in insts
+        for r in range(len(COMPONENTS) + 1)
+        for S in combinations(COMPONENTS, r))
+    assert sham_inert, "the sham must leave every coalition's episode at its rest value"
+    # the marker tracker is invisible to the whole declared battery: it is
+    # trajectory-identical to the reactive controller at rest, under the moved goal,
+    # and under the blocked path, and departs only under the sham
+    reactive_set = {"goal_register", "map", "harness"}
+    mimic_hidden = all(
+        marker_tracker_traj(inst, probe) == run_episode(reactive_set, inst, probe)[0]
+        for inst in insts for probe in ("rest", "move", "block"))
+    assert mimic_hidden, "marker tracker must match the reactive controller on the battery"
+    mimic_shown = all(
+        marker_tracker_traj(inst, "sham") != run_episode(reactive_set, inst, "sham")[0]
+        for inst in insts)
+    assert mimic_shown, "the sham must separate the marker tracker from the goal tracker"
+    # and against the marker rival the moved goal carries exactly zero evidence,
+    # because under it the goal model and the marker model are one model
+    move_zero = float(max(abs(agency_evidence(marker_tracker_traj(inst, "move"), inst,
+                                              "move", rival="marker")) for inst in insts))
+    assert move_zero < 1e-9, "moved goal must be uninformative against the marker rival"
     return {"rest_trajectories_identical": rest_identical,
             "rest_evidence_zero_on_tested_trajectories": rest_zero,
             "shapley_efficiency_max_error": round(max(eff_E, eff_C), 12),
-            "persona_capacity_dummy_all_coalitions_max_error": round(dummy_err, 12)}
+            "persona_capacity_dummy_all_coalitions_max_error": round(dummy_err, 12),
+            "sham_leaves_every_coalition_at_rest": sham_inert,
+            "marker_tracker_hidden_from_declared_battery": mimic_hidden,
+            "sham_separates_marker_tracker": mimic_shown,
+            "move_probe_evidence_vs_marker_rival_max_abs": round(move_zero, 12)}
 
 
 def analysis_boundary_sweep(insts, probes, ref, decl):
@@ -612,6 +765,7 @@ def run() -> dict:
     boundary = analysis_boundary_sweep(insts, probes, ref_C, decl)
     richness = analysis_richness_guard(insts)
     persona = analysis_persona_swap(insts, probes, ref_C, decl)
+    sham = analysis_sham_control(insts)
     return {
         "note": "Illustrative gridworld; components held at their null by do-intervention; not fit to data. Deterministic.",
         "params": {"seed": SEED, "grid": N, "steps": T, "beta": BETA,
@@ -633,9 +787,11 @@ def run() -> dict:
         "boundary_sweep": boundary,
         "enclosure_landscape_capacity_by_size": landscape,
         "richness_guard": richness,
+        "sham_control": {k: v for k, v in sham.items() if not k.startswith("_")},
         "persona_swap": persona,
         "separation_robustness": robustness,
         "map_robustness": map_robustness,
         "checks": checks,
         "_sep": sep,
+        "_sham": sham,
     }

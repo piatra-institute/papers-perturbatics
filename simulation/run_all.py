@@ -28,10 +28,12 @@ def main() -> None:
     (OUT / "figures").mkdir(parents=True, exist_ok=True)
     results = run()
     (OUT / "results.json").write_text(json.dumps(_strip_private(results), indent=2))
-    from figures import plot_separation, plot_realization_map, plot_guards
+    from figures import (plot_separation, plot_realization_map, plot_guards,
+                         plot_sham_control)
     plot_separation(results, str(OUT / "figures" / "separation.png"))
     plot_realization_map(results, str(OUT / "figures" / "realization_map.png"))
     plot_guards(results, str(OUT / "figures" / "guards.png"))
+    plot_sham_control(results, str(OUT / "figures" / "sham_control.png"))
 
     sep = results["separation"]
     rm = results["realization_map"]
@@ -52,6 +54,11 @@ def main() -> None:
           f"{ps['capacity_persona_identity']}, swap-model "
           f"{ps['capacity_swap_model_keep_persona']}")
     print("richness:", rg["systems"], "corr", rg["complexity_agency_correlation"])
+    sc = results["sham_control"]
+    print("sham control AUROC by probe:", sc["auroc_reactive_vs_marker_tracker_by_probe"])
+    print("sham selectivity:", sc["selectivity_move_minus_sham"])
+    for s, v in sc["verdict"].items():
+        print(f"  {s:15s} {v}")
     print("robustness:", results["separation_robustness"])
     print("map robustness:", results["map_robustness"])
     print("checks:", results["checks"])
