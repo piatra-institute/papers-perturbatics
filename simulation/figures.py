@@ -65,6 +65,7 @@ def plot_separation(results: dict, path: str) -> None:
 
 
 CAP = "#2a9d8f"        # realized-capacity share
+ABSORB_G = "#1a7f37"   # the battery that includes a matched sham
 
 
 def plot_realization_map(results: dict, path: str) -> None:
@@ -156,6 +157,53 @@ def plot_sham_control(results: dict, path: str) -> None:
 HUMAN = "#6a3d9a"      # the operator, when it holds goal authority
 
 
+def plot_blind_recovery(results: dict, path: str) -> None:
+    br = results["blind_recovery"]
+    mechs = list(br["with_sham"]["recovery_by_mechanism"])
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10.4, 4.0),
+                                 gridspec_kw={"width_ratios": [1.15, 1]})
+
+    x = np.arange(len(mechs))
+    w = 0.38
+    a1.bar(x - w / 2, [br["without_sham"]["recovery_by_mechanism"][m] for m in mechs], w,
+           color=NEUTRAL, label="battery without a sham")
+    a1.bar(x + w / 2, [br["with_sham"]["recovery_by_mechanism"][m] for m in mechs], w,
+           color=ABSORB_G, label="battery with a matched sham")
+    a1.axhline(br["chance_level"], color=PASSIVE, ls="--", lw=1.0)
+    a1.annotate("chance", (len(mechs) - 0.5, br["chance_level"] + 0.02), fontsize=8,
+                color=PASSIVE, ha="right")
+    a1.set_xticks(x)
+    a1.set_xticklabels([m.replace("_", "\n") for m in mechs], fontsize=8)
+    a1.set_ylim(0, 1.12)
+    a1.set_ylabel("planted mechanism recovered")
+    a1.set_title("recovery of a mechanism the evaluator was not told",
+                 fontsize=9.5, color=INK)
+    a1.legend(frameon=False, fontsize=8.5, loc="lower left")
+
+    conf = br["with_sham"]["confusion"]
+    n = br["n_instances"]
+    M = np.array([[conf[m][h] / n for h in mechs] for m in mechs])
+    im = a2.imshow(M, cmap="Greens", vmin=0, vmax=1)
+    a2.set_xticks(range(len(mechs)))
+    a2.set_xticklabels([m.replace("_", "\n") for m in mechs], fontsize=7.5)
+    a2.set_yticks(range(len(mechs)))
+    a2.set_yticklabels([m.replace("_", " ") for m in mechs], fontsize=7.5)
+    for i in range(len(mechs)):
+        for j in range(len(mechs)):
+            if M[i, j] > 0.01:
+                a2.text(j, i, f"{M[i, j]:.2f}", ha="center", va="center", fontsize=7.5,
+                        color="white" if M[i, j] > 0.55 else INK)
+    a2.set_xlabel("inferred")
+    a2.set_ylabel("planted")
+    a2.set_title("where it fails, with the sham in the battery", fontsize=9.5, color=INK)
+    a2.grid(False)
+    fig.colorbar(im, ax=a2, fraction=0.046, pad=0.04)
+    _style(a1)
+    fig.tight_layout()
+    fig.savefig(path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+
+
 def plot_centaur(results: dict, path: str) -> None:
     ct = results["centaur"]
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(10.0, 3.9),
@@ -183,20 +231,28 @@ def plot_centaur(results: dict, path: str) -> None:
     a1.legend(frameon=False, fontsize=8.5, loc="upper right")
     a1.set_ylim(-0.25, 1.12)
 
-    pts = [(k, d) for k, d in ct["crossover_decoy_rate_by_latency"] if d is not None]
-    ks = [p[0] for p in pts]
-    ds = [p[1] for p in pts]
-    a2.plot(ks, ds, "o-", color=HUMAN, lw=1.8, ms=4)
+    # the whole crossing rests on the stipulation that the register is credulous, so
+    # the stipulation is drawn as a family rather than assumed at its extreme
+    shades = {"0.0": "#cfcfcf", "0.25": "#b3a2cc", "0.5": "#9377b8", "0.75": "#7a55a5",
+              "1.0": HUMAN}
+    for c in ct["machine_credulity_values"]:
+        pts = [(k, d) for k, d in ct["crossover_surface_by_credulity"][str(c)]
+               if d is not None]
+        if not pts:
+            continue
+        a2.plot([p[0] for p in pts], [p[1] for p in pts], "o-",
+                color=shades[str(c)], lw=1.7, ms=3.4, label=f"credulity {c}")
     first = ct["first_latency_with_a_crossover"]
     if first is not None:
         a2.axvspan(0, first, color=NEUTRAL, alpha=0.13)
-        a2.annotate("delay is free\n(slack in the horizon)", (first / 2, 0.62),
-                    ha="center", fontsize=8, color=NEUTRAL)
+        a2.annotate("delay is free", (first / 2, 0.52), ha="center", fontsize=8,
+                    color=NEUTRAL)
     a2.set_xlabel("operator delay (steps before the goal is re-issued)")
     a2.set_ylabel("decoy rate at which human authority wins")
-    a2.set_title("when a slow, sceptical authority is worth its delay",
-                 fontsize=9.5, color=INK)
-    a2.set_ylim(0, 0.85)
+    a2.set_title("the crossing is carried entirely by how credulous the channel is",
+                 fontsize=9.0, color=INK)
+    a2.set_ylim(0, 1.05)
+    a2.legend(frameon=False, fontsize=7.5, loc="lower right")
     for ax in (a1, a2):
         _style(ax)
     fig.tight_layout()

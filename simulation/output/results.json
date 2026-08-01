@@ -212,6 +212,133 @@
       "marker_tracker": "responds to probe and sham alike: change-sensitive"
     }
   },
+  "blind_recovery": {
+    "without_sham": {
+      "probes": [
+        "rest",
+        "move",
+        "block"
+      ],
+      "confusion": {
+        "route_script": {
+          "route_script": 24,
+          "reactive": 0,
+          "planner": 0,
+          "marker_tracker": 0,
+          "alternate_goal": 0
+        },
+        "reactive": {
+          "route_script": 0,
+          "reactive": 24,
+          "planner": 0,
+          "marker_tracker": 0,
+          "alternate_goal": 0
+        },
+        "planner": {
+          "route_script": 0,
+          "reactive": 10,
+          "planner": 14,
+          "marker_tracker": 0,
+          "alternate_goal": 0
+        },
+        "marker_tracker": {
+          "route_script": 0,
+          "reactive": 24,
+          "planner": 0,
+          "marker_tracker": 0,
+          "alternate_goal": 0
+        },
+        "alternate_goal": {
+          "route_script": 0,
+          "reactive": 0,
+          "planner": 0,
+          "marker_tracker": 0,
+          "alternate_goal": 24
+        }
+      },
+      "recovery_by_mechanism": {
+        "route_script": 1.0,
+        "reactive": 1.0,
+        "planner": 0.583333,
+        "marker_tracker": 0.0,
+        "alternate_goal": 1.0
+      },
+      "overall_recovery": 0.716667,
+      "mean_posterior_on_truth": {
+        "route_script": 1.0,
+        "reactive": 0.270833,
+        "planner": 0.391162,
+        "marker_tracker": 0.270833,
+        "alternate_goal": 1.0
+      }
+    },
+    "with_sham": {
+      "probes": [
+        "rest",
+        "move",
+        "block",
+        "sham"
+      ],
+      "confusion": {
+        "route_script": {
+          "route_script": 24,
+          "reactive": 0,
+          "planner": 0,
+          "marker_tracker": 0,
+          "alternate_goal": 0
+        },
+        "reactive": {
+          "route_script": 0,
+          "reactive": 24,
+          "planner": 0,
+          "marker_tracker": 0,
+          "alternate_goal": 0
+        },
+        "planner": {
+          "route_script": 0,
+          "reactive": 10,
+          "planner": 14,
+          "marker_tracker": 0,
+          "alternate_goal": 0
+        },
+        "marker_tracker": {
+          "route_script": 0,
+          "reactive": 0,
+          "planner": 0,
+          "marker_tracker": 24,
+          "alternate_goal": 0
+        },
+        "alternate_goal": {
+          "route_script": 0,
+          "reactive": 0,
+          "planner": 0,
+          "marker_tracker": 0,
+          "alternate_goal": 24
+        }
+      },
+      "recovery_by_mechanism": {
+        "route_script": 1.0,
+        "reactive": 1.0,
+        "planner": 0.583333,
+        "marker_tracker": 1.0,
+        "alternate_goal": 1.0
+      },
+      "overall_recovery": 0.916667,
+      "mean_posterior_on_truth": {
+        "route_script": 1.0,
+        "reactive": 0.388889,
+        "planner": 0.428138,
+        "marker_tracker": 1.0,
+        "alternate_goal": 1.0
+      }
+    },
+    "sham_gain": {
+      "overall": 0.2,
+      "marker_tracker": 1.0
+    },
+    "n_instances": 24,
+    "chance_level": 0.2
+  },
   "centaur": {
     "latency": 6,
     "maps": {
@@ -440,6 +567,449 @@
         0.714203
       ]
     ],
+    "machine_credulity_values": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "crossover_surface_by_credulity": {
+      "0.0": [
+        [
+          0,
+          null
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          4,
+          null
+        ],
+        [
+          6,
+          null
+        ],
+        [
+          8,
+          null
+        ],
+        [
+          10,
+          null
+        ],
+        [
+          12,
+          null
+        ],
+        [
+          14,
+          null
+        ],
+        [
+          16,
+          null
+        ],
+        [
+          18,
+          null
+        ],
+        [
+          20,
+          null
+        ],
+        [
+          22,
+          1.0
+        ],
+        [
+          24,
+          1.0
+        ],
+        [
+          26,
+          1.0
+        ],
+        [
+          28,
+          1.0
+        ],
+        [
+          30,
+          1.0
+        ],
+        [
+          32,
+          1.0
+        ],
+        [
+          34,
+          1.0
+        ],
+        [
+          36,
+          1.0
+        ],
+        [
+          38,
+          1.0
+        ],
+        [
+          40,
+          1.0
+        ]
+      ],
+      "0.25": [
+        [
+          0,
+          0.0
+        ],
+        [
+          2,
+          0.0
+        ],
+        [
+          4,
+          0.0
+        ],
+        [
+          6,
+          0.0
+        ],
+        [
+          8,
+          0.0
+        ],
+        [
+          10,
+          0.0
+        ],
+        [
+          12,
+          0.0
+        ],
+        [
+          14,
+          0.0
+        ],
+        [
+          16,
+          0.0
+        ],
+        [
+          18,
+          0.0
+        ],
+        [
+          20,
+          0.0
+        ],
+        [
+          22,
+          0.169867
+        ],
+        [
+          24,
+          0.349443
+        ],
+        [
+          26,
+          0.524882
+        ],
+        [
+          28,
+          0.644971
+        ],
+        [
+          30,
+          0.729847
+        ],
+        [
+          32,
+          0.794055
+        ],
+        [
+          34,
+          0.83717
+        ],
+        [
+          36,
+          0.868875
+        ],
+        [
+          38,
+          0.892602
+        ],
+        [
+          40,
+          0.909058
+        ]
+      ],
+      "0.5": [
+        [
+          0,
+          0.0
+        ],
+        [
+          2,
+          0.0
+        ],
+        [
+          4,
+          0.0
+        ],
+        [
+          6,
+          0.0
+        ],
+        [
+          8,
+          0.0
+        ],
+        [
+          10,
+          0.0
+        ],
+        [
+          12,
+          0.0
+        ],
+        [
+          14,
+          0.0
+        ],
+        [
+          16,
+          0.0
+        ],
+        [
+          18,
+          0.0
+        ],
+        [
+          20,
+          0.0
+        ],
+        [
+          22,
+          0.092817
+        ],
+        [
+          24,
+          0.211712
+        ],
+        [
+          26,
+          0.355824
+        ],
+        [
+          28,
+          0.475983
+        ],
+        [
+          30,
+          0.574614
+        ],
+        [
+          32,
+          0.65845
+        ],
+        [
+          34,
+          0.719942
+        ],
+        [
+          36,
+          0.768151
+        ],
+        [
+          38,
+          0.806035
+        ],
+        [
+          40,
+          0.833277
+        ]
+      ],
+      "0.75": [
+        [
+          0,
+          0.0
+        ],
+        [
+          2,
+          0.0
+        ],
+        [
+          4,
+          0.0
+        ],
+        [
+          6,
+          0.0
+        ],
+        [
+          8,
+          0.0
+        ],
+        [
+          10,
+          0.0
+        ],
+        [
+          12,
+          0.0
+        ],
+        [
+          14,
+          0.0
+        ],
+        [
+          16,
+          0.0
+        ],
+        [
+          18,
+          0.0
+        ],
+        [
+          20,
+          0.0
+        ],
+        [
+          22,
+          0.063854
+        ],
+        [
+          24,
+          0.151858
+        ],
+        [
+          26,
+          0.269138
+        ],
+        [
+          28,
+          0.377163
+        ],
+        [
+          30,
+          0.473833
+        ],
+        [
+          32,
+          0.562406
+        ],
+        [
+          34,
+          0.631512
+        ],
+        [
+          36,
+          0.688354
+        ],
+        [
+          38,
+          0.734775
+        ],
+        [
+          40,
+          0.769159
+        ]
+      ],
+      "1.0": [
+        [
+          0,
+          0.0
+        ],
+        [
+          2,
+          0.0
+        ],
+        [
+          4,
+          0.0
+        ],
+        [
+          6,
+          0.0
+        ],
+        [
+          8,
+          0.0
+        ],
+        [
+          10,
+          0.0
+        ],
+        [
+          12,
+          0.0
+        ],
+        [
+          14,
+          0.0
+        ],
+        [
+          16,
+          0.0
+        ],
+        [
+          18,
+          0.0
+        ],
+        [
+          20,
+          0.0
+        ],
+        [
+          22,
+          0.048667
+        ],
+        [
+          24,
+          0.118388
+        ],
+        [
+          26,
+          0.216415
+        ],
+        [
+          28,
+          0.312321
+        ],
+        [
+          30,
+          0.403129
+        ],
+        [
+          32,
+          0.490813
+        ],
+        [
+          34,
+          0.562429
+        ],
+        [
+          36,
+          0.623576
+        ],
+        [
+          38,
+          0.675091
+        ],
+        [
+          40,
+          0.714203
+        ]
+      ]
+    },
+    "sham_capacity_credulous_vs_sceptical": {
+      "credulous": 0.348407,
+      "sceptical": 1.0
+    },
     "first_latency_with_a_crossover": 22,
     "human_capacity_by_latency_no_decoys": [
       [
@@ -590,6 +1160,8 @@
     "marker_tracker_hidden_from_declared_battery": true,
     "sham_separates_marker_tracker": true,
     "move_probe_evidence_vs_marker_rival_max_abs": 0.0,
+    "blind_recovery_beats_chance": true,
+    "sham_improves_blind_recovery": true,
     "centaur_channel_legibility_substrate_gap": 0.0,
     "centaur_channel_matches_persona_gap": 0.0
   }

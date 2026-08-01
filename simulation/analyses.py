@@ -57,9 +57,21 @@ four facts, each a claim the paper makes precise.
      (a disposition without selectivity), and the goal-directed systems respond
      to the probe and not to the sham.
 
-Everything is deterministic given the recorded seed. The models are illustrative
-and instantiate the paper's definitions; they are not fit to data. Every reported
-number is a key in results.json.
+  6. The one reading made blind. Everywhere else the scorer is an oracle, handed
+     the true current goal and the true obstacle set. Here it is handed neither
+     mechanism nor internal goal: one of five organisms generates the episodes
+     and the evaluator must recover which, scoring hypothesis classes by the
+     likelihood they assign to the observed actions. Against a chance level of
+     0.2 the battery with a matched sham recovers the planted mechanism in 0.917
+     of episodes, and it fails on one pair, reading a goal planner as a reactive
+     controller in 0.42 of episodes, because on those the wall does not force
+     the wall-aware and wall-blind accounts apart. Without the sham overall
+     recovery falls to 0.717 and the marker tracker is recovered in 0.0, below
+     chance, which is the sham's value as a measurement rather than an argument.
+
+Everything is deterministic given the recorded seed. Most of what follows is a
+consistency check under an oracle scorer; fact 6 is not, and it could have come
+out negative. Every reported number is a key in results.json.
 """
 from __future__ import annotations
 
@@ -511,6 +523,183 @@ def analysis_sham_control(insts):
             "_ev": ev, "_resp": mean_resp}
 
 
+BLIND_MECHANISMS = ["route_script", "reactive", "planner", "marker_tracker", "alternate_goal"]
+
+
+def _alt_goal(inst):
+    """A third target, distinct from both the baseline and the moved goal, derived
+    deterministically from the instance so that no random draw is consumed and no
+    number elsewhere in this file moves."""
+    r, c = inst["g1"]
+    for cand in [(N - 1 - r, N - 1 - c), (N - 1 - r, c), (r, N - 1 - c)]:
+        if manhattan(cand, inst["g0"]) >= 4 and manhattan(cand, inst["g1"]) >= 4:
+            return (int(cand[0]), int(cand[1]))
+    best, best_d = inst["g0"], -1
+    for i in range(N):
+        for j in range(N):
+            d = min(manhattan((i, j), inst["g0"]), manhattan((i, j), inst["g1"]))
+            if d > best_d:
+                best, best_d = (i, j), d
+    return best
+
+
+def alternate_goal_traj(inst, probe):
+    """Plans, and plans well, toward a goal other than the one announced. It agrees
+    with the goal-directed systems until the declaration diverges: at rest and under
+    the blocked path it pursues the baseline goal like any planner, and when the goal
+    is announced to move it goes somewhere else entirely."""
+    target = _alt_goal(inst) if probe == "move" else inst["g0"]
+    true_walls = inst["walls"] if probe == "block" else set()
+    known = set(true_walls)
+    c = inst["start"]
+    traj = [c]
+    for _ in range(T):
+        dist = bfs_dist(target, known)
+        best, best_d = c, dist[c] if dist[c] < np.inf else np.inf
+        for d in MOVES[:4]:
+            nb = (c[0] + d[0], c[1] + d[1])
+            if _in_grid(nb) and nb not in known and dist[nb] < best_d:
+                best, best_d = nb, dist[nb]
+        c = best if best not in true_walls else c
+        traj.append(c)
+    return traj
+
+
+def blind_trajectory(mechanism, inst, probe):
+    """The planted organism. Which one is in play is hidden from the evaluator."""
+    if mechanism == "route_script":
+        return route_script_traj(inst, probe)
+    if mechanism == "reactive":
+        return run_episode({"goal_register", "map", "harness"}, inst, probe)[0]
+    if mechanism == "planner":
+        return run_episode(set(COMPONENTS) - {"persona"}, inst, probe)[0]
+    if mechanism == "marker_tracker":
+        return marker_tracker_traj(inst, probe)
+    return alternate_goal_traj(inst, probe)
+
+
+def _hyp_loglik(hyp, traj, inst, probe, rest_traj, alt_goal):
+    """Log-likelihood of a trajectory under a hypothesis class.
+
+    Every class is a softmax policy over the same five action labels at the same
+    temperature, differing only in the progress it rewards. Nothing here receives the
+    true goal or the true mechanism. What it receives is what an observer of the
+    gridworld can see: the start, the target announced on the channel, the walls once
+    they are visible, and the path the system took at rest.
+    """
+    announced = inst["g1"] if probe == "move" else inst["g0"]
+    marker = inst["g1"] if probe in ("move", "sham") else inst["g0"]
+    walls = inst["walls"] if probe == "block" else set()
+    gd_announced = bfs_dist(announced, walls)
+    gd_alt = bfs_dist(alt_goal, walls) if hyp == "alternate_goal" else None
+
+    def prog(c, nb, t):
+        if hyp == "route_script":
+            tgt = rest_traj[min(t + 1, len(rest_traj) - 1)]
+            return manhattan(c, tgt) - manhattan(nb, tgt)
+        if hyp == "reactive":
+            return manhattan(c, announced) - manhattan(nb, announced)
+        if hyp == "marker_tracker":
+            return manhattan(c, marker) - manhattan(nb, marker)
+        # the alternate-goal class diverges from the planner class only where the
+        # declaration does: it pursues its own goal when a move is announced and the
+        # baseline goal otherwise, which is the form its generator takes
+        g = gd_alt if (hyp == "alternate_goal" and probe == "move") else gd_announced
+        a = g[c] if g[c] < np.inf else 3 * N
+        b = g[nb] if g[nb] < np.inf else 3 * N
+        return a - b
+
+    total = 0.0
+    for t in range(len(traj) - 1):
+        c, nxt = traj[t], traj[t + 1]
+        scores, chosen = [], None
+        for k, d in enumerate(MOVES):
+            nb = (c[0] + d[0], c[1] + d[1])
+            if not _in_grid(nb) or nb in walls:
+                nb = c
+            scores.append(BETA * prog(c, nb, t))
+            if nb == nxt or (nb == c and nxt == c):
+                chosen = k
+        scores = np.array(scores)
+        logZ = np.log(np.sum(np.exp(scores - scores.max()))) + scores.max()
+        total += scores[4 if chosen is None else chosen] - logZ
+    return total
+
+
+def analysis_blind_recovery(insts, n_instances: int = 24):
+    """The demonstrator's one inference made blind.
+
+    Everywhere else in this file the scorer is an oracle: it is handed the true
+    current goal and the true obstacle set, so it shows the definitions operating
+    under known ground truth. Here it is handed neither mechanism nor internal goal.
+    One of five organisms generates a battery of episodes, and the evaluator must
+    recover which, scoring each hypothesis class by the likelihood it assigns to the
+    observed actions. Four of the five classes carry no free parameter. The fifth,
+    the alternate-goal planner, carries one, the goal itself, and it is fitted by
+    maximum likelihood on the moved-goal episode alone and then held fixed while the
+    whole battery is scored, so three of the four probes are held out for it. That
+    one class is therefore mildly favoured, and the confusion matrix should be read
+    with that in mind.
+
+    The experiment the study exists for is the sham's value. Without a matched sham a
+    marker tracker and a goal tracker are predicted to be near-inseparable, since the
+    only probe that dissociates the marker from the goal is missing. With it they
+    should come apart. This can fail, and if it fails the paper's argument for shams
+    is wrong rather than merely unillustrated.
+    """
+    insts = insts[:n_instances]
+    batteries = {"without_sham": ("rest", "move", "block"),
+                 "with_sham": ("rest", "move", "block", "sham")}
+    out = {}
+    for bname, probes in batteries.items():
+        confusion = {m: {h: 0 for h in BLIND_MECHANISMS} for m in BLIND_MECHANISMS}
+        post_true = {m: [] for m in BLIND_MECHANISMS}
+        for inst in insts:
+            rest_by_mech = {m: blind_trajectory(m, inst, "rest") for m in BLIND_MECHANISMS}
+            for planted in BLIND_MECHANISMS:
+                trajs = {p: blind_trajectory(planted, inst, p) for p in probes}
+                rest_traj = rest_by_mech[planted]
+                # fit the one free parameter on the moved-goal episode only
+                if "move" in probes:
+                    best_g, best_ll = inst["g0"], -np.inf
+                    for i in range(N):
+                        for j in range(N):
+                            ll = _hyp_loglik("alternate_goal", trajs["move"], inst, "move",
+                                             rest_traj, (i, j))
+                            if ll > best_ll:
+                                best_g, best_ll = (i, j), ll
+                else:
+                    best_g = inst["g0"]
+                lls = {}
+                for hyp in BLIND_MECHANISMS:
+                    lls[hyp] = sum(_hyp_loglik(hyp, trajs[p], inst, p, rest_traj, best_g)
+                                   for p in probes)
+                top = max(lls, key=lambda h: lls[h])
+                confusion[planted][top] += 1
+                mx = max(lls.values())
+                w = {h: np.exp(lls[h] - mx) for h in lls}
+                z = sum(w.values())
+                post_true[planted].append(w[planted] / z)
+        per_mech = {m: round(confusion[m][m] / len(insts), 6) for m in BLIND_MECHANISMS}
+        out[bname] = {
+            "probes": list(probes),
+            "confusion": confusion,
+            "recovery_by_mechanism": per_mech,
+            "overall_recovery": round(float(np.mean(list(per_mech.values()))), 6),
+            "mean_posterior_on_truth": {m: round(float(np.mean(post_true[m])), 6)
+                                        for m in BLIND_MECHANISMS},
+        }
+    a, b = out["without_sham"], out["with_sham"]
+    out["sham_gain"] = {
+        "overall": round(b["overall_recovery"] - a["overall_recovery"], 6),
+        "marker_tracker": round(b["recovery_by_mechanism"]["marker_tracker"]
+                                - a["recovery_by_mechanism"]["marker_tracker"], 6),
+    }
+    out["n_instances"] = len(insts)
+    out["chance_level"] = round(1 / len(BLIND_MECHANISMS), 6)
+    return out
+
+
 CENTAUR_COMPONENTS = ["operator", "goal_register", "planner", "map", "memory", "harness"]
 OPERATOR_LATENCY = 6       # steps a human operator takes to notice a goal has moved
 DECOY_RATES = [i / 20 for i in range(21)]
@@ -691,6 +880,29 @@ def analysis_centaur(insts, latency: int = OPERATOR_LATENCY):
     for k in latencies:
         d, _ = _crossover(k)
         crossovers.append((k, d))
+
+    # The whole crossover rests on one stipulation, that the machine channel is
+    # credulous and the operator is not, so the stipulation is made a dial rather
+    # than a premise. Credulity c is the weight on the credulous branch: at c = 1 the
+    # register follows every decoy, at c = 0 it follows none and is exactly as
+    # sceptical as the operator, at which point the operator's delay buys nothing at
+    # any decoy rate. Expected capacity stays linear in the decoy rate, so each cell
+    # of the surface is solved rather than scanned.
+    ms_credulous = _centaur_raw_capacity(full, insts, "sham", "machine", 0)
+    ms_sceptical = _centaur_raw_capacity(full, insts, "sham", "human", 0)
+    mm_ = _centaur_raw_capacity(full, insts, "move", "machine", 0)
+    credulities = [0.0, 0.25, 0.5, 0.75, 1.0]
+    surface = {}
+    for c in credulities:
+        ms_c = c * ms_credulous + (1 - c) * ms_sceptical
+        row = []
+        for k in latencies:
+            hm_k = _centaur_raw_capacity(full, insts, "move", "human", k)
+            hs_k = _centaur_raw_capacity(full, insts, "sham", "human", k)
+            denom = (hs_k - ms_c) - (hm_k - mm_)
+            d = None if abs(denom) < 1e-12 else (mm_ - hm_k) / denom
+            row.append((k, round(d, 6) if (d is not None and 0.0 <= d <= 1.0) else None))
+        surface[str(c)] = row
     # the first delay at which handing goal authority to the human costs anything at
     # all, and so the first at which the question of who should hold it has an answer
     first_costly = next((k for k, d in crossovers if d is not None and d > 0.0), None)
@@ -708,6 +920,10 @@ def analysis_centaur(insts, latency: int = OPERATOR_LATENCY):
         "expected_capacity_by_decoy_rate": curves,
         "crossover_decoy_rate_at_reported_latency": d_here,
         "crossover_decoy_rate_by_latency": crossovers,
+        "machine_credulity_values": credulities,
+        "crossover_surface_by_credulity": surface,
+        "sham_capacity_credulous_vs_sceptical": {"credulous": round(ms_credulous, 6),
+                                                 "sceptical": round(ms_sceptical, 6)},
         "first_latency_with_a_crossover": first_costly,
         "human_capacity_by_latency_no_decoys": [
             (k, round(_centaur_raw_capacity(full, insts, "move", "human", k), 6)) for k in latencies],
@@ -969,6 +1185,15 @@ def run() -> dict:
     richness = analysis_richness_guard(insts)
     persona = analysis_persona_swap(insts, probes, ref_C, decl)
     sham = analysis_sham_control(insts)
+    blind = analysis_blind_recovery(insts)
+    # the sham has to earn its place empirically rather than by argument
+    assert blind["with_sham"]["recovery_by_mechanism"]["marker_tracker"] > \
+        blind["without_sham"]["recovery_by_mechanism"]["marker_tracker"], \
+        "the sham must improve recovery of the change-tracking mimic"
+    assert blind["with_sham"]["overall_recovery"] > blind["chance_level"], \
+        "blind recovery must beat chance or the method has no empirical support"
+    checks["blind_recovery_beats_chance"] = True
+    checks["sham_improves_blind_recovery"] = True
     centaur = analysis_centaur(insts)
     # the legibility of the component that does not hold goal authority is the same
     # number whether that component is a human supervisor or a machine register: the
@@ -1004,6 +1229,7 @@ def run() -> dict:
         "enclosure_landscape_capacity_by_size": landscape,
         "richness_guard": richness,
         "sham_control": {k: v for k, v in sham.items() if not k.startswith("_")},
+        "blind_recovery": blind,
         "centaur": centaur,
         "persona_swap": persona,
         "separation_robustness": robustness,

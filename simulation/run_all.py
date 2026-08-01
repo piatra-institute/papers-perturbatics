@@ -29,12 +29,14 @@ def main() -> None:
     results = run()
     (OUT / "results.json").write_text(json.dumps(_strip_private(results), indent=2))
     from figures import (plot_separation, plot_realization_map, plot_guards,
-                         plot_sham_control, plot_centaur)
+                         plot_sham_control, plot_centaur,
+                         plot_blind_recovery)
     plot_separation(results, str(OUT / "figures" / "separation.png"))
     plot_realization_map(results, str(OUT / "figures" / "realization_map.png"))
     plot_guards(results, str(OUT / "figures" / "guards.png"))
     plot_sham_control(results, str(OUT / "figures" / "sham_control.png"))
     plot_centaur(results, str(OUT / "figures" / "centaur.png"))
+    plot_blind_recovery(results, str(OUT / "figures" / "blind_recovery.png"))
 
     sep = results["separation"]
     rm = results["realization_map"]
@@ -66,6 +68,11 @@ def main() -> None:
         print(f"centaur {a:8s} holder={m['authority_holder']:14s} "
               f"channel={m['pure_channel']:14s} L(channel)={m['legibility'][m['pure_channel']]}")
     print("centaur crossover by latency:", ct["crossover_decoy_rate_by_latency"])
+    br = results["blind_recovery"]
+    print(f"blind recovery: chance {br['chance_level']}, "
+          f"without sham {br['without_sham']['overall_recovery']}, "
+          f"with sham {br['with_sham']['overall_recovery']}, gain {br['sham_gain']}")
+    print("  per mechanism (with sham):", br["with_sham"]["recovery_by_mechanism"])
     print("robustness:", results["separation_robustness"])
     print("map robustness:", results["map_robustness"])
     print("checks:", results["checks"])

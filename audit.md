@@ -209,3 +209,29 @@ Verification:
 - claims: 40 prose decimal claims, 1 flagged no-match (0.18), the pre-existing negative.
 - build: 26 pages, down from 27. check => PASS, web OK. PDF synced.
 - web: `app/papers/page.tsx` abstract replaced in place and verified to be a single line; `tsc --noEmit` clean, `next build` compiles.
+
+## v12 (2026-08-01) — the oracle removed from one reading, and four self-criticisms answered
+
+An assessment of the paper named five weaknesses, four of them introduced by earlier revisions in this session. All five were addressed.
+
+**1. The scorer was an oracle everywhere, so nothing in the paper could have come out wrong.** This was the real one. Added `analysis_blind_recovery`: five organisms (route script, reactive controller, goal planner, marker tracker, and a planner pursuing a goal other than the one announced) generate batteries, and which is in play is hidden. The evaluator receives what an observer of the gridworld receives, the start, the target announced on the channel, the walls once visible, and the path taken, and scores each hypothesis class by the likelihood it assigns to the observed actions. Four classes are parameter-free; the fifth fits the alternate goal by maximum likelihood on the moved-goal episode alone and then holds it fixed while the whole battery is scored, so three of four probes are held out for it and that class is mildly favoured, which the text states.
+
+Against a chance level of 0.2, the battery with a matched sham recovers the planted mechanism in 0.916667 of episodes. Four of five are recovered every time. The fifth is the goal planner at 0.583333, read as a reactive controller in 0.42 of episodes, because on those the wall does not force the wall-aware and wall-blind accounts apart; the principle predicts that failure and the study measures it. **The sham is now measured rather than argued for**: without it overall recovery falls to 0.716667 and the marker tracker is recovered in 0.0 of episodes, below chance, because without the one intervention dissociating a marker from a goal the two are the same hypothesis. Adding it takes the marker tracker to 1.0 and the battery up by 0.2. Two new invariants fail the run if recovery does not beat chance or if the sham does not improve it. Sixth figure `blind_recovery.png`. The paper's contribution statement moves from three claims to four: one organization, one novelty, one calibration, one position.
+
+One bug was caught during this: the first pass had the alternate-goal *hypothesis* pursue its fitted goal on every probe while its *generator* pursued the baseline goal except under a move. The class was mis-specified against itself and recovered in 0.0 of episodes. Fixed by making the hypothesis mirror the generator; recovery went to 1.0.
+
+**2. The centaur's crossover rested on a stipulation.** Machine credulity is now a dial rather than a premise, and the crossing is recomputed across it. At credulity 0.0, where the register is as sceptical as the operator, no delay has a crossing below a decoy rate of 1.0: the operator's delay buys nothing at any rate the environment can supply. At a delay of 28 steps the crossing is 0.645 at credulity 0.25, 0.476 at 0.5, 0.377 at 0.75, and 0.312 at 1.0. The paper now says that the result is not about whether humans should hold goals, but that the case for it is exactly as strong as the channel is credulous, and that the reported configuration is the strongest form of that case rather than a neutral one. The centaur figure's right panel is now the family of curves over credulity.
+
+**3. "A persona with a salary" outran its math.** Cut. Replaced with an explicit scope statement: what is shown is that this instrument's measurand attaches to a role rather than to whatever fills it, and that a component with no channel to the world has a capacity share of zero whoever occupies it; nothing here is evidence about actual human supervisors, who hold goals, revise them, and answer for them in ways no component of this assemblage models.
+
+**4. Apparatus outgrowing load-bearing content.** Addressed by adding content rather than by cutting apparatus, which is the honest fix: the paper went 26 to 28 pages and gained its first result that could have been negative. Genuine redundancy was removed where it existed. The 762-word terms paragraph, the longest in the paper, contained a sentence asserting that an inference made blind is "a benchmark's job and not this model's", which the new section contradicts outright. Rewritten and split into three paragraphs at 702 words.
+
+**5. The playground's numbers differed from the paper's.** Fixed properly rather than documented away. The paper's 40 instances are exported to `logic/paperInstances.ts` and used at the playground's default seed, so the page now reproduces the published numbers exactly: AUROC 0.786250 under the blocked path, mean evidence 30.0265 and -31.9025, capacity shares 0.813046 and 0.252024, persona legibility 0.230769. Any other seed redraws, which is what makes the seed control worth having, and the settings copy says so.
+
+Verification:
+- voice: 0 errors, 2 review-candidates (both pre-existing). "earns its place" was flagged in new prose and rewritten; `carries/carry` trimmed back to 0.7/k.
+- refs: 52 in-text keys / 52 bib entries, 0 missing, 0 unused.
+- claims: 49 prose decimal claims, 1 flagged no-match (0.18), the pre-existing negative.
+- simulation: all 12 invariants pass. Every number from v8.1 through v11 is unchanged; the blind study and the credulity sweep are additive.
+- build: 28 pages. check => PASS, web OK. PDF synced.
+- web: `tsc --noEmit` clean, `next build` compiles, playground verified in-browser against the paper's published maps.
