@@ -194,3 +194,18 @@ Verification:
 - simulation: all 10 invariants pass, including the two new centaur symmetries at exactly 0.0. Every number from v9 and earlier is unchanged; the centaur runs as a separate assemblage precisely so the published six-component maps do not move.
 - build: 27 pages. check => PASS, web OK. PDF synced.
 - web: `npx tsc --noEmit` clean, `next build` compiles and prerenders `/playgrounds/agentoscope`.
+
+## v11 (2026-08-01) — abstract compressed, and the paper points at the instrument
+
+Two changes, both requested after the playground shipped.
+
+**The abstract was the longest in the corpus and is now 419 words, down from 765.** It had accreted a paragraph per revision: v9 added the sham and the finite-battery limit, v10 added the centaur and the crossover, and each was written as a full result rather than as a clause. The rewrite keeps the same spine (the surface that cannot carry the properties worth knowing, the separation principle, the instrument and its 0.50 at rest, the mimic the battery cannot reach and the sham that does, the two maps and the legibility term, the substrate-indifference of the role, the three silences at consciousness) and compresses the sham and centaur results to one sentence each. The crossover numbers and the per-component shares are dropped from the abstract and left to the body, since an abstract that recites six decimals is a table with prose around it. Propagated identically to `metadata.yaml` and to the `ownPapers[]` entry in the web index.
+
+**The paper now points at the interactive instrument.** A sentence in the demonstrator's terms paragraph and a section in `README.md` note that the constructions also run at `piatra.institute/playgrounds/agentoscope`, and both state the honest difference: the instances are redrawn there from a reader-set seed, so the sample statistics move a little while the identities do not. This is the first paper-to-playground link in the corpus, which is why the wording is careful about what transfers. It is a pointer to an artifact rather than a citation, so the stand-alone rule (no author-year citation of PIATRA papers) is untouched.
+
+Verification:
+- voice: 0 errors, 2 review-candidates (both pre-existing, L53 and L64). The rewrite pushed `carries/carry` to 1.1/k against a corpus mean of 0.49, so four instances were varied back down to 0.8/k. Rhythm unchanged at a 36-sentence run.
+- refs: 52 in-text keys / 52 bib entries, 0 missing, 0 unused.
+- claims: 40 prose decimal claims, 1 flagged no-match (0.18), the pre-existing negative.
+- build: 26 pages, down from 27. check => PASS, web OK. PDF synced.
+- web: `app/papers/page.tsx` abstract replaced in place and verified to be a single line; `tsc --noEmit` clean, `next build` compiles.

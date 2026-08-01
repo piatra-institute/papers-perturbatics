@@ -20,5 +20,13 @@ uv run build.py          # -> paper/PAPER.pdf  (vendored canonical recipe)
 Requires `pandoc` and `xelatex` on PATH. From the workspace you can also run
 `papers build perturbatics`.
 
+## Interactive
+
+The same constructions run in the browser at
+[piatra.institute/playgrounds/agentoscope](https://piatra.institute/playgrounds/agentoscope),
+where the reader picks the probe: rest, moved goal, blocked path, or matched sham. The
+instances are redrawn there from a seed the reader sets, so the sample statistics move a
+little while the identities do not.
+
 Part of [piatra-papers](https://github.com/piatra-institute). See the workspace
 docs for the research and writing pipelines.
