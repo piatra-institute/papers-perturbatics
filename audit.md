@@ -289,3 +289,17 @@ The opening read "Whether an artificial agent pursues a goal", which is narrower
 One consequence had to be handled rather than absorbed. Broadening the subject stranded the predicate, since "a composite, a model under a persona, with a memory, a harness, and tools" is not true of a natural agent. The composite claim is therefore given its own sentence and attached to the case it holds of: "The artificial case makes the difficulty vivid." The second occurrence of the narrow phrasing, at the head of the agency-theater section, is left alone: that paragraph is specifically about artificial agents being built to fit the human detector, and the narrow reading is the correct one there.
 
 Fifteen words were reclaimed from the sham clause in the same abstract so the length holds at 500. Gates unchanged: voice 0 errors, refs 73/73, claims 0 unmatched, check => PASS. Propagated to metadata.yaml and the web index.
+
+## v14.2 (2026-08-02) — the prose straightened
+
+The author rejected three sentences as unnatural, slop-like English, and they turned out to be samples of a habit running through the whole paper, introduced across this session's revisions.
+
+Three tics, all removed:
+
+1. **Prose narrating its own rhetoric.** "which should be said rather than left for the prose to blur", "for a reason worth stating exactly", "a condition worth stating rather than assuming", "the word capacity is doing operational work in that sentence", "and it is worth being exact about why". Nine instances, all cut. The claims they were introducing are simply stated now.
+
+2. **Reflexive contrast framing.** Sentences built around what a claim is not: "the science is not general experimentation with a Greek label", "State it as a small result rather than a mood", "To make the instrument concrete rather than promissory". The measurement was 89 uses of "rather than" in a 13,000-word body, about seven per thousand words, and several sentences carried two. Now 70, and the survivors are the ones where the contrast is the content, such as Pearl's settled-by-doing-rather-than-seeing. One trap found in the process: swapping "rather than" for ", not" is the same tic in costume, and the voice gate's inline-contrastive rule caught four instances of it immediately. The fix is to drop the contrast, not to reword it.
+
+3. **Sentences that circle before landing, and titles that gesture.** "The battery decays when the system knows it" is now "What a system does once it knows the battery". "To make the instrument concrete rather than promissory, put three systems in a deterministic gridworld" is now "Put three systems in a deterministic gridworld." Also straightened: the four-claims opening, the demonstrator's terms, the study's limits, the three silences, the danger-against-itself paragraph, and the second-order opening.
+
+The rhythm advisory improved on its own as a result, which is the useful corroboration that this was a real problem rather than a matter of taste: the longest run without a short sentence fell from 37 sentences to 24, and short sentences rose from 13% to 16%. Gates otherwise unchanged: voice 0 errors and the same two pre-existing review-candidates at L55 and L66, refs 73/73, claims 0 unmatched, check => PASS, 31 pages. Saved as a standing constraint in the workspace memory so it does not return.
