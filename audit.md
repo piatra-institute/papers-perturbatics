@@ -281,3 +281,11 @@ Trigger: a commissioned ChatGPT Pro research report testing the paper's novelty 
 **Terminology:** the "legibility term" collision with a multiagent RL reward component (Liu et al. 2024) is acknowledged in text, with the arithmetic description offered as the safer name; phi_C is guarded against being read as latent capability, with sandbagging cited as why realized performance is not capacity; the agentoscope/AgentScope naming collision is noted for the software rather than the paper.
 
 Verification: voice 0 errors, 2 review-candidates (both pre-existing, L55 and L66); two new inline-contrastive warns introduced mid-revision were caught and cleared. refs 73/73 after a particle-surname fix ("van der Weij" capitalized in-text so the reconciler keys match). claims 51 decimal claims, **0 unmatched**. 17/17 invariants. build 31 pages. check => PASS, web OK, PDF synced, web index abstract synced, tsc clean. Proposal 498 words, verified by script.
+
+## v14.1 (2026-08-02) — the abstract's scope broadened
+
+The opening read "Whether an artificial agent pursues a goal", which is narrower than the paper. The separation principle is classical identifiability and holds of any system whose organization is at issue; the body already reasons about thermostats and regenerating tissue, and the demonstrator's own organisms are simulated. Now: "Whether an agent pursues a goal, whether it is competent, who authored its output, none of that is on its surface, and the agent may be natural, artificial, simulated, or hybrid."
+
+One consequence had to be handled rather than absorbed. Broadening the subject stranded the predicate, since "a composite, a model under a persona, with a memory, a harness, and tools" is not true of a natural agent. The composite claim is therefore given its own sentence and attached to the case it holds of: "The artificial case makes the difficulty vivid." The second occurrence of the narrow phrasing, at the head of the agency-theater section, is left alone: that paragraph is specifically about artificial agents being built to fit the human detector, and the narrow reading is the correct one there.
+
+Fifteen words were reclaimed from the sham clause in the same abstract so the length holds at 500. Gates unchanged: voice 0 errors, refs 73/73, claims 0 unmatched, check => PASS. Propagated to metadata.yaml and the web index.
