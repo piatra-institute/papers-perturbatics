@@ -30,13 +30,14 @@ def main() -> None:
     (OUT / "results.json").write_text(json.dumps(_strip_private(results), indent=2))
     from figures import (plot_separation, plot_realization_map, plot_guards,
                          plot_sham_control, plot_centaur,
-                         plot_blind_recovery)
+                         plot_blind_recovery, plot_second_order)
     plot_separation(results, str(OUT / "figures" / "separation.png"))
     plot_realization_map(results, str(OUT / "figures" / "realization_map.png"))
     plot_guards(results, str(OUT / "figures" / "guards.png"))
     plot_sham_control(results, str(OUT / "figures" / "sham_control.png"))
     plot_centaur(results, str(OUT / "figures" / "centaur.png"))
     plot_blind_recovery(results, str(OUT / "figures" / "blind_recovery.png"))
+    plot_second_order(results, str(OUT / "figures" / "second_order.png"))
 
     sep = results["separation"]
     rm = results["realization_map"]
@@ -69,10 +70,15 @@ def main() -> None:
               f"channel={m['pure_channel']:14s} L(channel)={m['legibility'][m['pure_channel']]}")
     print("centaur crossover by latency:", ct["crossover_decoy_rate_by_latency"])
     br = results["blind_recovery"]
-    print(f"blind recovery: chance {br['chance_level']}, "
-          f"without sham {br['without_sham']['overall_recovery']}, "
-          f"with sham {br['with_sham']['overall_recovery']}, gain {br['sham_gain']}")
-    print("  per mechanism (with sham):", br["with_sham"]["recovery_by_mechanism"])
+    print(f"blind recovery: chance {br['chance_level']}; "
+          f"expected {br['without_sham']['overall_expected']} -> {br['with_sham']['overall_expected']}, "
+          f"unique {br['without_sham']['overall_unique']} -> {br['with_sham']['overall_unique']}, "
+          f"mean class {br['without_sham']['overall_mean_class_size']} -> "
+          f"{br['with_sham']['overall_mean_class_size']}")
+    print("  unique per mechanism (with sham):", br["with_sham"]["unique_recovery"])
+    so = results["second_order"]
+    print("second order AUROC planner vs probe-aware mimic:",
+          so["auroc_planner_vs_probe_aware_by_probe"])
     print("robustness:", results["separation_robustness"])
     print("map robustness:", results["map_robustness"])
     print("checks:", results["checks"])

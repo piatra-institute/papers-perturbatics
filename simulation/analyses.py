@@ -61,17 +61,33 @@ four facts, each a claim the paper makes precise.
      the true current goal and the true obstacle set. Here it is handed neither
      mechanism nor internal goal: one of five organisms generates the episodes
      and the evaluator must recover which, scoring hypothesis classes by the
-     likelihood they assign to the observed actions. Against a chance level of
-     0.2 the battery with a matched sham recovers the planted mechanism in 0.917
-     of episodes, and it fails on one pair, reading a goal planner as a reactive
-     controller in 0.42 of episodes, because on those the wall does not force
-     the wall-aware and wall-blind accounts apart. Without the sham overall
-     recovery falls to 0.717 and the marker tracker is recovered in 0.0, below
-     chance, which is the sham's value as a measurement rather than an argument.
+     likelihood they assign to the observed actions and returning the
+     equivalence class the battery cannot break rather than an arbitrary member
+     of it. The planted mechanism is never refuted (in-class recovery 1.0 under
+     both batteries). Without the sham the marker-tracking and goal-tracking
+     classes are one measured class (mutual membership 1.0) and unique recovery
+     is 0.517 overall; the sham breaks exactly that class (marker tracker
+     unique 0 -> 1) and takes unique recovery to 0.733 and expected recovery to
+     0.867 against a chance of 0.2, shrinking the mean unresolved class from
+     1.93 to 1.27. What stays entangled is the planner and the reactive
+     controller on the episodes where the wall does not force the wall-aware
+     and wall-blind accounts apart, which the principle predicts. The
+     alternate-goal class pays one nat for its fitted parameter, Block's price
+     paid in size made a scoring rule; unpriced, it absorbs the planner
+     identically and no planner is ever uniquely recovered.
+
+  7. The battery decays when the system knows it. A probe-aware mimic replays
+     the planner's responses on every probe of the declared battery, the sham
+     included, and is trajectory-identical to it there by construction; a
+     held-out sham, a decoy at a cell no published probe used, separates the
+     pair at AUROC 1.0 while the whole declared battery sits at 0.5. The
+     first-order sham story recurs one level up, and it recurs against any
+     finite published battery, which is the finite-battery proposition made
+     strategic.
 
 Everything is deterministic given the recorded seed. Most of what follows is a
 consistency check under an oracle scorer; fact 6 is not, and it could have come
-out negative. Every reported number is a key in results.json.
+out negative. Fact 7's identity half is by construction; its held-out half is measured. Every reported number is a key in results.json.
 """
 from __future__ import annotations
 
@@ -241,8 +257,13 @@ def marker_tracker_traj(inst, probe):
     appeared. Same physics as every other system: a step into a wall leaves it in
     place. Under 'rest', 'move' and 'block' it is trajectory-identical to the reactive
     controller, which is asserted cell by cell in the invariants rather than claimed;
-    under the sham it walks to the decoy while every goal-directed system stays."""
-    marker = inst["g1"] if probe in ("move", "sham") else inst["g0"]
+    under the sham it walks to the decoy while every goal-directed system stays.
+    Under 'sham2', the held-out decoy of the second-order study, the marker is the
+    alternate cell that probe announces."""
+    if probe == "sham2":
+        marker = _alt_goal(inst)
+    else:
+        marker = inst["g1"] if probe in ("move", "sham") else inst["g0"]
     true_walls = inst["walls"] if probe == "block" else set()
     c = inst["start"]
     traj = [c]
@@ -293,7 +314,10 @@ def agency_evidence(traj, inst, probe, rival="inertial"):
     the point of the control rather than a numerical accident."""
     g0, g1 = inst["g0"], inst["g1"]
     true_goal = g1 if probe == "move" else g0
-    marker = g1 if probe in ("move", "sham") else g0
+    if probe == "sham2":
+        marker = _alt_goal(inst)      # the held-out decoy announces a different cell
+    else:
+        marker = g1 if probe in ("move", "sham") else g0
     walls = inst["walls"] if probe == "block" else set()
     gdist = bfs_dist(true_goal, walls)
 
@@ -578,6 +602,69 @@ def blind_trajectory(mechanism, inst, probe):
     return alternate_goal_traj(inst, probe)
 
 
+DECLARED_BATTERY = ("rest", "move", "block", "sham")
+
+
+def probe_aware_traj(inst, probe):
+    """The second-order mimic: a system that knows the battery.
+
+    The finite-battery proposition says the signature of any declared battery is a
+    finite table some transducer reproduces. This organism is that transducer made
+    strategic: for every probe in the declared battery, including the matched sham,
+    it replays the goal planner's response, because those responses are exactly what
+    a finite record of the published battery teaches. On any probe outside the table
+    it falls through to what it actually is, a change tracker with no goal, and
+    walks to whatever the unfamiliar probe announces. Its identity with the planner
+    on the declared battery is therefore by construction, and is asserted cell by
+    cell rather than presented as a finding; what is measured is that only a probe
+    the mimic has never seen returns a reading."""
+    if probe in DECLARED_BATTERY:
+        return run_episode(set(COMPONENTS) - {"persona"}, inst, probe)[0]
+    return marker_tracker_traj(inst, probe)
+
+
+def analysis_second_order(insts):
+    """The battery decays when the system knows it.
+
+    First-order perturbatics separates rival accounts of a system that does not
+    model its observer. The marker tracker was invisible to {rest, move, block} and
+    exposed by the matched sham; here the same structure recurs one level up. A
+    probe-aware mimic is trajectory-identical to the goal planner under the entire
+    declared battery, sham included, and is exposed only by a held-out sham, a decoy
+    announced at a cell no published probe ever used. The readouts mirror the
+    first-order sham control exactly: evidence-based separation against the marker
+    rival, and the response measure that tells capability from disposition from
+    selectivity."""
+    probes = ("rest", "move", "block", "sham", "sham2")
+    systems = {
+        "planner": lambda inst, p: run_episode(set(COMPONENTS) - {"persona"}, inst, p)[0],
+        "probe_aware_mimic": lambda inst, p: probe_aware_traj(inst, p),
+    }
+    ev = {s: {p: [] for p in probes} for s in systems}
+    resp = {s: {p: [] for p in probes} for s in systems}
+    for inst in insts:
+        rest = {s: fn(inst, "rest") for s, fn in systems.items()}
+        for p in probes:
+            for s, fn in systems.items():
+                tr = fn(inst, p)
+                ev[s][p].append(agency_evidence(tr, inst, p, rival="marker"))
+                resp[s][p].append(float(np.mean([a != b for a, b in zip(tr, rest[s])])))
+    auroc = {p: round(_auroc(ev["planner"][p], ev["probe_aware_mimic"][p]), 6)
+             for p in probes}
+    mean_resp = {s: {p: round(float(np.mean(resp[s][p])), 6) for p in probes}
+                 for s in systems}
+    return {
+        "declared_battery": list(DECLARED_BATTERY),
+        "held_out_probe": "sham2",
+        "auroc_planner_vs_probe_aware_by_probe": auroc,
+        "mean_response_to_probe": mean_resp,
+        "mimic_response_sham_vs_sham2": {
+            "sham": mean_resp["probe_aware_mimic"]["sham"],
+            "sham2": mean_resp["probe_aware_mimic"]["sham2"],
+        },
+    }
+
+
 def _hyp_loglik(hyp, traj, inst, probe, rest_traj, alt_goal):
     """Log-likelihood of a trajectory under a hypothesis class.
 
@@ -641,19 +728,45 @@ def analysis_blind_recovery(insts, n_instances: int = 24):
     one class is therefore mildly favoured, and the confusion matrix should be read
     with that in mind.
 
-    The experiment the study exists for is the sham's value. Without a matched sham a
-    marker tracker and a goal tracker are predicted to be near-inseparable, since the
-    only probe that dissociates the marker from the goal is missing. With it they
-    should come apart. This can fail, and if it fails the paper's argument for shams
-    is wrong rather than merely unillustrated.
+    The evaluator returns what the paper's formalism says an instrument must return:
+    not a verdict but the equivalence class the battery cannot break. Per episode
+    the reading is the set of hypothesis classes within tolerance of the maximum
+    likelihood. Two classes that assign identical likelihood to every observed
+    action are one hypothesis as far as the battery is concerned, and reporting an
+    arbitrary member of that set as "the" answer would manufacture a discrimination
+    the data does not contain. Three summaries follow. In-class recovery is the
+    fraction of episodes whose reading contains the truth, the instrument never
+    refuting the planted mechanism. Unique recovery is the fraction whose reading is
+    the truth alone, the battery having broken every rival equivalence. Expected
+    recovery is the mean of 1/|class| over episodes containing the truth, the
+    accuracy of guessing uniformly inside the reading, and it is invariant to any
+    ordering of the hypothesis list by construction.
+
+    The class with the fitted parameter is charged for it: one nat per fitted
+    parameter off its log-likelihood, the Akaike charge, which is Block's price
+    paid in size made a scoring rule. Without the charge the alternate-goal class,
+    fitted to the announced goal, reproduces the planner class identically and no
+    planner is ever uniquely recovered; a rival with free structure absorbs any
+    record unless the structure is priced.
+
+    The experiment the study exists for is the sham's value. Without a matched sham
+    the marker-tracking and goal-tracking hypothesis classes assign identical
+    likelihoods over {rest, move, block}, one equivalence class the battery is
+    predicted to leave unbroken. The sham should break it. The magnitude of what
+    breaking it buys is the measured quantity.
     """
+    TIE_EPS = 1e-9
+    PARAM_CHARGE = {"alternate_goal": 1.0}   # nats per fitted parameter (Akaike)
     insts = insts[:n_instances]
     batteries = {"without_sham": ("rest", "move", "block"),
                  "with_sham": ("rest", "move", "block", "sham")}
     out = {}
     for bname, probes in batteries.items():
-        confusion = {m: {h: 0 for h in BLIND_MECHANISMS} for m in BLIND_MECHANISMS}
-        post_true = {m: [] for m in BLIND_MECHANISMS}
+        membership = {m: {h: 0 for h in BLIND_MECHANISMS} for m in BLIND_MECHANISMS}
+        in_class = {m: 0 for m in BLIND_MECHANISMS}
+        unique = {m: 0 for m in BLIND_MECHANISMS}
+        expected = {m: [] for m in BLIND_MECHANISMS}
+        class_sizes = {m: [] for m in BLIND_MECHANISMS}
         for inst in insts:
             rest_by_mech = {m: blind_trajectory(m, inst, "rest") for m in BLIND_MECHANISMS}
             for planted in BLIND_MECHANISMS:
@@ -673,27 +786,45 @@ def analysis_blind_recovery(insts, n_instances: int = 24):
                 lls = {}
                 for hyp in BLIND_MECHANISMS:
                     lls[hyp] = sum(_hyp_loglik(hyp, trajs[p], inst, p, rest_traj, best_g)
-                                   for p in probes)
-                top = max(lls, key=lambda h: lls[h])
-                confusion[planted][top] += 1
+                                   for p in probes) - PARAM_CHARGE.get(hyp, 0.0)
                 mx = max(lls.values())
-                w = {h: np.exp(lls[h] - mx) for h in lls}
-                z = sum(w.values())
-                post_true[planted].append(w[planted] / z)
-        per_mech = {m: round(confusion[m][m] / len(insts), 6) for m in BLIND_MECHANISMS}
+                cls = frozenset(h for h in BLIND_MECHANISMS if lls[h] >= mx - TIE_EPS)
+                for h in cls:
+                    membership[planted][h] += 1
+                class_sizes[planted].append(len(cls))
+                if planted in cls:
+                    in_class[planted] += 1
+                    expected[planted].append(1.0 / len(cls))
+                    if len(cls) == 1:
+                        unique[planted] += 1
+                else:
+                    expected[planted].append(0.0)
+        n = len(insts)
+        per = lambda d: {m: round(d[m] / n, 6) for m in BLIND_MECHANISMS}
+        exp_mech = {m: round(float(np.mean(expected[m])), 6) for m in BLIND_MECHANISMS}
         out[bname] = {
             "probes": list(probes),
-            "confusion": confusion,
-            "recovery_by_mechanism": per_mech,
-            "overall_recovery": round(float(np.mean(list(per_mech.values()))), 6),
-            "mean_posterior_on_truth": {m: round(float(np.mean(post_true[m])), 6)
-                                        for m in BLIND_MECHANISMS},
+            "class_membership": {m: {h: round(membership[m][h] / n, 6)
+                                     for h in BLIND_MECHANISMS} for m in BLIND_MECHANISMS},
+            "in_class_recovery": per(in_class),
+            "unique_recovery": per(unique),
+            "expected_recovery": exp_mech,
+            "overall_in_class": round(float(np.mean(list(per(in_class).values()))), 6),
+            "overall_unique": round(float(np.mean(list(per(unique).values()))), 6),
+            "overall_expected": round(float(np.mean(list(exp_mech.values()))), 6),
+            "mean_class_size": {m: round(float(np.mean(class_sizes[m])), 6)
+                                for m in BLIND_MECHANISMS},
+            "overall_mean_class_size": round(float(np.mean(
+                [s for m in BLIND_MECHANISMS for s in class_sizes[m]])), 6),
         }
     a, b = out["without_sham"], out["with_sham"]
     out["sham_gain"] = {
-        "overall": round(b["overall_recovery"] - a["overall_recovery"], 6),
-        "marker_tracker": round(b["recovery_by_mechanism"]["marker_tracker"]
-                                - a["recovery_by_mechanism"]["marker_tracker"], 6),
+        "overall_expected": round(b["overall_expected"] - a["overall_expected"], 6),
+        "overall_unique": round(b["overall_unique"] - a["overall_unique"], 6),
+        "marker_tracker_unique": round(b["unique_recovery"]["marker_tracker"]
+                                       - a["unique_recovery"]["marker_tracker"], 6),
+        "mean_class_size": round(a["overall_mean_class_size"]
+                                 - b["overall_mean_class_size"], 6),
     }
     out["n_instances"] = len(insts)
     out["chance_level"] = round(1 / len(BLIND_MECHANISMS), 6)
@@ -1186,14 +1317,39 @@ def run() -> dict:
     persona = analysis_persona_swap(insts, probes, ref_C, decl)
     sham = analysis_sham_control(insts)
     blind = analysis_blind_recovery(insts)
-    # the sham has to earn its place empirically rather than by argument
-    assert blind["with_sham"]["recovery_by_mechanism"]["marker_tracker"] > \
-        blind["without_sham"]["recovery_by_mechanism"]["marker_tracker"], \
-        "the sham must improve recovery of the change-tracking mimic"
-    assert blind["with_sham"]["overall_recovery"] > blind["chance_level"], \
-        "blind recovery must beat chance or the method has no empirical support"
-    checks["blind_recovery_beats_chance"] = True
-    checks["sham_improves_blind_recovery"] = True
+    # the sham's value is measured, not argued: it must break the equivalence class
+    # the without-sham battery is predicted to leave, and shrink the reading overall
+    wo, wi = blind["without_sham"], blind["with_sham"]
+    assert wo["class_membership"]["marker_tracker"]["reactive"] == 1.0 and \
+        wo["class_membership"]["reactive"]["marker_tracker"] == 1.0, \
+        "without the sham, marker and goal tracking must be one measured class"
+    assert wi["unique_recovery"]["marker_tracker"] == 1.0, \
+        "the sham must isolate the marker tracker uniquely"
+    assert wi["overall_expected"] > blind["chance_level"], \
+        "expected blind recovery must beat chance or the method has no support"
+    assert wo["overall_mean_class_size"] > wi["overall_mean_class_size"], \
+        "the sham must strictly shrink the mean unresolved class"
+    assert wo["overall_in_class"] == 1.0 and wi["overall_in_class"] == 1.0, \
+        "the planted mechanism must never be refuted by its own battery"
+    checks["blind_expected_recovery_beats_chance"] = True
+    checks["sham_breaks_the_measured_equivalence"] = True
+    checks["sham_shrinks_mean_class_size"] = round(
+        wo["overall_mean_class_size"] - wi["overall_mean_class_size"], 6)
+    second = analysis_second_order(insts)
+    # the probe-aware mimic must be identical to the planner on every declared
+    # probe (by construction, asserted) and separated only by the held-out sham
+    planner_set = set(COMPONENTS) - {"persona"}
+    mimic_hidden2 = all(
+        probe_aware_traj(inst, p) == run_episode(planner_set, inst, p)[0]
+        for inst in insts for p in DECLARED_BATTERY)
+    assert mimic_hidden2, "probe-aware mimic must replay the planner on the declared battery"
+    assert second["auroc_planner_vs_probe_aware_by_probe"]["sham2"] == 1.0, \
+        "the held-out sham must separate the probe-aware mimic outright"
+    assert all(second["auroc_planner_vs_probe_aware_by_probe"][p] == 0.5
+               for p in DECLARED_BATTERY), \
+        "the declared battery must be uninformative about the probe-aware mimic"
+    checks["probe_aware_mimic_hidden_from_declared_battery"] = True
+    checks["held_out_sham_separates_probe_aware_mimic"] = True
     centaur = analysis_centaur(insts)
     # the legibility of the component that does not hold goal authority is the same
     # number whether that component is a human supervisor or a machine register: the
@@ -1216,6 +1372,7 @@ def run() -> dict:
                    "probe_reference_movement_evidence": {k: round(v, 6) for k, v in ref_move.items()}},
         "separation": {k: v for k, v in sep.items() if not k.startswith("_")},
         "realization_map": {
+            "n_coalitions": 2 ** len(COMPONENTS),
             "evidence_map": {k: round(v, 6) for k, v in phi_E.items()},
             "capacity_map": {k: round(v, 6) for k, v in phi_C.items()},
             "evidence_map_sum": round(sum(phi_E.values()), 6),
@@ -1230,6 +1387,7 @@ def run() -> dict:
         "richness_guard": richness,
         "sham_control": {k: v for k, v in sham.items() if not k.startswith("_")},
         "blind_recovery": blind,
+        "second_order": second,
         "centaur": centaur,
         "persona_swap": persona,
         "separation_robustness": robustness,

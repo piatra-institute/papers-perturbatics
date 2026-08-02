@@ -50,6 +50,7 @@
     "mean_evidence_probe_reactive": 26.384062
   },
   "realization_map": {
+    "n_coalitions": 64,
     "evidence_map": {
       "goal_register": 0.700953,
       "planner": 0.36873,
@@ -219,58 +220,75 @@
         "move",
         "block"
       ],
-      "confusion": {
+      "class_membership": {
         "route_script": {
-          "route_script": 24,
-          "reactive": 0,
-          "planner": 0,
-          "marker_tracker": 0,
-          "alternate_goal": 0
+          "route_script": 1.0,
+          "reactive": 0.0,
+          "planner": 0.0,
+          "marker_tracker": 0.0,
+          "alternate_goal": 0.0
         },
         "reactive": {
-          "route_script": 0,
-          "reactive": 24,
-          "planner": 0,
-          "marker_tracker": 0,
-          "alternate_goal": 0
+          "route_script": 0.0,
+          "reactive": 1.0,
+          "planner": 0.916667,
+          "marker_tracker": 1.0,
+          "alternate_goal": 0.0
         },
         "planner": {
-          "route_script": 0,
-          "reactive": 10,
-          "planner": 14,
-          "marker_tracker": 0,
-          "alternate_goal": 0
+          "route_script": 0.0,
+          "reactive": 0.416667,
+          "planner": 1.0,
+          "marker_tracker": 0.416667,
+          "alternate_goal": 0.0
         },
         "marker_tracker": {
-          "route_script": 0,
-          "reactive": 24,
-          "planner": 0,
-          "marker_tracker": 0,
-          "alternate_goal": 0
+          "route_script": 0.0,
+          "reactive": 1.0,
+          "planner": 0.916667,
+          "marker_tracker": 1.0,
+          "alternate_goal": 0.0
         },
         "alternate_goal": {
-          "route_script": 0,
-          "reactive": 0,
-          "planner": 0,
-          "marker_tracker": 0,
-          "alternate_goal": 24
+          "route_script": 0.0,
+          "reactive": 0.0,
+          "planner": 0.0,
+          "marker_tracker": 0.0,
+          "alternate_goal": 1.0
         }
       },
-      "recovery_by_mechanism": {
+      "in_class_recovery": {
         "route_script": 1.0,
         "reactive": 1.0,
+        "planner": 1.0,
+        "marker_tracker": 1.0,
+        "alternate_goal": 1.0
+      },
+      "unique_recovery": {
+        "route_script": 1.0,
+        "reactive": 0.0,
         "planner": 0.583333,
         "marker_tracker": 0.0,
         "alternate_goal": 1.0
       },
-      "overall_recovery": 0.716667,
-      "mean_posterior_on_truth": {
+      "expected_recovery": {
         "route_script": 1.0,
-        "reactive": 0.270833,
-        "planner": 0.391162,
-        "marker_tracker": 0.270833,
+        "reactive": 0.347222,
+        "planner": 0.722222,
+        "marker_tracker": 0.347222,
         "alternate_goal": 1.0
-      }
+      },
+      "overall_in_class": 1.0,
+      "overall_unique": 0.516667,
+      "overall_expected": 0.683333,
+      "mean_class_size": {
+        "route_script": 1.0,
+        "reactive": 2.916667,
+        "planner": 1.833333,
+        "marker_tracker": 2.916667,
+        "alternate_goal": 1.0
+      },
+      "overall_mean_class_size": 1.933333
     },
     "with_sham": {
       "probes": [
@@ -279,65 +297,120 @@
         "block",
         "sham"
       ],
-      "confusion": {
+      "class_membership": {
         "route_script": {
-          "route_script": 24,
-          "reactive": 0,
-          "planner": 0,
-          "marker_tracker": 0,
-          "alternate_goal": 0
+          "route_script": 1.0,
+          "reactive": 0.0,
+          "planner": 0.0,
+          "marker_tracker": 0.0,
+          "alternate_goal": 0.0
         },
         "reactive": {
-          "route_script": 0,
-          "reactive": 24,
-          "planner": 0,
-          "marker_tracker": 0,
-          "alternate_goal": 0
+          "route_script": 0.0,
+          "reactive": 1.0,
+          "planner": 0.916667,
+          "marker_tracker": 0.0,
+          "alternate_goal": 0.0
         },
         "planner": {
-          "route_script": 0,
-          "reactive": 10,
-          "planner": 14,
-          "marker_tracker": 0,
-          "alternate_goal": 0
+          "route_script": 0.0,
+          "reactive": 0.416667,
+          "planner": 1.0,
+          "marker_tracker": 0.0,
+          "alternate_goal": 0.0
         },
         "marker_tracker": {
-          "route_script": 0,
-          "reactive": 0,
-          "planner": 0,
-          "marker_tracker": 24,
-          "alternate_goal": 0
+          "route_script": 0.0,
+          "reactive": 0.0,
+          "planner": 0.0,
+          "marker_tracker": 1.0,
+          "alternate_goal": 0.0
         },
         "alternate_goal": {
-          "route_script": 0,
-          "reactive": 0,
-          "planner": 0,
-          "marker_tracker": 0,
-          "alternate_goal": 24
+          "route_script": 0.0,
+          "reactive": 0.0,
+          "planner": 0.0,
+          "marker_tracker": 0.0,
+          "alternate_goal": 1.0
         }
       },
-      "recovery_by_mechanism": {
+      "in_class_recovery": {
         "route_script": 1.0,
         "reactive": 1.0,
+        "planner": 1.0,
+        "marker_tracker": 1.0,
+        "alternate_goal": 1.0
+      },
+      "unique_recovery": {
+        "route_script": 1.0,
+        "reactive": 0.083333,
         "planner": 0.583333,
         "marker_tracker": 1.0,
         "alternate_goal": 1.0
       },
-      "overall_recovery": 0.916667,
-      "mean_posterior_on_truth": {
+      "expected_recovery": {
         "route_script": 1.0,
-        "reactive": 0.388889,
-        "planner": 0.428138,
+        "reactive": 0.541667,
+        "planner": 0.791667,
         "marker_tracker": 1.0,
         "alternate_goal": 1.0
-      }
+      },
+      "overall_in_class": 1.0,
+      "overall_unique": 0.733333,
+      "overall_expected": 0.866667,
+      "mean_class_size": {
+        "route_script": 1.0,
+        "reactive": 1.916667,
+        "planner": 1.416667,
+        "marker_tracker": 1.0,
+        "alternate_goal": 1.0
+      },
+      "overall_mean_class_size": 1.266667
     },
     "sham_gain": {
-      "overall": 0.2,
-      "marker_tracker": 1.0
+      "overall_expected": 0.183334,
+      "overall_unique": 0.216666,
+      "marker_tracker_unique": 1.0,
+      "mean_class_size": 0.666666
     },
     "n_instances": 24,
     "chance_level": 0.2
+  },
+  "second_order": {
+    "declared_battery": [
+      "rest",
+      "move",
+      "block",
+      "sham"
+    ],
+    "held_out_probe": "sham2",
+    "auroc_planner_vs_probe_aware_by_probe": {
+      "rest": 0.5,
+      "move": 0.5,
+      "block": 0.5,
+      "sham": 0.5,
+      "sham2": 1.0
+    },
+    "mean_response_to_probe": {
+      "planner": {
+        "rest": 0.0,
+        "move": 0.841463,
+        "block": 0.295732,
+        "sham": 0.0,
+        "sham2": 0.0
+      },
+      "probe_aware_mimic": {
+        "rest": 0.0,
+        "move": 0.841463,
+        "block": 0.295732,
+        "sham": 0.0,
+        "sham2": 0.868293
+      }
+    },
+    "mimic_response_sham_vs_sham2": {
+      "sham": 0.0,
+      "sham2": 0.868293
+    }
   },
   "centaur": {
     "latency": 6,
@@ -1160,8 +1233,11 @@
     "marker_tracker_hidden_from_declared_battery": true,
     "sham_separates_marker_tracker": true,
     "move_probe_evidence_vs_marker_rival_max_abs": 0.0,
-    "blind_recovery_beats_chance": true,
-    "sham_improves_blind_recovery": true,
+    "blind_expected_recovery_beats_chance": true,
+    "sham_breaks_the_measured_equivalence": true,
+    "sham_shrinks_mean_class_size": 0.666666,
+    "probe_aware_mimic_hidden_from_declared_battery": true,
+    "held_out_sham_separates_probe_aware_mimic": true,
     "centaur_channel_legibility_substrate_gap": 0.0,
     "centaur_channel_matches_persona_gap": 0.0
   }

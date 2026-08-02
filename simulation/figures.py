@@ -159,15 +159,15 @@ HUMAN = "#6a3d9a"      # the operator, when it holds goal authority
 
 def plot_blind_recovery(results: dict, path: str) -> None:
     br = results["blind_recovery"]
-    mechs = list(br["with_sham"]["recovery_by_mechanism"])
+    mechs = list(br["with_sham"]["unique_recovery"])
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(10.4, 4.0),
                                  gridspec_kw={"width_ratios": [1.15, 1]})
 
     x = np.arange(len(mechs))
     w = 0.38
-    a1.bar(x - w / 2, [br["without_sham"]["recovery_by_mechanism"][m] for m in mechs], w,
+    a1.bar(x - w / 2, [br["without_sham"]["unique_recovery"][m] for m in mechs], w,
            color=NEUTRAL, label="battery without a sham")
-    a1.bar(x + w / 2, [br["with_sham"]["recovery_by_mechanism"][m] for m in mechs], w,
+    a1.bar(x + w / 2, [br["with_sham"]["unique_recovery"][m] for m in mechs], w,
            color=ABSORB_G, label="battery with a matched sham")
     a1.axhline(br["chance_level"], color=PASSIVE, ls="--", lw=1.0)
     a1.annotate("chance", (len(mechs) - 0.5, br["chance_level"] + 0.02), fontsize=8,
@@ -175,14 +175,13 @@ def plot_blind_recovery(results: dict, path: str) -> None:
     a1.set_xticks(x)
     a1.set_xticklabels([m.replace("_", "\n") for m in mechs], fontsize=8)
     a1.set_ylim(0, 1.12)
-    a1.set_ylabel("planted mechanism recovered")
-    a1.set_title("recovery of a mechanism the evaluator was not told",
+    a1.set_ylabel("planted mechanism isolated uniquely")
+    a1.set_title("what the battery isolates, and what it leaves entangled",
                  fontsize=9.5, color=INK)
-    a1.legend(frameon=False, fontsize=8.5, loc="lower left")
+    a1.legend(frameon=False, fontsize=8.5, loc="upper center")
 
-    conf = br["with_sham"]["confusion"]
-    n = br["n_instances"]
-    M = np.array([[conf[m][h] / n for h in mechs] for m in mechs])
+    M = np.array([[br["with_sham"]["class_membership"][m][h] for h in mechs]
+                  for m in mechs])
     im = a2.imshow(M, cmap="Greens", vmin=0, vmax=1)
     a2.set_xticks(range(len(mechs)))
     a2.set_xticklabels([m.replace("_", "\n") for m in mechs], fontsize=7.5)
@@ -193,12 +192,55 @@ def plot_blind_recovery(results: dict, path: str) -> None:
             if M[i, j] > 0.01:
                 a2.text(j, i, f"{M[i, j]:.2f}", ha="center", va="center", fontsize=7.5,
                         color="white" if M[i, j] > 0.55 else INK)
-    a2.set_xlabel("inferred")
+    a2.set_xlabel("in the reading's equivalence class")
     a2.set_ylabel("planted")
-    a2.set_title("where it fails, with the sham in the battery", fontsize=9.5, color=INK)
+    a2.set_title("the class the battery cannot break, sham included",
+                 fontsize=9.5, color=INK)
     a2.grid(False)
     fig.colorbar(im, ax=a2, fraction=0.046, pad=0.04)
     _style(a1)
+    fig.tight_layout()
+    fig.savefig(path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
+
+
+def plot_second_order(results: dict, path: str) -> None:
+    so = results["second_order"]
+    probes = list(so["auroc_planner_vs_probe_aware_by_probe"])
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.6, 3.8),
+                                 gridspec_kw={"width_ratios": [1.1, 1]})
+
+    vals = [so["auroc_planner_vs_probe_aware_by_probe"][p] for p in probes]
+    cols = [ABSORB_G if p == "sham2" else NEUTRAL for p in probes]
+    a1.bar(range(len(probes)), vals, 0.6, color=cols)
+    a1.axhline(0.5, color=INK, lw=0.9, ls="--")
+    a1.set_xticks(range(len(probes)))
+    a1.set_xticklabels(["rest", "move", "block", "sham", "held-out\nsham"], fontsize=8.5)
+    a1.set_ylim(0, 1.05)
+    a1.set_ylabel("AUROC, planner vs probe-aware mimic")
+    a1.set_title("the declared battery, sham included, reads nothing",
+                 fontsize=9.5, color=INK)
+
+    systems = ["planner", "probe_aware_mimic"]
+    resp = so["mean_response_to_probe"]
+    x = np.arange(len(systems))
+    w = 0.38
+    a2.bar(x - w / 2, [resp[s]["sham"] for s in systems], w, color=NEUTRAL,
+           label="declared sham")
+    a2.bar(x + w / 2, [resp[s]["sham2"] for s in systems], w, color=ABSORB_G,
+           label="held-out sham")
+    for k, s in enumerate(systems):
+        if resp[s]["sham"] < 1e-9 and resp[s]["sham2"] < 1e-9:
+            a2.annotate("withholds\nunder both", xy=(k, 0.02), fontsize=8,
+                        color=NEUTRAL, ha="center", va="bottom")
+    a2.set_xticks(x)
+    a2.set_xticklabels(["planner", "probe-aware\nmimic"], fontsize=8.5)
+    a2.set_ylim(0, 1.12)
+    a2.set_ylabel("fraction of cells departing the rest path")
+    a2.set_title("only a probe it has never seen moves it", fontsize=9.5, color=INK)
+    a2.legend(frameon=False, fontsize=8.5, loc="upper left")
+    for ax in (a1, a2):
+        _style(ax)
     fig.tight_layout()
     fig.savefig(path, dpi=200, bbox_inches="tight")
     plt.close(fig)
@@ -265,14 +307,28 @@ def plot_guards(results: dict, path: str) -> None:
     rg = results["richness_guard"]["systems"]
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.4, 3.8))
 
-    names = [b[0] for b in bs]
-    vals = [b[1] for b in bs]
-    a1.plot(range(len(names)), vals, "o-", color=AGENT, lw=1.8, ms=6)
+    # the full landscape over all 2^6 enclosures, not one flattering path through it:
+    # the band is the min/max realized capacity at each enclosure size, and the line
+    # is the nested chain the prose walks
+    land = results["enclosure_landscape_capacity_by_size"]
+    sizes = sorted(int(k) for k in land)
+    lo = [land[str(s)]["min"] for s in sizes]
+    hi = [land[str(s)]["max"] for s in sizes]
+    a1.fill_between(sizes, lo, hi, color=AGENT, alpha=0.18,
+                    label="all enclosures of that size (min to max)")
+    chain_sizes = [2, 3, 5, 6]     # planner+harness, +goal register, +map+memory, +persona
+    a1.plot(chain_sizes, [b[1] for b in bs], "o-", color=AGENT, lw=1.8, ms=6,
+            label="the nested chain of the text")
+    offsets = [(6, 6), (6, -12), (0, -15), (6, -4)]
+    aligns = ["left", "left", "center", "left"]
+    for (s, b), off, ha in zip(zip(chain_sizes, bs), offsets, aligns):
+        a1.annotate(b[0], (s, b[1]), xytext=off, textcoords="offset points",
+                    fontsize=7.2, color=INK, ha=ha)
     a1.axhline(0, color=NEUTRAL, lw=0.9)
-    a1.set_xticks(range(len(names)))
-    a1.set_xticklabels(names, fontsize=8)
+    a1.set_xlabel("components enclosed")
     a1.set_ylabel("realized capacity of the enclosed unit")
-    a1.set_title("the reading depends on the declared boundary", fontsize=10, color=INK)
+    a1.set_title("the landscape over every declarable boundary", fontsize=10, color=INK)
+    a1.legend(frameon=False, fontsize=7.5, loc="upper left")
 
     for name, (cx, ay) in rg.items():
         col = PASSIVE if name in ("route_script", "chaotic") else AGENT
