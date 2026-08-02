@@ -303,3 +303,26 @@ Three tics, all removed:
 3. **Sentences that circle before landing, and titles that gesture.** "The battery decays when the system knows it" is now "What a system does once it knows the battery". "To make the instrument concrete rather than promissory, put three systems in a deterministic gridworld" is now "Put three systems in a deterministic gridworld." Also straightened: the four-claims opening, the demonstrator's terms, the study's limits, the three silences, the danger-against-itself paragraph, and the second-order opening.
 
 The rhythm advisory improved on its own as a result, which is the useful corroboration that this was a real problem rather than a matter of taste: the longest run without a short sentence fell from 37 sentences to 24, and short sentences rose from 13% to 16%. Gates otherwise unchanged: voice 0 errors and the same two pre-existing review-candidates at L55 and L66, refs 73/73, claims 0 unmatched, check => PASS, 31 pages. Saved as a standing constraint in the workspace memory so it does not return.
+
+## v14.3 (2026-08-02) — the prose pass finished properly
+
+The v14.2 pass was whack-a-mole. It fixed the three sentences the author named and left the habit intact, which the author demonstrated by naming three more from the same paragraphs the pass had supposedly cleaned. The mistake was shortening the preambles instead of deleting them, so the shape survived in miniature: "Against that background the paper makes four claims, and they are of different sizes, which should be said rather than left for the prose to blur" became "The paper makes four claims, and they are not the same size", which is the same sentence with fewer words.
+
+This pass measured the shapes across all 421 sentences before touching anything, then fixed every instance of each.
+
+| Shape | Before | After |
+|---|---|---|
+| "X, and it/they/this does Y" characterising tail | 20 | 0 |
+| meta-commentary on the document | 9 | 0 |
+| ", not X" contrast | 4 | 0 |
+| "There is X, and it ..." | 1 | 0 |
+| scene-setting opener before the claim | 8 | 0 |
+| "rather than" | 89 | 38 (3.0/1k, from 7.0) |
+
+Deleted rather than shortened: "The principle is a small result and can be stated as one", "and the section claims none of it as such", "so its scope is worth marking", "and the narrowing belongs in the text", "and the paper is late to both", "Only part of that generalizes", "Three limits bound what these numbers mean", "Take the ending on its own terms first". Each was a sentence about what the text was about to do; the thing it was about to do now simply happens.
+
+The `, not` trap caught me twice in one session, once in each pass: swapping "rather than" for ", not" preserves the tic exactly and the voice gate's inline-contrastive rule flags it immediately. Six instances introduced and removed. The rule is to drop the contrast, not to reword it, and it is now in the workspace memory with that warning attached.
+
+Corroboration that this was structural and not taste: the rhythm advisory improved twice without being targeted. Longest run without a short sentence 37 -> 24 -> 21; short sentences 13% -> 16% -> 17%; mean sentence length 30 -> 28 words. Body 12,954 -> 12,608 words with no content removed.
+
+Gates: voice 0 errors and the same two pre-existing review-candidates (L55, L66), refs 73/73, claims 0 unmatched, check => PASS, 30 pages, web synced, tsc clean.
