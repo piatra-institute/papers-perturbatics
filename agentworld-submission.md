@@ -4,19 +4,23 @@ Target: **Agentworld special issue**, *Antikythera: Journal for the Philosophy o
 
 The call's one explicit instruction (p. 58 of the brief): *"All submissions should explain how the proposed contribution adds to the Special Issue's core questions."* The proposal below performs that mapping itself, in its own text, because the proposal is the only document the editors are guaranteed to read.
 
-## Proposal (500-word limit; this one is 463 words)
+## Proposal (500-word limit; this one is 498 words)
 
 **Perturbatics: An Agentoscope for Reading Agency**
 
-The Antikythera mechanism was an instrument for reading a system nobody could interrogate directly. This paper builds another one, for the system this issue describes: the artificial agent that is not what it appears to be, a composite of model, persona, memory, harness, and tools, answering as though a single mind stood behind it.
+The lecture that launched Agentworld was called *What Is Agency? Placebo Culture, Agency Theater, Agentic AI*. This paper submits the instrument that measures the middle term.
 
-Section 8.4 of the brief holds that stability among unlike minds is the calibration of mutual legibility, and that alien drift begins in behavior that stays predictable while its motive silently diverges. We submit the instrument that measures this. Its principle: at rest, rival accounts of a system's organization leave the same record, so separation requires a probe, a controlled difference that makes them predict differently. Its readout: the evidence for agency and the realized capacity are attributed across the assemblage by the same interventional game, and the difference of the two maps is a legibility term that makes agency theater a number, a narrating persona showing agency it does not realize.
+Agency theater is the gap between the agency a thing displays and the agency it realizes. We make it a number. Give each component of an assemblage a configuration switch, attribute the evidence for agency across those switches by an interventional Shapley game, attribute the realized performance by the same game, and difference the two maps. A component with evidence and no performance is theater exactly; a narrating persona returns its whole evidence share as gap, and the value is a theorem of the construction rather than a fitted number.
 
-The demonstrator instantiates the brief's own claims. Section 8.4's divergent mimic: a system tracking the last-announced target is trajectory-identical to a goal tracker under the entire declared battery, separated only by a matched sham, a decoy announced where the goal did not go. Section 7.4's role-interchangeability: goal authority handed to a human operator and then to a machine register returns mirror-image maps, whoever merely announces the goal carrying the persona's own legibility to six decimals; the instrument reads the role rather than the substrate. Section 10.2's harness-centrism: the harness is a switched component with its own Shapley share. Section 8.2's mutual modeling: a probe-aware mimic that has memorized the published battery, sham included, defeats all of it and is exposed only by a probe it has never seen. The battery decays when the system knows it, and auditing becomes an institutional question rather than an instrumental one. One reading is made blind: five planted mechanisms, recovered up to the equivalence classes the battery cannot break, 0.73 uniquely isolated against a chance of 0.2.
+The instrument rests on a separation principle. At rest, rival accounts of a system's organization leave the same record, so nothing analytic tells them apart and separation requires a probe, a controlled difference that makes the rivals predict differently. From that principle the brief's own claims become measurable. Section 8.4 holds that stability among unlike minds is calibrated legibility, and that drift begins in behavior that stays predictable while its motive diverges: a system tracking the last-announced target is trajectory-identical to a goal tracker under an entire declared battery, and only a matched sham, a decoy where the goal did not go, separates them. Section 7.4 holds that what matters is the function of a role rather than who occupies it: hand goal authority to a human operator and then to a machine register and the maps come out mirror images, whoever merely announces the goal carrying the persona's own number to six decimals. Section 10.2 holds that capability lives in the harness: the harness is a switched component with its own share.
 
-The account names its boundary. For consciousness the deciding probe, shutdown, returns nothing, must not be run, and for a copyable individual cannot even be stated, which is section 8.5's session-death reached from the other side: the science must also say when not to perturb.
+Section 8.2 asks what happens when the other is modeling you, and the answer is unkind to instruments. A mimic that has memorized a published battery, matched sham included, defeats every probe in it and is separated only by a draw it has never seen. Enumerated batteries are spent by publication; randomized families are not. Auditing therefore becomes a question about institutions, about who holds the unspent draws and what an audit is worth once its content is public.
 
-The paper reads one assemblage rigorously; it does not model society-scale coevolution. What accompanies it exceeds the format the call asks contributors to exceed: a full draft, a deterministic simulation whose every number is machine-checked against the text under fifteen invariants, seven figures, and a live interactive agentoscope at piatra.institute/playgrounds/agentoscope, where the reader chooses the probe and watches four systems identical at rest fan apart. Production capacity is not proposed but already spent.
+One reading is made blind. Five mechanisms are planted and hidden, and the evaluator returns an identified set rather than a verdict, never refuting the truth and isolating it alone in 0.73 of readings against a chance of 0.2.
+
+The account ends where its probe cannot be run. For consciousness the deciding act is uninformative, inadmissible, and underdetermined in its description under a copyable individual's persistence conditions, which is section 8.5's session-death reached from the other side.
+
+The paper reads one assemblage rigorously and does not model society-scale coevolution. It arrives with a deterministic simulation whose every number is machine-checked under seventeen invariants, seven figures, and a live interactive agentoscope where the reader chooses the probe. Production capacity is not proposed but already spent.
 
 ## Fit, mapped honestly
 
@@ -26,6 +30,7 @@ Claim only what a spot-check confirms. The strong hits:
 |---|---|
 | **§2.5** "the individuated agent is not a monad but a lamination" | The assemblage of six switched components; the boundary declared, swept, and read as a landscape over all 64 enclosures; Simondon and Combes cited on individuation. |
 | **§7.4** role-based interchangeability ("what matters is the function of the role, not who occupies it") | The centaur condition: mirror-image maps under authority exchange; the non-holder's legibility identical to six decimals whether it is a human or a register. A formal proof of the section's claim. |
+| **The launch lecture**, *What Is Agency? Placebo Culture, Agency Theater, Agentic AI* (9 July 2026) | The paper's central construct is the lecture's middle term, made a measurable quantity. The phrase is the issue's, not ours, and the proposal says so in its first line. |
 | **§8.4** "stability is legibility, not cooperation"; drift as predictable behavior with divergent motive | The legibility term $L = \phi^E - \phi^C$; the marker tracker, predictable under the whole battery while its motive diverges, exposed only by the matched sham. |
 | **§8.5** session-death ("disappearance with artifact-mediated pseudo-return") | The third silence: pause, fork, or ending is undecidable for a copyable individual, so the admissibility term cannot be priced. Reached independently; ends in a stance, not a taxonomy. |
 | **§8.2 / Q11** counter-simulation, adversariality as norm | The second-order section: the probed agent as a player, theater as strategy, battery decay, the held-out sham as a one-shot resource, audit institutions. |
@@ -45,7 +50,7 @@ Claims **dropped** from earlier drafts of this package, with reasons: **Q1** (th
 | Requirement | Status |
 |---|---|
 | Abstract or proposal <=500 words | Above (463 words, verified by script) |
-| Full paper draft (encouraged, not required) | Ready: 28-page PDF, 7 figures, published at piatra.institute |
+| Full paper draft (encouraged, not required) | Ready: PDF with 7 figures, published at piatra.institute |
 | Author name(s), affiliation(s) | **PIATRA . INSTITUTE** (institutional author; no individual byline, by design) |
 | Contact info + lead contact | The institute's contact address (fill at submission) |
 | Biography(ies)/CV(s) | Institute biography below |

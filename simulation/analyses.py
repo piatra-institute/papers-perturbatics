@@ -755,24 +755,32 @@ def analysis_blind_recovery(insts, n_instances: int = 24):
     predicted to leave unbroken. The sham should break it. The magnitude of what
     breaking it buys is the measured quantity.
     """
-    TIE_EPS = 1e-9
-    PARAM_CHARGE = {"alternate_goal": 1.0}   # nats per fitted parameter (Akaike)
+    # The fitted class is charged a two-part description length rather than a
+    # parameter count. It must transmit which of the N*N cells its goal is, and a
+    # uniform code over the grid costs log(N^2) nats; an Akaike-style charge of one
+    # nat per parameter is the wrong price here, because the search is over a
+    # discrete grid of 169 candidates rather than over one regular scalar, and the
+    # error flatters the only class with free structure.
+    CODE_COST = {"alternate_goal": float(np.log(N * N))}
+    # The reading is an identified set, and a set defined by exact likelihood ties
+    # would be an artifact of a deterministic demonstrator: on noisy data nothing
+    # ties exactly. The set is therefore taken at a stated tolerance in nats, and
+    # reported across a range of them, so that what the study claims is visibly
+    # independent of the tolerance rather than resting on machine precision.
+    TOLERANCES = [0.0, 1.0, 2.0, 4.0, 8.0]
+    PRIMARY_TOL = 2.0
     insts = insts[:n_instances]
     batteries = {"without_sham": ("rest", "move", "block"),
                  "with_sham": ("rest", "move", "block", "sham")}
     out = {}
     for bname, probes in batteries.items():
-        membership = {m: {h: 0 for h in BLIND_MECHANISMS} for m in BLIND_MECHANISMS}
-        in_class = {m: 0 for m in BLIND_MECHANISMS}
-        unique = {m: 0 for m in BLIND_MECHANISMS}
-        expected = {m: [] for m in BLIND_MECHANISMS}
-        class_sizes = {m: [] for m in BLIND_MECHANISMS}
+        episode_lls = []
         for inst in insts:
             rest_by_mech = {m: blind_trajectory(m, inst, "rest") for m in BLIND_MECHANISMS}
             for planted in BLIND_MECHANISMS:
                 trajs = {p: blind_trajectory(planted, inst, p) for p in probes}
                 rest_traj = rest_by_mech[planted]
-                # fit the one free parameter on the moved-goal episode only
+                # the free parameter is fitted on the moved-goal episode alone
                 if "move" in probes:
                     best_g, best_ll = inst["g0"], -np.inf
                     for i in range(N):
@@ -786,12 +794,21 @@ def analysis_blind_recovery(insts, n_instances: int = 24):
                 lls = {}
                 for hyp in BLIND_MECHANISMS:
                     lls[hyp] = sum(_hyp_loglik(hyp, trajs[p], inst, p, rest_traj, best_g)
-                                   for p in probes) - PARAM_CHARGE.get(hyp, 0.0)
+                                   for p in probes) - CODE_COST.get(hyp, 0.0)
+                episode_lls.append((planted, lls))
+
+        def summarise(tol):
+            membership = {m: {h: 0 for h in BLIND_MECHANISMS} for m in BLIND_MECHANISMS}
+            in_class = {m: 0 for m in BLIND_MECHANISMS}
+            unique = {m: 0 for m in BLIND_MECHANISMS}
+            expected = {m: [] for m in BLIND_MECHANISMS}
+            sizes = {m: [] for m in BLIND_MECHANISMS}
+            for planted, lls in episode_lls:
                 mx = max(lls.values())
-                cls = frozenset(h for h in BLIND_MECHANISMS if lls[h] >= mx - TIE_EPS)
+                cls = frozenset(h for h in BLIND_MECHANISMS if lls[h] >= mx - tol)
                 for h in cls:
                     membership[planted][h] += 1
-                class_sizes[planted].append(len(cls))
+                sizes[planted].append(len(cls))
                 if planted in cls:
                     in_class[planted] += 1
                     expected[planted].append(1.0 / len(cls))
@@ -799,24 +816,33 @@ def analysis_blind_recovery(insts, n_instances: int = 24):
                         unique[planted] += 1
                 else:
                     expected[planted].append(0.0)
-        n = len(insts)
-        per = lambda d: {m: round(d[m] / n, 6) for m in BLIND_MECHANISMS}
-        exp_mech = {m: round(float(np.mean(expected[m])), 6) for m in BLIND_MECHANISMS}
-        out[bname] = {
-            "probes": list(probes),
-            "class_membership": {m: {h: round(membership[m][h] / n, 6)
-                                     for h in BLIND_MECHANISMS} for m in BLIND_MECHANISMS},
-            "in_class_recovery": per(in_class),
-            "unique_recovery": per(unique),
-            "expected_recovery": exp_mech,
-            "overall_in_class": round(float(np.mean(list(per(in_class).values()))), 6),
-            "overall_unique": round(float(np.mean(list(per(unique).values()))), 6),
-            "overall_expected": round(float(np.mean(list(exp_mech.values()))), 6),
-            "mean_class_size": {m: round(float(np.mean(class_sizes[m])), 6)
-                                for m in BLIND_MECHANISMS},
-            "overall_mean_class_size": round(float(np.mean(
-                [s for m in BLIND_MECHANISMS for s in class_sizes[m]])), 6),
-        }
+            n = len(insts)
+            per = lambda d: {m: round(d[m] / n, 6) for m in BLIND_MECHANISMS}
+            exp_mech = {m: round(float(np.mean(expected[m])), 6) for m in BLIND_MECHANISMS}
+            return {
+                "class_membership": {m: {h: round(membership[m][h] / n, 6)
+                                         for h in BLIND_MECHANISMS} for m in BLIND_MECHANISMS},
+                "in_class_recovery": per(in_class),
+                "unique_recovery": per(unique),
+                "expected_recovery": exp_mech,
+                "overall_in_class": round(float(np.mean(list(per(in_class).values()))), 6),
+                "overall_unique": round(float(np.mean(list(per(unique).values()))), 6),
+                "overall_expected": round(float(np.mean(list(exp_mech.values()))), 6),
+                "mean_class_size": {m: round(float(np.mean(sizes[m])), 6)
+                                    for m in BLIND_MECHANISMS},
+                "overall_mean_class_size": round(float(np.mean(
+                    [s for m in BLIND_MECHANISMS for s in sizes[m]])), 6),
+            }
+
+        primary = summarise(PRIMARY_TOL)
+        primary["probes"] = list(probes)
+        primary["tolerance_nats"] = PRIMARY_TOL
+        primary["tolerance_sensitivity"] = {
+            str(tol): {k: summarise(tol)[k] for k in
+                       ("overall_unique", "overall_expected", "overall_in_class",
+                        "overall_mean_class_size")}
+            for tol in TOLERANCES}
+        out[bname] = primary
     a, b = out["without_sham"], out["with_sham"]
     out["sham_gain"] = {
         "overall_expected": round(b["overall_expected"] - a["overall_expected"], 6),
@@ -828,6 +854,8 @@ def analysis_blind_recovery(insts, n_instances: int = 24):
     }
     out["n_instances"] = len(insts)
     out["chance_level"] = round(1 / len(BLIND_MECHANISMS), 6)
+    out["code_cost_nats"] = {k: round(v, 6) for k, v in CODE_COST.items()}
+    out["tolerances_nats"] = TOLERANCES
     return out
 
 
@@ -1335,6 +1363,21 @@ def run() -> dict:
     checks["sham_breaks_the_measured_equivalence"] = True
     checks["sham_shrinks_mean_class_size"] = round(
         wo["overall_mean_class_size"] - wi["overall_mean_class_size"], 6)
+    # the reading must not depend on exact likelihood ties, which a deterministic
+    # demonstrator manufactures and noisy data never supplies: the summaries have to
+    # hold over a band of tolerances, and the sham has to pay at every one of them
+    band = [tol for tol in blind["tolerances_nats"] if tol <= 2.0]
+    assert all(wo["tolerance_sensitivity"][str(tol)]["overall_unique"]
+               == wo["overall_unique"] for tol in band) and \
+        all(wi["tolerance_sensitivity"][str(tol)]["overall_unique"]
+            == wi["overall_unique"] for tol in band), \
+        "the identified-set summaries must be flat across the reported tolerance band"
+    assert all(wi["tolerance_sensitivity"][str(tol)]["overall_unique"] >
+               wo["tolerance_sensitivity"][str(tol)]["overall_unique"]
+               for tol in blind["tolerances_nats"]), \
+        "the sham must pay at every tolerance, not only at the reported one"
+    checks["identified_set_flat_over_tolerance_band"] = True
+    checks["sham_pays_at_every_tolerance"] = True
     second = analysis_second_order(insts)
     # the probe-aware mimic must be identical to the planner on every declared
     # probe (by construction, asserted) and separated only by the held-out sham

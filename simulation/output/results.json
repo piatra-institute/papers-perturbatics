@@ -215,11 +215,6 @@
   },
   "blind_recovery": {
     "without_sham": {
-      "probes": [
-        "rest",
-        "move",
-        "block"
-      ],
       "class_membership": {
         "route_script": {
           "route_script": 1.0,
@@ -288,15 +283,47 @@
         "marker_tracker": 2.916667,
         "alternate_goal": 1.0
       },
-      "overall_mean_class_size": 1.933333
-    },
-    "with_sham": {
+      "overall_mean_class_size": 1.933333,
       "probes": [
         "rest",
         "move",
-        "block",
-        "sham"
+        "block"
       ],
+      "tolerance_nats": 2.0,
+      "tolerance_sensitivity": {
+        "0.0": {
+          "overall_unique": 0.516667,
+          "overall_expected": 0.683333,
+          "overall_in_class": 1.0,
+          "overall_mean_class_size": 1.933333
+        },
+        "1.0": {
+          "overall_unique": 0.516667,
+          "overall_expected": 0.683333,
+          "overall_in_class": 1.0,
+          "overall_mean_class_size": 1.933333
+        },
+        "2.0": {
+          "overall_unique": 0.516667,
+          "overall_expected": 0.683333,
+          "overall_in_class": 1.0,
+          "overall_mean_class_size": 1.933333
+        },
+        "4.0": {
+          "overall_unique": 0.491667,
+          "overall_expected": 0.666667,
+          "overall_in_class": 1.0,
+          "overall_mean_class_size": 1.983333
+        },
+        "8.0": {
+          "overall_unique": 0.4,
+          "overall_expected": 0.575,
+          "overall_in_class": 1.0,
+          "overall_mean_class_size": 2.6
+        }
+      }
+    },
+    "with_sham": {
       "class_membership": {
         "route_script": {
           "route_script": 1.0,
@@ -365,7 +392,46 @@
         "marker_tracker": 1.0,
         "alternate_goal": 1.0
       },
-      "overall_mean_class_size": 1.266667
+      "overall_mean_class_size": 1.266667,
+      "probes": [
+        "rest",
+        "move",
+        "block",
+        "sham"
+      ],
+      "tolerance_nats": 2.0,
+      "tolerance_sensitivity": {
+        "0.0": {
+          "overall_unique": 0.733333,
+          "overall_expected": 0.866667,
+          "overall_in_class": 1.0,
+          "overall_mean_class_size": 1.266667
+        },
+        "1.0": {
+          "overall_unique": 0.733333,
+          "overall_expected": 0.866667,
+          "overall_in_class": 1.0,
+          "overall_mean_class_size": 1.266667
+        },
+        "2.0": {
+          "overall_unique": 0.733333,
+          "overall_expected": 0.866667,
+          "overall_in_class": 1.0,
+          "overall_mean_class_size": 1.266667
+        },
+        "4.0": {
+          "overall_unique": 0.708333,
+          "overall_expected": 0.854167,
+          "overall_in_class": 1.0,
+          "overall_mean_class_size": 1.291667
+        },
+        "8.0": {
+          "overall_unique": 0.616667,
+          "overall_expected": 0.755556,
+          "overall_in_class": 1.0,
+          "overall_mean_class_size": 1.7
+        }
+      }
     },
     "sham_gain": {
       "overall_expected": 0.183334,
@@ -374,7 +440,17 @@
       "mean_class_size": 0.666666
     },
     "n_instances": 24,
-    "chance_level": 0.2
+    "chance_level": 0.2,
+    "code_cost_nats": {
+      "alternate_goal": 5.129899
+    },
+    "tolerances_nats": [
+      0.0,
+      1.0,
+      2.0,
+      4.0,
+      8.0
+    ]
   },
   "second_order": {
     "declared_battery": [
@@ -1236,6 +1312,8 @@
     "blind_expected_recovery_beats_chance": true,
     "sham_breaks_the_measured_equivalence": true,
     "sham_shrinks_mean_class_size": 0.666666,
+    "identified_set_flat_over_tolerance_band": true,
+    "sham_pays_at_every_tolerance": true,
     "probe_aware_mimic_hidden_from_declared_battery": true,
     "held_out_sham_separates_probe_aware_mimic": true,
     "centaur_channel_legibility_substrate_gap": 0.0,
