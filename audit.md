@@ -1,5 +1,21 @@
 # Audit
 
+## 2026-08-07 — v14.4, resonance pass before submission
+
+Scope: three short prose additions and two voice fixes; no simulation, figure, or submission-package changes.
+
+Changes:
+  - Second-order section: the audit stock's exhaustion stated as self-concealing (a spent battery returns clean verdicts, and a regime that stops producing draws loses the means of noticing); the self-revising subject added beyond the memorizing one (a system with access to its own organization is a moving referent, so a verdict carries a date). Unperformable-probe section: reversibility stated as the instrument's first discipline toward its subject, the admissibility term charging by what a probe forecloses.
+  - Two pre-existing voice warns fixed (an inline-contrastive in the separation-principle section; one pet-vocabulary phrase).
+
+Verification:
+  - voice: 0 errors, 0 review-candidates
+  - refs: 73/73, 0 missing, 0 unused
+  - claims: 51 decimal claims, 0 without a match
+  - build + sync: PASS; check => PASS
+  - proposal and submission package untouched (figure and invariant counts unchanged)
+
+
 Dated log of editorial passes and verification runs. Newest first.
 See the workspace docs (run `papers docs`): writing-pipeline.md §7 and refresh-pipeline.md.
 
