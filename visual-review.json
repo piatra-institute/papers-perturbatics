@@ -1,5 +1,5 @@
 {
-  "pdf_sha256": "233362067dbdb1e00d99bfa1262c8f9c08434aabb8d315e8b6c2b075d2199240",
+  "pdf_sha256": "d9c67f933f87ab14f532e7c2126c8ce201512afa45bee0d902a4e36e8ab5a342",
   "page_count": 29,
   "pages_inspected": [
     1,
@@ -33,5 +33,5 @@
     29
   ],
   "all_pages_inspected": true,
-  "notes": "All 29 pages inspected after the prose revision; title page, abstract, ten numbered sections, Reproducibility and the 73-entry bibliography set cleanly. All seven figures were regenerated with descriptive panel titles replacing slogans; the Figure 6 legend, which overlapped the marker-tracker bar, was moved into a two-column row above the bars, and the Figure 3 '+ map, memory' label, which overlapped the chain, was repositioned; both pages were rebuilt and re-inspected. The Figure 5 shading now marks delays up to 20 steps, matching the exact first costly delay. No overfull lines, missing glyphs, clipped annotations or orphaned headings. Metadata-only rebuild: the web blurb in metadata.yaml, a hashed build input, changed, so the PDF was re-rendered (9f86b480804e to 233362067dbd); the rendered text is byte-for-byte identical and no page was re-inspected."
+  "notes": "All 29 pages inspected after the prose revision; title page, abstract, ten numbered sections, Reproducibility and the 73-entry bibliography set cleanly. All seven figures were regenerated with descriptive panel titles replacing slogans; the Figure 6 legend, which overlapped the marker-tracker bar, was moved into a two-column row above the bars, and the Figure 3 '+ map, memory' label, which overlapped the chain, was repositioned; both pages were rebuilt and re-inspected. The Figure 5 shading now marks delays up to 20 steps, matching the exact first costly delay. No overfull lines, missing glyphs, clipped annotations or orphaned headings. Metadata-only rebuild: the web blurb in metadata.yaml, a hashed build input, changed, so the PDF was re-rendered (9f86b480804e to 233362067dbd); the rendered text is byte-for-byte identical and no page was re-inspected. Metadata-only rebuild: the web blurb in metadata.yaml, a hashed build input, changed, so the PDF was re-rendered (233362067dbd to d9c67f933f87); the rendered text is byte-for-byte identical and no page was re-inspected."
 }
