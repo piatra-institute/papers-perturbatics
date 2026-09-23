@@ -450,7 +450,110 @@
       2.0,
       4.0,
       8.0
-    ]
+    ],
+    "code_cost_sensitivity": {
+      "prices_nats": [
+        1.0,
+        2.0,
+        2.5,
+        3.0,
+        4.0,
+        5.129899
+      ],
+      "tolerance_nats": 2.0,
+      "by_price": {
+        "1.0": {
+          "without_sham": {
+            "overall_unique": 0.4,
+            "overall_expected": 0.5875,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 2.5
+          },
+          "with_sham": {
+            "overall_unique": 0.616667,
+            "overall_expected": 0.763889,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 1.65
+          },
+          "planner_unique_with_sham": 0.0
+        },
+        "2.0": {
+          "without_sham": {
+            "overall_unique": 0.4,
+            "overall_expected": 0.5875,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 2.5
+          },
+          "with_sham": {
+            "overall_unique": 0.616667,
+            "overall_expected": 0.763889,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 1.65
+          },
+          "planner_unique_with_sham": 0.0
+        },
+        "2.5": {
+          "without_sham": {
+            "overall_unique": 0.516667,
+            "overall_expected": 0.683333,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 1.933333
+          },
+          "with_sham": {
+            "overall_unique": 0.733333,
+            "overall_expected": 0.866667,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 1.266667
+          },
+          "planner_unique_with_sham": 0.583333
+        },
+        "3.0": {
+          "without_sham": {
+            "overall_unique": 0.516667,
+            "overall_expected": 0.683333,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 1.933333
+          },
+          "with_sham": {
+            "overall_unique": 0.733333,
+            "overall_expected": 0.866667,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 1.266667
+          },
+          "planner_unique_with_sham": 0.583333
+        },
+        "4.0": {
+          "without_sham": {
+            "overall_unique": 0.516667,
+            "overall_expected": 0.683333,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 1.933333
+          },
+          "with_sham": {
+            "overall_unique": 0.733333,
+            "overall_expected": 0.866667,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 1.266667
+          },
+          "planner_unique_with_sham": 0.583333
+        },
+        "5.129899": {
+          "without_sham": {
+            "overall_unique": 0.516667,
+            "overall_expected": 0.683333,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 1.933333
+          },
+          "with_sham": {
+            "overall_unique": 0.733333,
+            "overall_expected": 0.866667,
+            "overall_in_class": 1.0,
+            "overall_mean_class_size": 1.266667
+          },
+          "planner_unique_with_sham": 0.583333
+        }
+      }
+    }
   },
   "second_order": {
     "declared_battery": [
@@ -1160,6 +1263,8 @@
       "sceptical": 1.0
     },
     "first_latency_with_a_crossover": 22,
+    "first_latency_with_a_crossover_exact": 21,
+    "crossover_decoy_rate_at_first_latency_exact": 0.018823,
     "human_capacity_by_latency_no_decoys": [
       [
         0,
@@ -1313,10 +1418,12 @@
     "sham_breaks_the_measured_equivalence": true,
     "sham_shrinks_mean_class_size": 0.666666,
     "identified_set_flat_over_tolerance_band": true,
+    "blind_recovery_invariant_for_prices_above_tolerance": true,
     "sham_pays_at_every_tolerance": true,
     "probe_aware_mimic_hidden_from_declared_battery": true,
     "held_out_sham_separates_probe_aware_mimic": true,
     "centaur_channel_legibility_substrate_gap": 0.0,
-    "centaur_channel_matches_persona_gap": 0.0
+    "centaur_channel_matches_persona_gap": 0.0,
+    "centaur_first_costly_delay_exact_within_grid_step": true
   }
 }

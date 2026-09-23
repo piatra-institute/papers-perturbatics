@@ -1,5 +1,18 @@
 # Audit
 
+## 2026-09-23 — prose revision
+
+Prose revision against the house standard, with a grid and number audit of the simulation.
+  - Headings: Abstract; 1. Introduction; 2. The probe separation principle; 3. Object, probe grammar and matched shams; 4. An instrument for human-machine assemblages; 5. A gridworld demonstrator; 6. Goal authority in a human-machine assemblage; 7. Blind recovery of planted mechanisms; 8. Probe-aware systems and battery decay; 9. Relation to existing methods; 10. Inadmissible probes and consciousness; Reproducibility.
+  - Tic counts before -> after: 'rather than' 39 -> 0; 'not X but Y' 6 -> 0; 'the paper/this paper' 11 -> 0; 'worth' 5 -> 1 (literal: what an audit is worth); 'merely/simply' 6 -> 0; 'what follows/here is' 8 -> 3; 'exactly/precisely' 6 -> 5 (all literal, e.g. evidence of exactly 0). Abstract ~520 -> 260 words; body 12,362 -> about 11,300 words.
+  - Removed: the Appendix 'The Perturbatic Atlas' (a table naming eight other institute papers by title) and the sentence naming 'faultization', under the standing rule that a paper never cites or mentions other institute papers. The opening epigraph section was converted to prose.
+  - Correction 1 (grid artifact): the first operator delay at which human goal authority costs anything was read off a delay grid of step 2 (22 steps). analyses.py now scans every integer delay and records first_latency_with_a_crossover_exact = 21 with crossover decoy rate 0.018823; an invariant requires it to lie within one grid step below the grid value. Text now reads: crossover 0.0 up to 20 steps, first costly delay 21 steps (0.019), then 0.05 at 22, 0.31 at 28, 0.71 at 40.
+  - Correction 2 (rounding): at a delay of 28 steps the crossover at credulity 0.25 is 0.644971, written as 0.65; now 0.64.
+  - Correction 3 (false invariance claim): the text said the blind-recovery readings were unchanged across the whole range between the Akaike price (1 nat) and the description-length price (log 169 = 5.13 nats). Recomputed: with the 2-nat identified-set tolerance, prices of 1 and 2 nats let the fitted alternate-goal class join the planner's set (unique recovery 0.40 without / 0.62 with the sham, planner never unique), and every price above 2 nats reproduces the published readings (0.52 / 0.73, expected 0.68 / 0.87). analyses.py records code_cost_sensitivity over prices {1, 2, 2.5, 3, 4, 5.13} with an invariant; the text now states the dependence on price relative to the tolerance.
+  - Clarified: the planner/reactive entanglement ('the reactive controller in the planner's on 0.42 of episodes') now gives both directions from results.json (planner in the reactive controller's set on 0.92 of its episodes; reactive in the planner's on 0.42). The persona's evidence share is now given its closed form 0.3/1.3 = 0.230769.
+  - All other prose numbers checked against results.json; no further discrepancies. Grid audit otherwise: matched-suppression-style bisection not used; AUROCs, Shapley values and identified sets are exact computations; the decoy-rate crossover is solved in closed form per delay.
+  - Figures: slogan titles replaced by descriptive ones in all seven figures; two label overlaps fixed. results.json changed only by the added fields and checks; all invariants pass.
+
 ## 2026-08-07 — v14.4, resonance pass before submission
 
 Scope: three short prose additions and two voice fixes; no simulation, figure, or submission-package changes.

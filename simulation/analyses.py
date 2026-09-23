@@ -713,7 +713,7 @@ def _hyp_loglik(hyp, traj, inst, probe, rest_traj, alt_goal):
     return total
 
 
-def analysis_blind_recovery(insts, n_instances: int = 24):
+def analysis_blind_recovery(insts, n_instances: int = 24, code_cost: float | None = None):
     """The demonstrator's one inference made blind.
 
     Everywhere else in this file the scorer is an oracle: it is handed the true
@@ -761,7 +761,7 @@ def analysis_blind_recovery(insts, n_instances: int = 24):
     # nat per parameter is the wrong price here, because the search is over a
     # discrete grid of 169 candidates rather than over one regular scalar, and the
     # error flatters the only class with free structure.
-    CODE_COST = {"alternate_goal": float(np.log(N * N))}
+    CODE_COST = {"alternate_goal": float(np.log(N * N)) if code_cost is None else float(code_cost)}
     # The reading is an identified set, and a set defined by exact likelihood ties
     # would be an artifact of a deterministic demonstrator: on noisy data nothing
     # ties exactly. The set is therefore taken at a stated tolerance in nats, and
@@ -1065,6 +1065,15 @@ def analysis_centaur(insts, latency: int = OPERATOR_LATENCY):
     # the first delay at which handing goal authority to the human costs anything at
     # all, and so the first at which the question of who should hold it has an answer
     first_costly = next((k for k, d in crossovers if d is not None and d > 0.0), None)
+    # The delay grid above has a step of 2, but the operator's delay is an integer
+    # number of steps, so the first delay at which human authority costs anything is
+    # located exactly by scanning every integer delay (prose audit, 2026-09-23).
+    first_costly_exact, d_first_exact = None, None
+    for k in range(0, T + 1):
+        d, _ = _crossover(k)
+        if d is not None and d > 0.0:
+            first_costly_exact, d_first_exact = k, d
+            break
     d_here, (hm, hs, mm, ms) = _crossover(latency)
     curves = {
         "human": [round((1 - d) * hm + d * hs, 6) for d in DECOY_RATES],
@@ -1084,6 +1093,8 @@ def analysis_centaur(insts, latency: int = OPERATOR_LATENCY):
         "sham_capacity_credulous_vs_sceptical": {"credulous": round(ms_credulous, 6),
                                                  "sceptical": round(ms_sceptical, 6)},
         "first_latency_with_a_crossover": first_costly,
+        "first_latency_with_a_crossover_exact": first_costly_exact,
+        "crossover_decoy_rate_at_first_latency_exact": d_first_exact,
         "human_capacity_by_latency_no_decoys": [
             (k, round(_centaur_raw_capacity(full, insts, "move", "human", k), 6)) for k in latencies],
     }
@@ -1377,6 +1388,32 @@ def run() -> dict:
                for tol in blind["tolerances_nats"]), \
         "the sham must pay at every tolerance, not only at the reported one"
     checks["identified_set_flat_over_tolerance_band"] = True
+    # Sensitivity to the price charged for the fitted goal (prose audit, 2026-09-23).
+    # The fitted class reproduces the planner's likelihood exactly, so after the
+    # charge it sits exactly `price` nats below the planner and joins the planner's
+    # identified set whenever price <= the 2-nat tolerance. The readings are
+    # therefore invariant for every price above the tolerance, and at an Akaike
+    # charge of 1 nat no planner is ever uniquely recovered.
+    keys = ("overall_unique", "overall_expected", "overall_in_class", "overall_mean_class_size")
+    prices = [1.0, 2.0, 2.5, 3.0, 4.0, float(np.log(N * N))]
+    by_price = {}
+    for c in prices:
+        b = analysis_blind_recovery(insts, code_cost=c)
+        by_price[str(round(c, 6))] = {
+            **{bn: {k: b[bn][k] for k in keys} for bn in ("without_sham", "with_sham")},
+            "planner_unique_with_sham": b["with_sham"]["unique_recovery"]["planner"]}
+    tol = wi["tolerance_nats"]
+    for c in prices:
+        row = by_price[str(round(c, 6))]
+        if c > tol:
+            assert all(row[bn][k] == blind[bn][k] for bn in ("without_sham", "with_sham")
+                       for k in keys), "readings must be invariant for prices above the tolerance"
+        else:
+            assert row["planner_unique_with_sham"] == 0.0, \
+                "at or below the tolerance the fitted class must absorb the planner"
+    blind["code_cost_sensitivity"] = {"prices_nats": [round(c, 6) for c in prices],
+                                      "tolerance_nats": tol, "by_price": by_price}
+    checks["blind_recovery_invariant_for_prices_above_tolerance"] = True
     checks["sham_pays_at_every_tolerance"] = True
     second = analysis_second_order(insts)
     # the probe-aware mimic must be identical to the planner on every declared
@@ -1406,6 +1443,10 @@ def run() -> dict:
     assert centaur_matches_persona < 1e-6, "channel legibility must equal the pure-channel value"
     checks["centaur_channel_legibility_substrate_gap"] = round(centaur_symmetry, 12)
     checks["centaur_channel_matches_persona_gap"] = round(centaur_matches_persona, 12)
+    fg, fe = centaur["first_latency_with_a_crossover"], centaur["first_latency_with_a_crossover_exact"]
+    assert fe is not None and fg is not None and fg - 2 < fe <= fg, \
+        "the exact first costly delay must lie within one grid step below the grid value"
+    checks["centaur_first_costly_delay_exact_within_grid_step"] = True
     return {
         "note": "Illustrative gridworld; components held at their null by do-intervention; not fit to data. Deterministic.",
         "params": {"seed": SEED, "grid": N, "steps": T, "beta": BETA,

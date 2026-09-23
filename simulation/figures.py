@@ -57,7 +57,7 @@ def plot_separation(results: dict, path: str) -> None:
     a2.set_xlabel("agency evidence (log Bayes factor)")
     for ax in (a1, a2):
         _style(ax)
-    fig.suptitle("the same systems: indistinguishable at rest, separated by the battery",
+    fig.suptitle("agency evidence of three systems at rest and under the two-probe battery",
                  fontsize=11, color=INK, y=1.02)
     fig.tight_layout()
     fig.savefig(path, dpi=200, bbox_inches="tight")
@@ -84,7 +84,7 @@ def plot_realization_map(results: dict, path: str) -> None:
     a1.set_xticks(x)
     a1.set_xticklabels(labels, fontsize=8)
     a1.set_ylabel("normalized contribution")
-    a1.set_title("what shows agency vs what realizes it", fontsize=10, color=INK)
+    a1.set_title("evidence share and capacity share by component", fontsize=10, color=INK)
     a1.legend(frameon=False, fontsize=8.5, loc="upper right")
 
     # highlight by a principled rule, not a plotting threshold: red marks the pure
@@ -95,7 +95,7 @@ def plot_realization_map(results: dict, path: str) -> None:
     a2.set_xticks(x)
     a2.set_xticklabels(labels, fontsize=8)
     a2.set_ylabel(r"legibility  $L = \phi^E - \phi^C$")
-    a2.set_title("agency theater", fontsize=10, color=INK)
+    a2.set_title("legibility by component", fontsize=10, color=INK)
     a2.annotate("persona:\nevidence, no capacity", xy=(5, L["persona"]), xytext=(1.9, 0.17),
                 fontsize=8, color=PASSIVE,
                 arrowprops=dict(arrowstyle="->", color=PASSIVE, lw=0.8))
@@ -125,7 +125,7 @@ def plot_sham_control(results: dict, path: str) -> None:
     a1.set_xticklabels(probes, fontsize=9)
     a1.set_ylim(0, 1.05)
     a1.set_ylabel("AUROC, goal tracker vs marker tracker")
-    a1.set_title("the declared battery does not reach the mimic", fontsize=10, color=INK)
+    a1.set_title("goal tracker vs marker tracker: AUROC by probe", fontsize=10, color=INK)
 
     systems = ["planner", "reactive", "route_script", "marker_tracker"]
     x = np.arange(len(systems))
@@ -144,7 +144,7 @@ def plot_sham_control(results: dict, path: str) -> None:
     a2.set_xticklabels([s.replace("_", "\n") for s in systems], fontsize=8)
     a2.set_ylim(0, 1.12)
     a2.set_ylabel("fraction of cells departing the rest path")
-    a2.set_title("three ways to fail: no response, equal response, selective response",
+    a2.set_title("response to the moved goal and to the matched sham",
                  fontsize=9.5, color=INK)
     a2.legend(frameon=False, fontsize=8.5, loc="upper right")
     for ax in (a1, a2):
@@ -174,11 +174,11 @@ def plot_blind_recovery(results: dict, path: str) -> None:
                 color=PASSIVE, ha="right")
     a1.set_xticks(x)
     a1.set_xticklabels([m.replace("_", "\n") for m in mechs], fontsize=8)
-    a1.set_ylim(0, 1.12)
+    a1.set_ylim(0, 1.3)
     a1.set_ylabel("planted mechanism isolated uniquely")
-    a1.set_title("what the battery isolates, and what it leaves entangled",
+    a1.set_title("unique recovery of each planted mechanism",
                  fontsize=9.5, color=INK)
-    a1.legend(frameon=False, fontsize=8.5, loc="upper center")
+    a1.legend(frameon=False, fontsize=8.5, loc="upper center", ncol=2)
 
     M = np.array([[br["with_sham"]["class_membership"][m][h] for h in mechs]
                   for m in mechs])
@@ -194,7 +194,7 @@ def plot_blind_recovery(results: dict, path: str) -> None:
                         color="white" if M[i, j] > 0.55 else INK)
     a2.set_xlabel("in the reading's equivalence class")
     a2.set_ylabel("planted")
-    a2.set_title("the class the battery cannot break, sham included",
+    a2.set_title("identified-set membership, battery with sham",
                  fontsize=9.5, color=INK)
     a2.grid(False)
     fig.colorbar(im, ax=a2, fraction=0.046, pad=0.04)
@@ -218,7 +218,7 @@ def plot_second_order(results: dict, path: str) -> None:
     a1.set_xticklabels(["rest", "move", "block", "sham", "held-out\nsham"], fontsize=8.5)
     a1.set_ylim(0, 1.05)
     a1.set_ylabel("AUROC, planner vs probe-aware mimic")
-    a1.set_title("the declared battery, sham included, reads nothing",
+    a1.set_title("planner vs probe-aware mimic: AUROC by probe",
                  fontsize=9.5, color=INK)
 
     systems = ["planner", "probe_aware_mimic"]
@@ -237,7 +237,7 @@ def plot_second_order(results: dict, path: str) -> None:
     a2.set_xticklabels(["planner", "probe-aware\nmimic"], fontsize=8.5)
     a2.set_ylim(0, 1.12)
     a2.set_ylabel("fraction of cells departing the rest path")
-    a2.set_title("only a probe it has never seen moves it", fontsize=9.5, color=INK)
+    a2.set_title("response to the declared and held-out shams", fontsize=9.5, color=INK)
     a2.legend(frameon=False, fontsize=8.5, loc="upper left")
     for ax in (a1, a2):
         _style(ax)
@@ -268,7 +268,7 @@ def plot_centaur(results: dict, path: str) -> None:
     a1.annotate("machine holds the goal", (2.5, 0.03), xycoords=("data", "axes fraction"),
                 ha="center", fontsize=8.5, color=AGENT)
     a1.set_ylabel("normalized contribution")
-    a1.set_title("the legibility follows the authority, not the substrate",
+    a1.set_title("capacity and legibility of operator and register",
                  fontsize=9.5, color=INK)
     a1.legend(frameon=False, fontsize=8.5, loc="upper right")
     a1.set_ylim(-0.25, 1.12)
@@ -284,14 +284,14 @@ def plot_centaur(results: dict, path: str) -> None:
             continue
         a2.plot([p[0] for p in pts], [p[1] for p in pts], "o-",
                 color=shades[str(c)], lw=1.7, ms=3.4, label=f"credulity {c}")
-    first = ct["first_latency_with_a_crossover"]
+    first = ct["first_latency_with_a_crossover_exact"]
     if first is not None:
-        a2.axvspan(0, first, color=NEUTRAL, alpha=0.13)
-        a2.annotate("delay is free", (first / 2, 0.52), ha="center", fontsize=8,
+        a2.axvspan(0, first - 1, color=NEUTRAL, alpha=0.13)
+        a2.annotate(f"no crossover\n(delay $\\leq$ {first - 1})", ((first - 1) / 2, 0.52), ha="center", fontsize=8,
                     color=NEUTRAL)
     a2.set_xlabel("operator delay (steps before the goal is re-issued)")
     a2.set_ylabel("decoy rate at which human authority wins")
-    a2.set_title("the crossing is carried entirely by how credulous the channel is",
+    a2.set_title("crossover decoy rate by operator delay and credulity",
                  fontsize=9.0, color=INK)
     a2.set_ylim(0, 1.05)
     a2.legend(frameon=False, fontsize=7.5, loc="lower right")
@@ -319,15 +319,16 @@ def plot_guards(results: dict, path: str) -> None:
     chain_sizes = [2, 3, 5, 6]     # planner+harness, +goal register, +map+memory, +persona
     a1.plot(chain_sizes, [b[1] for b in bs], "o-", color=AGENT, lw=1.8, ms=6,
             label="the nested chain of the text")
-    offsets = [(6, 6), (6, -12), (0, -15), (6, -4)]
-    aligns = ["left", "left", "center", "left"]
+    offsets = [(6, 6), (6, -12), (6, -14), (6, -4)]
+    aligns = ["left", "left", "left", "left"]
     for (s, b), off, ha in zip(zip(chain_sizes, bs), offsets, aligns):
         a1.annotate(b[0], (s, b[1]), xytext=off, textcoords="offset points",
                     fontsize=7.2, color=INK, ha=ha)
     a1.axhline(0, color=NEUTRAL, lw=0.9)
     a1.set_xlabel("components enclosed")
     a1.set_ylabel("realized capacity of the enclosed unit")
-    a1.set_title("the landscape over every declarable boundary", fontsize=10, color=INK)
+    a1.set_title("realized capacity over all 64 enclosures", fontsize=10, color=INK)
+    a1.set_ylim(-0.3, 1.35)
     a1.legend(frameon=False, fontsize=7.5, loc="upper left")
 
     for name, (cx, ay) in rg.items():
@@ -338,7 +339,7 @@ def plot_guards(results: dict, path: str) -> None:
     a2.axhline(0, color=NEUTRAL, lw=0.9)
     a2.set_xlabel("trajectory complexity (bits)")
     a2.set_ylabel("agency evidence")
-    a2.set_title("complexity is no proxy for agency",
+    a2.set_title("trajectory complexity against agency evidence",
                  fontsize=10, color=INK)
     for ax in (a1, a2):
         _style(ax)
