@@ -6,7 +6,7 @@ created: 2026-07
 date: July 2026
 paper_dir: paper
 has_simulation: true
-claims_target: results.json
+claims_target: claim-ledger
 repo: git@github.com:piatra-institute/papers-perturbatics.git
 github: https://github.com/piatra-institute/papers-perturbatics
 status: published

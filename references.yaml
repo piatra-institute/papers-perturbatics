@@ -1,0 +1,1518 @@
+# CSL references with stable IDs; cite with Pandoc [@id] syntax.
+# Migrated from the legacy inline bibliography. Entries with a DOI were resolved through doi.org
+# content negotiation (CSL-JSON) and checked for year and title; others were matched in Crossref
+# or entered by hand. Provenance per entry is in sources.md.
+references:
+- id: akaike1974
+  type: article-journal
+  title: A new look at the statistical model identification
+  author:
+  - given: H.
+    family: Akaike
+  container-title: IEEE Transactions on Automatic Control
+  volume: '19'
+  issue: '6'
+  page: 716-723
+  DOI: 10.1109/tac.1974.1100705
+  issued:
+    date-parts:
+    - - 1974
+- id: arghal2026
+  type: article
+  title: A Behavioural and Representational Evaluation of Goal-Directedness in Language Model Agents
+  author:
+  - family: Arghal
+    given: Raghu
+  - family: Chen
+    given: Fade
+  - family: Dalton
+    given: Niall
+  - family: Kortukov
+    given: Evgenii
+  - family: McNamara
+    given: Calum
+  - family: Nalmpantis
+    given: Angelos
+  - family: Nirvaan
+    given: Moksh
+  - family: Sarti
+    given: Gabriele
+  - family: Giulianelli
+    given: Mario
+  DOI: 10.48550/arXiv.2602.08964
+  issued:
+    date-parts:
+    - - 2026
+  number: arXiv:2602.08964
+  container-title: arXiv
+- id: ashby1956
+  type: book
+  title: An Introduction to Cybernetics
+  author:
+  - family: Ashby
+    given: W. Ross
+  publisher: Chapman & Hall
+  issued:
+    date-parts:
+    - - 1956
+  publisher-place: London
+- id: atkinson1975
+  type: article-journal
+  title: The design of experiments for discriminating between two rival models
+  author:
+  - family: Atkinson
+    given: A. C.
+  - family: Fedorov
+    given: V. V.
+  container-title: Biometrika
+  volume: '62'
+  issue: '1'
+  page: 57-70
+  DOI: 10.1093/biomet/62.1.57
+  issued:
+    date-parts:
+    - - 1975
+- id: baker2009
+  type: article-journal
+  title: Action understanding as inverse planning
+  author:
+  - given: Chris L.
+    family: Baker
+  - given: Rebecca
+    family: Saxe
+  - given: Joshua B.
+    family: Tenenbaum
+  container-title: Cognition
+  volume: '113'
+  issue: '3'
+  page: 329-349
+  DOI: 10.1016/j.cognition.2009.07.005
+  issued:
+    date-parts:
+    - - 2009
+- id: barandiaran2009
+  type: article-journal
+  title: 'Defining Agency: Individuality, Normativity, Asymmetry, and Spatio-temporality in Action'
+  author:
+  - given: Xabier E.
+    family: Barandiaran
+  - given: Ezequiel
+    family: Di Paolo
+  - given: Marieke
+    family: Rohde
+  container-title: Adaptive Behavior
+  volume: '17'
+  issue: '5'
+  page: 367-386
+  DOI: 10.1177/1059712309343819
+  issued:
+    date-parts:
+    - - 2009
+- id: barnett2023
+  type: article-journal
+  title: 'Dynamical independence: Discovering emergent macroscopic processes in complex dynamical systems'
+  author:
+  - given: L.
+    family: Barnett
+  - given: A. K.
+    family: Seth
+  container-title: Physical Review E
+  volume: '108'
+  issue: '1'
+  DOI: 10.1103/physreve.108.014304
+  issued:
+    date-parts:
+    - - 2023
+  page: '014304'
+- id: barrett2000
+  type: article-journal
+  title: Exploring the natural foundations of religion
+  author:
+  - given: Justin L.
+    family: Barrett
+  container-title: Trends in Cognitive Sciences
+  volume: '4'
+  issue: '1'
+  page: 29-34
+  DOI: 10.1016/s1364-6613(99)01419-9
+  issued:
+    date-parts:
+    - - 2000
+- id: basiri2016
+  type: article-journal
+  title: Chaos Engineering
+  author:
+  - given: Ali
+    family: Basiri
+  - given: Niosha
+    family: Behnam
+  - given: Ruud
+    family: de Rooij
+  - given: Lorin
+    family: Hochstein
+  - given: Luke
+    family: Kosewski
+  - given: Justin
+    family: Reynolds
+  - given: Casey
+    family: Rosenthal
+  container-title: IEEE Software
+  volume: '33'
+  issue: '3'
+  page: 35-41
+  DOI: 10.1109/ms.2016.60
+  issued:
+    date-parts:
+    - - 2016
+- id: bertalanffy1968
+  type: book
+  title: 'General System Theory: Foundations, Development, Applications'
+  author:
+  - family: Bertalanffy
+    given: Ludwig
+    non-dropping-particle: von
+  publisher: George Braziller
+  publisher-place: New York
+  issued:
+    date-parts:
+    - - 1968
+- id: bird1998
+  type: article-journal
+  title: Dispositions and Antidotes
+  author:
+  - given: Alexander
+    family: Bird
+  container-title: The Philosophical Quarterly
+  volume: '48'
+  issue: '191'
+  page: 227-234
+  DOI: 10.1111/1467-9213.00098
+  issued:
+    date-parts:
+    - - 1998
+- id: block1981
+  type: article-journal
+  title: Psychologism and Behaviorism
+  author:
+  - given: Ned
+    family: Block
+  container-title: The Philosophical Review
+  volume: '90'
+  issue: '1'
+  page: 5-43
+  DOI: 10.2307/2184371
+  issued:
+    date-parts:
+    - - 1981
+- id: box1967
+  type: article-journal
+  title: Discrimination Among Mechanistic Models
+  author:
+  - given: G. E.P.
+    family: Box
+  - given: W. J.
+    family: Hill
+  container-title: Technometrics
+  volume: '9'
+  issue: '1'
+  page: 57-71
+  DOI: 10.1080/00401706.1967.10490441
+  issued:
+    date-parts:
+    - - 1967
+- id: bruineberg2022
+  type: article-journal
+  title: The Emperor's New Markov Blankets
+  author:
+  - given: Jelle
+    family: Bruineberg
+  - given: Krzysztof
+    family: Dołęga
+  - given: Joe
+    family: Dewhurst
+  - given: Manuel
+    family: Baltieri
+  container-title: Behavioral and Brain Sciences
+  volume: '45'
+  DOI: 10.1017/s0140525x21002351
+  issued:
+    date-parts:
+    - - 2022
+  page: e183
+- id: butlin2023
+  type: article
+  title: 'Consciousness in Artificial Intelligence: Insights from the Science of Consciousness'
+  author:
+  - family: Butlin
+    given: Patrick
+  - family: Long
+    given: Robert
+  - family: Elmoznino
+    given: Eric
+  - family: Bengio
+    given: Yoshua
+  - family: Birch
+    given: Jonathan
+  - family: Constant
+    given: Axel
+  - family: Deane
+    given: George
+  - family: Fleming
+    given: Stephen M.
+  - family: Frith
+    given: Chris
+  - family: Ji
+    given: Xu
+  - family: Kanai
+    given: Ryota
+  - family: Klein
+    given: Colin
+  - family: Lindsay
+    given: Grace
+  - family: Michel
+    given: Matthias
+  - family: Mudrik
+    given: Liad
+  - family: Peters
+    given: Megan A. K.
+  - family: Schwitzgebel
+    given: Eric
+  - family: Simon
+    given: Jonathan
+  - family: VanRullen
+    given: Rufin
+  DOI: 10.48550/arXiv.2308.08708
+  issued:
+    date-parts:
+    - - 2023
+  number: arXiv:2308.08708
+  container-title: arXiv
+- id: casali2013
+  type: article-journal
+  title: A Theoretically Based Index of Consciousness Independent of Sensory Processing and Behavior
+  author:
+  - given: Adenauer G.
+    family: Casali
+  - given: Olivia
+    family: Gosseries
+  - given: Mario
+    family: Rosanova
+  - given: Mélanie
+    family: Boly
+  - given: Simone
+    family: Sarasso
+  - given: Karina R.
+    family: Casali
+  - given: Silvia
+    family: Casarotto
+  - given: Marie-Aurélie
+    family: Bruno
+  - given: Steven
+    family: Laureys
+  - given: Giulio
+    family: Tononi
+  - given: Marcello
+    family: Massimini
+  container-title: Science Translational Medicine
+  volume: '5'
+  DOI: 10.1126/scitranslmed.3006294
+  issued:
+    date-parts:
+    - - 2013
+  issue: '198'
+  page: 198ra105
+- id: combes2013
+  type: book
+  title: Gilbert Simondon and the Philosophy of the Transindividual
+  author:
+  - family: Combes
+    given: Muriel
+  translator:
+  - family: LaMarre
+    given: Thomas
+  publisher: MIT Press
+  publisher-place: Cambridge, MA
+  issued:
+    date-parts:
+    - - 2013
+- id: conant1970
+  type: article-journal
+  title: Every good regulator of a system must be a model of that system
+  author:
+  - family: Conant
+    given: Roger C.
+  - family: Ashby
+    given: W. Ross
+  container-title: International Journal of Systems Science
+  volume: '1'
+  issue: '2'
+  page: 89-97
+  DOI: 10.1080/00207727008920220
+  issued:
+    date-parts:
+    - - 1970
+- id: crawford1982
+  type: article-journal
+  title: Strategic Information Transmission
+  author:
+  - given: Vincent P.
+    family: Crawford
+  - given: Joel
+    family: Sobel
+  container-title: Econometrica
+  volume: '50'
+  issue: '6'
+  page: 1431-1451
+  DOI: 10.2307/1913390
+  issued:
+    date-parts:
+    - - 1982
+- id: dennett1987
+  type: book
+  title: The Intentional Stance
+  author:
+  - family: Dennett
+    given: Daniel C.
+  publisher: MIT Press
+  publisher-place: Cambridge, MA
+  issued:
+    date-parts:
+    - - 1987
+- id: dragan2013
+  type: paper-conference
+  title: Legibility and predictability of robot motion
+  author:
+  - given: Anca D.
+    family: Dragan
+  - given: Kenton C.T.
+    family: Lee
+  - given: Siddhartha S.
+    family: Srinivasa
+  container-title: 2013 8th ACM/IEEE International Conference on Human-Robot Interaction (HRI)
+  page: 301-308
+  publisher: IEEE
+  DOI: 10.1109/hri.2013.6483603
+  issued:
+    date-parts:
+    - - 2013
+- id: dwork2015
+  type: article-journal
+  title: 'The reusable holdout: Preserving validity in adaptive data analysis'
+  author:
+  - given: Cynthia
+    family: Dwork
+  - given: Vitaly
+    family: Feldman
+  - given: Moritz
+    family: Hardt
+  - given: Toniann
+    family: Pitassi
+  - given: Omer
+    family: Reingold
+  - given: Aaron
+    family: Roth
+  container-title: Science
+  volume: '349'
+  issue: '6248'
+  page: 636-638
+  DOI: 10.1126/science.aaa9375
+  issued:
+    date-parts:
+    - - 2015
+- id: geiger2021
+  type: paper-conference
+  title: Causal Abstractions of Neural Networks
+  author:
+  - family: Geiger
+    given: Atticus
+  - family: Lu
+    given: Hanson
+  - family: Icard
+    given: Thomas
+  - family: Potts
+    given: Christopher
+  container-title: Advances in Neural Information Processing Systems
+  volume: '34'
+  page: 9574-9586
+  URL: https://proceedings.neurips.cc/paper_files/paper/2021/hash/4f5c422f4d49a5a807eda27434231040-Abstract.html
+  issued:
+    date-parts:
+    - - 2021
+- id: gergely1995
+  type: article-journal
+  title: Taking the intentional stance at 12 months of age
+  author:
+  - given: György
+    family: Gergely
+  - given: Zoltán
+    family: Nádasdy
+  - given: Gergely
+    family: Csibra
+  - given: Szilvia
+    family: Bíró
+  container-title: Cognition
+  volume: '56'
+  issue: '2'
+  page: 165-193
+  DOI: 10.1016/0010-0277(95)00661-h
+  issued:
+    date-parts:
+    - - 1995
+- id: grabisch1999
+  type: article-journal
+  title: An axiomatic approach to the concept of interaction among players in cooperative games
+  author:
+  - given: Michel
+    family: Grabisch
+  - given: Marc
+    family: Roubens
+  container-title: International Journal of Game Theory
+  volume: '28'
+  issue: '4'
+  page: 547-565
+  DOI: 10.1007/s001820050125
+  issued:
+    date-parts:
+    - - 1999
+- id: hacking1983
+  type: book
+  title: 'Representing and Intervening: Introductory Topics in the Philosophy of Natural Science'
+  author:
+  - family: Hacking
+    given: Ian
+  publisher: Cambridge University Press
+  publisher-place: Cambridge
+  DOI: 10.1017/CBO9780511814563
+  issued:
+    date-parts:
+    - - 1983
+- id: hardt2016
+  type: paper-conference
+  title: Strategic Classification
+  author:
+  - given: Moritz
+    family: Hardt
+  - given: Nimrod
+    family: Megiddo
+  - given: Christos
+    family: Papadimitriou
+  - given: Mary
+    family: Wootters
+  container-title: Proceedings of the 2016 ACM Conference on Innovations in Theoretical Computer Science
+  page: 111-122
+  publisher: ACM
+  DOI: 10.1145/2840728.2840730
+  issued:
+    date-parts:
+    - - 2016
+- id: heider1944
+  type: article-journal
+  title: An Experimental Study of Apparent Behavior
+  author:
+  - given: Fritz
+    family: Heider
+  - given: Marianne
+    family: Simmel
+  container-title: The American Journal of Psychology
+  volume: '57'
+  issue: '2'
+  page: 243-259
+  DOI: 10.2307/1416950
+  issued:
+    date-parts:
+    - - 1944
+- id: heskes2020
+  type: paper-conference
+  title: 'Causal Shapley Values: Exploiting Causal Knowledge to Explain Individual Predictions of Complex
+    Models'
+  author:
+  - family: Heskes
+    given: Tom
+  - family: Sijben
+    given: Evi
+  - family: Bucur
+    given: Ioan Gabriel
+  - family: Claassen
+    given: Tom
+  container-title: Advances in Neural Information Processing Systems
+  volume: '33'
+  page: 4778-4789
+  URL: https://proceedings.neurips.cc/paper_files/paper/2020/hash/32e54441e6382a7fbacbbbaf3c450059-Abstract.html
+  issued:
+    date-parts:
+    - - 2020
+- id: horovicz2025
+  type: article
+  title: 'AgentSHAP: Interpreting LLM Agent Tool Importance with Monte Carlo Shapley Value Estimation'
+  author:
+  - family: Horovicz
+    given: Miriam
+  DOI: 10.48550/arXiv.2512.12597
+  issued:
+    date-parts:
+    - - 2025
+  number: arXiv:2512.12597
+  container-title: arXiv
+- id: hubinger2024
+  type: article
+  title: 'Sleeper Agents: Training Deceptive LLMs that Persist Through Safety Training'
+  author:
+  - family: Hubinger
+    given: Evan
+  - family: Denison
+    given: Carson
+  - family: Mu
+    given: Jesse
+  - family: Lambert
+    given: Mike
+  - family: Tong
+    given: Meg
+  - family: MacDiarmid
+    given: Monte
+  - family: Lanham
+    given: Tamera
+  - family: Ziegler
+    given: Daniel M.
+  - family: Maxwell
+    given: Tim
+  - family: Cheng
+    given: Newton
+  - family: Jermyn
+    given: Adam
+  - family: Askell
+    given: Amanda
+  - family: Radhakrishnan
+    given: Ansh
+  - family: Anil
+    given: Cem
+  - family: Duvenaud
+    given: David
+  - family: Ganguli
+    given: Deep
+  - family: Barez
+    given: Fazl
+  - family: Clark
+    given: Jack
+  - family: Ndousse
+    given: Kamal
+  - family: Sachan
+    given: Kshitij
+  - family: Sellitto
+    given: Michael
+  - family: Sharma
+    given: Mrinank
+  - family: DasSarma
+    given: Nova
+  - family: Grosse
+    given: Roger
+  - family: Kravec
+    given: Shauna
+  - family: Bai
+    given: Yuntao
+  - family: Witten
+    given: Zachary
+  - family: Favaro
+    given: Marina
+  - family: Brauner
+    given: Jan
+  - family: Karnofsky
+    given: Holden
+  - family: Christiano
+    given: Paul
+  - family: Bowman
+    given: Samuel R.
+  - family: Graham
+    given: Logan
+  - family: Kaplan
+    given: Jared
+  - family: Mindermann
+    given: Sören
+  - family: Greenblatt
+    given: Ryan
+  - family: Shlegeris
+    given: Buck
+  - family: Schiefer
+    given: Nicholas
+  - family: Perez
+    given: Ethan
+  DOI: 10.48550/arXiv.2401.05566
+  issued:
+    date-parts:
+    - - 2024
+  number: arXiv:2401.05566
+  container-title: arXiv
+- id: johnston1992
+  type: article-journal
+  title: How to speak of the colors
+  author:
+  - given: Mark
+    family: Johnston
+  container-title: Philosophical Studies
+  volume: '68'
+  issue: '3'
+  page: 221-263
+  DOI: 10.1007/bf00694847
+  issued:
+    date-parts:
+    - - 1992
+- id: jrgensen2026
+  type: article
+  title: Causal Foundations of Collective Agency
+  author:
+  - family: Jørgensen
+    given: Frederik Hytting
+  - family: Weichwald
+    given: Sebastian
+  - family: Hammond
+    given: Lewis
+  DOI: 10.48550/arXiv.2605.00248
+  issued:
+    date-parts:
+    - - 2026
+  number: arXiv:2605.00248
+  container-title: arXiv
+- id: jung2022
+  type: paper-conference
+  title: On Measuring Causal Contributions via do-interventions
+  author:
+  - family: Jung
+    given: Yonghan
+  - family: Kasiviswanathan
+    given: Shiva
+  - family: Tian
+    given: Jin
+  - family: Janzing
+    given: Dominik
+  - family: Blöbaum
+    given: Patrick
+  - family: Bareinboim
+    given: Elias
+  container-title: Proceedings of the 39th International Conference on Machine Learning
+  collection-title: Proceedings of Machine Learning Research
+  volume: '162'
+  page: 10476-10501
+  URL: https://proceedings.mlr.press/v162/jung22a.html
+  issued:
+    date-parts:
+    - - 2022
+- id: kass1995
+  type: article-journal
+  title: Bayes Factors
+  author:
+  - given: Robert E.
+    family: Kass
+  - given: Adrian E.
+    family: Raftery
+  container-title: Journal of the American Statistical Association
+  volume: '90'
+  issue: '430'
+  page: 773-795
+  DOI: 10.1080/01621459.1995.10476572
+  issued:
+    date-parts:
+    - - 1995
+- id: kenton2023
+  type: article-journal
+  title: Discovering agents
+  author:
+  - given: Zachary
+    family: Kenton
+  - given: Ramana
+    family: Kumar
+  - given: Sebastian
+    family: Farquhar
+  - given: Jonathan
+    family: Richens
+  - given: Matt
+    family: MacDermott
+  - given: Tom
+    family: Everitt
+  container-title: Artificial Intelligence
+  volume: '322'
+  page: '103963'
+  DOI: 10.1016/j.artint.2023.103963
+  issued:
+    date-parts:
+    - - 2023
+- id: klyubin2005
+  type: paper-conference
+  title: 'Empowerment: A Universal Agent-Centric Measure of Control'
+  author:
+  - given: A.S.
+    family: Klyubin
+  - given: D.
+    family: Polani
+  - given: C.L.
+    family: Nehaniv
+  container-title: Proceedings of the 2005 IEEE Congress on Evolutionary Computation
+  publisher: IEEE
+  volume: '1'
+  page: 128-135
+  DOI: 10.1109/cec.2005.1554676
+  issued:
+    date-parts:
+    - - 2005
+- id: krakauer2020
+  type: article-journal
+  title: The information theory of individuality
+  author:
+  - given: David
+    family: Krakauer
+  - given: Nils
+    family: Bertschinger
+  - given: Eckehard
+    family: Olbrich
+  - given: Jessica C.
+    family: Flack
+  - given: Nihat
+    family: Ay
+  container-title: Theory in Biosciences
+  volume: '139'
+  issue: '2'
+  page: 209-223
+  DOI: 10.1007/s12064-020-00313-7
+  issued:
+    date-parts:
+    - - 2020
+- id: lanham2023
+  type: article
+  title: Measuring Faithfulness in Chain-of-Thought Reasoning
+  author:
+  - family: Lanham
+    given: Tamera
+  - family: Chen
+    given: Anna
+  - family: Radhakrishnan
+    given: Ansh
+  - family: Steiner
+    given: Benoit
+  - family: Denison
+    given: Carson
+  - family: Hernandez
+    given: Danny
+  - family: Li
+    given: Dustin
+  - family: Durmus
+    given: Esin
+  - family: Hubinger
+    given: Evan
+  - family: Kernion
+    given: Jackson
+  - family: Lukošiūtė
+    given: Kamilė
+  - family: Nguyen
+    given: Karina
+  - family: Cheng
+    given: Newton
+  - family: Joseph
+    given: Nicholas
+  - family: Schiefer
+    given: Nicholas
+  - family: Rausch
+    given: Oliver
+  - family: Larson
+    given: Robin
+  - family: McCandlish
+    given: Sam
+  - family: Kundu
+    given: Sandipan
+  - family: Kadavath
+    given: Saurav
+  - family: Yang
+    given: Shannon
+  - family: Henighan
+    given: Thomas
+  - family: Maxwell
+    given: Timothy
+  - family: Telleen-Lawton
+    given: Timothy
+  - family: Hume
+    given: Tristan
+  - family: Hatfield-Dodds
+    given: Zac
+  - family: Kaplan
+    given: Jared
+  - family: Brauner
+    given: Jan
+  - family: Bowman
+    given: Samuel R.
+  - family: Perez
+    given: Ethan
+  DOI: 10.48550/arXiv.2307.13702
+  issued:
+    date-parts:
+    - - 2023
+  number: arXiv:2307.13702
+  container-title: arXiv
+- id: levin2019
+  type: article-journal
+  title: 'The Computational Boundary of a “Self”: Developmental Bioelectricity Drives Multicellularity
+    and Scale-Free Cognition'
+  author:
+  - given: Michael
+    family: Levin
+  container-title: Frontiers in Psychology
+  volume: '10'
+  DOI: 10.3389/fpsyg.2019.02688
+  issued:
+    date-parts:
+    - - 2019
+  page: '2688'
+- id: lewis1997
+  type: article-journal
+  title: Finkish Dispositions
+  author:
+  - given: David
+    family: Lewis
+  container-title: The Philosophical Quarterly
+  volume: '47'
+  issue: '187'
+  page: 143-158
+  DOI: 10.1111/1467-9213.00052
+  issued:
+    date-parts:
+    - - 1997
+- id: li2026
+  type: article
+  title: Decomposing and Measuring Evaluation Awareness
+  author:
+  - family: Li
+    given: Changling
+  - family: Zhang
+    given: Terry Jingchen
+  - family: Zhang
+    given: Jie
+  - family: Jin
+    given: Zhijing
+  - family: Abdelnabi
+    given: Sahar
+  - family: Andriushchenko
+    given: Maksym
+  DOI: 10.48550/arXiv.2605.23055
+  issued:
+    date-parts:
+    - - 2026
+  number: arXiv:2605.23055
+  container-title: arXiv
+- id: lindley1956
+  type: article-journal
+  title: On a Measure of the Information Provided by an Experiment
+  author:
+  - given: D. V.
+    family: Lindley
+  container-title: The Annals of Mathematical Statistics
+  volume: '27'
+  issue: '4'
+  page: 986-1005
+  DOI: 10.1214/aoms/1177728069
+  issued:
+    date-parts:
+    - - 1956
+- id: lipsitch2010
+  type: article-journal
+  title: 'Negative Controls: A Tool for Detecting Confounding and Bias in Observational Studies'
+  author:
+  - family: Lipsitch
+    given: Marc
+  - family: Tchetgen Tchetgen
+    given: Eric
+  - family: Cohen
+    given: Ted
+  container-title: Epidemiology
+  volume: '21'
+  issue: '3'
+  page: 383-388
+  DOI: 10.1097/EDE.0b013e3181d61eeb
+  issued:
+    date-parts:
+    - - 2010
+- id: liu2024
+  type: article
+  title: Active Legibility in Multiagent Reinforcement Learning
+  author:
+  - family: Liu
+    given: Yanyu
+  - family: Pan
+    given: Yinghui
+  - family: Zeng
+    given: Yifeng
+  - family: Ma
+    given: Biyang
+  - family: Prashant
+    given: Doshi
+  DOI: 10.48550/arXiv.2410.20954
+  issued:
+    date-parts:
+    - - 2024
+  number: arXiv:2410.20954
+  container-title: arXiv
+- id: ljung1999
+  type: book
+  title: 'System Identification: Theory for the User'
+  author:
+  - family: Ljung
+    given: Lennart
+  edition: '2'
+  publisher: Prentice Hall
+  publisher-place: Upper Saddle River, NJ
+  issued:
+    date-parts:
+    - - 1999
+- id: long2025
+  type: article-journal
+  title: Is there a tension between AI safety and AI welfare?
+  author:
+  - given: Robert
+    family: Long
+  - given: Jeff
+    family: Sebo
+  - given: Toni
+    family: Sims
+  container-title: Philosophical Studies
+  volume: '182'
+  issue: '7'
+  page: 2005-2033
+  DOI: 10.1007/s11098-025-02302-2
+  issued:
+    date-parts:
+    - - 2025
+- id: lucas1976
+  type: article-journal
+  title: 'Econometric policy evaluation: A critique'
+  author:
+  - given: Robert E.
+    family: Lucas
+  container-title: Carnegie-Rochester Conference Series on Public Policy
+  volume: '1'
+  page: 19-46
+  DOI: 10.1016/s0167-2231(76)80003-6
+  issued:
+    date-parts:
+    - - 1976
+- id: lundberg2017
+  type: paper-conference
+  title: A Unified Approach to Interpreting Model Predictions
+  author:
+  - family: Lundberg
+    given: Scott M.
+  - family: Lee
+    given: Su-In
+  container-title: Advances in Neural Information Processing Systems
+  volume: '30'
+  page: 4765-4774
+  URL: https://proceedings.neurips.cc/paper_files/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html
+  issued:
+    date-parts:
+    - - 2017
+- id: luo2026
+  type: article
+  title: 'Success Is Not Self-Explanatory: Auditing Success Provenance in Agent Evaluation'
+  author:
+  - family: Luo
+    given: Jingkun
+  - family: Peng
+    given: Da-Tian
+  DOI: 10.48550/arXiv.2607.24054
+  issued:
+    date-parts:
+    - - 2026
+  number: arXiv:2607.24054
+  container-title: arXiv
+- id: ma2026
+  type: article
+  title: 'Hidden APIs in Language Models: Discovering Reusable Causal Interfaces from Forked Futures'
+  author:
+  - family: Ma
+    given: SiYuan
+  - family: Luo
+    given: Yiqin
+  - literal: Zhangji
+  - family: Xiao
+    given: Canran
+  - family: Gao
+    given: Albert
+  - family: Wang
+    given: Wei
+  - family: Wu
+    given: Qiwei
+  - family: Li
+    given: Xinran
+  - family: Wei
+    given: Jinfeng
+  - family: Zhang
+    given: Qixin
+  DOI: 10.48550/arXiv.2607.27617
+  issued:
+    date-parts:
+    - - 2026
+  number: arXiv:2607.27617
+  container-title: arXiv
+- id: macdermott2024
+  type: paper-conference
+  title: Measuring Goal-Directedness
+  author:
+  - given: Matt
+    family: MacDermott
+  - given: James
+    family: Fox
+  - given: Francesco
+    family: Belardinelli
+  - given: Tom
+    family: Everitt
+  container-title: Advances in Neural Information Processing Systems
+  page: 11412-11431
+  publisher: Neural Information Processing Systems Foundation, Inc. (NeurIPS)
+  DOI: 10.52202/079017-0363
+  issued:
+    date-parts:
+    - - 2024
+  volume: '37'
+- id: manheim2018
+  type: article
+  title: Categorizing Variants of Goodhart's Law
+  author:
+  - family: Manheim
+    given: David
+  - family: Garrabrant
+    given: Scott
+  DOI: 10.48550/arXiv.1803.04585
+  issued:
+    date-parts:
+    - - 2018
+  number: arXiv:1803.04585
+  container-title: arXiv
+- id: marks2025
+  type: article
+  title: Auditing language models for hidden objectives
+  author:
+  - family: Marks
+    given: Samuel
+  - family: Treutlein
+    given: Johannes
+  - family: Bricken
+    given: Trenton
+  - family: Lindsey
+    given: Jack
+  - family: Marcus
+    given: Jonathan
+  - family: Mishra-Sharma
+    given: Siddharth
+  - family: Ziegler
+    given: Daniel
+  - family: Ameisen
+    given: Emmanuel
+  - family: Batson
+    given: Joshua
+  - family: Belonax
+    given: Tim
+  - family: Bowman
+    given: Samuel R.
+  - family: Carter
+    given: Shan
+  - family: Chen
+    given: Brian
+  - family: Cunningham
+    given: Hoagy
+  - family: Denison
+    given: Carson
+  - family: Dietz
+    given: Florian
+  - family: Golechha
+    given: Satvik
+  - family: Khan
+    given: Akbir
+  - family: Kirchner
+    given: Jan
+  - family: Leike
+    given: Jan
+  - family: Meek
+    given: Austin
+  - family: Nishimura-Gasparian
+    given: Kei
+  - family: Ong
+    given: Euan
+  - family: Olah
+    given: Christopher
+  - family: Pearce
+    given: Adam
+  - family: Roger
+    given: Fabien
+  - family: Salle
+    given: Jeanne
+  - family: Shih
+    given: Andy
+  - family: Tong
+    given: Meg
+  - family: Thomas
+    given: Drake
+  - family: Rivoire
+    given: Kelley
+  - family: Jermyn
+    given: Adam
+  - family: MacDiarmid
+    given: Monte
+  - family: Henighan
+    given: Tom
+  - family: Hubinger
+    given: Evan
+  DOI: 10.48550/arXiv.2503.10965
+  issued:
+    date-parts:
+    - - 2025
+  number: arXiv:2503.10965
+  container-title: arXiv
+- id: martin1994
+  type: article-journal
+  title: Dispositions and Conditionals
+  author:
+  - given: C. B.
+    family: Martin
+  container-title: The Philosophical Quarterly
+  volume: '44'
+  issue: '174'
+  page: 1-8
+  DOI: 10.2307/2220143
+  issued:
+    date-parts:
+    - - 1994
+- id: maturana1980
+  type: book
+  title: 'Autopoiesis and Cognition: The Realization of the Living'
+  author:
+  - family: Maturana
+    given: Humberto R.
+  - family: Varela
+    given: Francisco J.
+  collection-title: Boston Studies in the Philosophy of Science
+  collection-number: '42'
+  publisher: D. Reidel
+  publisher-place: Dordrecht
+  DOI: 10.1007/978-94-009-8947-4
+  issued:
+    date-parts:
+    - - 1980
+- id: mayo2018
+  type: book
+  title: 'Statistical Inference as Severe Testing: How to Get Beyond the Statistics Wars'
+  author:
+  - given: Deborah G.
+    family: Mayo
+  publisher: Cambridge University Press
+  DOI: 10.1017/9781107286184
+  issued:
+    date-parts:
+    - - 2018
+  publisher-place: Cambridge
+- id: montevil2015
+  type: article-journal
+  title: Biological organisation as closure of constraints
+  author:
+  - given: Maël
+    family: Montévil
+  - given: Matteo
+    family: Mossio
+  container-title: Journal of Theoretical Biology
+  volume: '372'
+  page: 179-191
+  DOI: 10.1016/j.jtbi.2015.02.029
+  issued:
+    date-parts:
+    - - 2015
+- id: moore1956
+  type: chapter
+  title: Gedanken-Experiments on Sequential Machines
+  author:
+  - given: Edward F.
+    family: Moore
+  container-title: Automata Studies
+  publisher: Princeton University Press
+  page: 129-154
+  DOI: 10.1515/9781400882618-006
+  issued:
+    date-parts:
+    - - 1956
+  editor:
+  - family: Shannon
+    given: C. E.
+  - family: McCarthy
+    given: J.
+  collection-title: Annals of Mathematics Studies
+  collection-number: '34'
+  publisher-place: Princeton
+- id: morabito2026
+  type: article
+  title: 'Rating the Pitch, Not the Product: User Evaluations of LLMs Reflect Expectations More Than Performance'
+  author:
+  - family: Morabito
+    given: Robert
+  - family: McDonald
+    given: Tyler
+  - family: Viswanath
+    given: Charitra
+  - family: Hwang
+    given: Angel Hsing-Chi
+  - family: Gaube
+    given: Susanne
+  - family: Kabbara
+    given: Jad
+  - family: Emami
+    given: Ali
+  DOI: 10.48550/arXiv.2607.05113
+  issued:
+    date-parts:
+    - - 2026
+  number: arXiv:2607.05113
+  container-title: arXiv
+- id: pearl2009
+  type: book
+  title: 'Causality: Models, Reasoning, and Inference'
+  author:
+  - given: Judea
+    family: Pearl
+  publisher: Cambridge University Press
+  DOI: 10.1017/cbo9780511803161
+  issued:
+    date-parts:
+    - - 2009
+  edition: '2'
+  publisher-place: Cambridge
+- id: perdomo2020
+  type: paper-conference
+  title: Performative Prediction
+  author:
+  - family: Perdomo
+    given: Juan
+  - family: Zrnic
+    given: Tijana
+  - family: Mendler-Dünner
+    given: Celestine
+  - family: Hardt
+    given: Moritz
+  container-title: Proceedings of the 37th International Conference on Machine Learning
+  collection-title: Proceedings of Machine Learning Research
+  volume: '119'
+  page: 7599-7609
+  URL: https://proceedings.mlr.press/v119/perdomo20a.html
+  issued:
+    date-parts:
+    - - 2020
+- id: rosenblueth1943
+  type: article-journal
+  title: Behavior, Purpose and Teleology
+  author:
+  - given: Arturo
+    family: Rosenblueth
+  - given: Norbert
+    family: Wiener
+  - given: Julian
+    family: Bigelow
+  container-title: Philosophy of Science
+  volume: '10'
+  issue: '1'
+  page: 18-24
+  DOI: 10.1086/286788
+  issued:
+    date-parts:
+    - - 1943
+- id: shah2026
+  type: article
+  title: 'Causal Agent Replay: Counterfactual Attribution for LLM-Agent Failures'
+  author:
+  - family: Shah
+    given: Jaineet
+  DOI: 10.48550/arXiv.2606.08275
+  issued:
+    date-parts:
+    - - 2026
+  number: arXiv:2606.08275
+  container-title: arXiv
+- id: sheshadri2026
+  type: article
+  title: 'AuditBench: Evaluating Alignment Auditing Techniques on Models with Hidden Behaviors'
+  author:
+  - family: Sheshadri
+    given: Abhay
+  - family: Ewart
+    given: Aidan
+  - family: Fronsdal
+    given: Kai
+  - family: Gupta
+    given: Isha
+  - family: Bowman
+    given: Samuel R.
+  - family: Price
+    given: Sara
+  - family: Marks
+    given: Samuel
+  - family: Wang
+    given: Rowan
+  DOI: 10.48550/arXiv.2602.22755
+  issued:
+    date-parts:
+    - - 2026
+  number: arXiv:2602.22755
+  container-title: arXiv
+- id: simondon2020
+  type: book
+  title: Individuation in Light of Notions of Form and Information
+  author:
+  - family: Simondon
+    given: Gilbert
+  translator:
+  - family: Adkins
+    given: Taylor
+  publisher: University of Minnesota Press
+  publisher-place: Minneapolis
+  issued:
+    date-parts:
+    - - 2020
+- id: tamer2010
+  type: article-journal
+  title: Partial Identification in Econometrics
+  author:
+  - given: Elie
+    family: Tamer
+  container-title: Annual Review of Economics
+  volume: '2'
+  issue: '1'
+  page: 167-195
+  DOI: 10.1146/annurev.economics.050708.143401
+  issued:
+    date-parts:
+    - - 2010
+- id: wang2021
+  type: paper-conference
+  title: 'Shapley Flow: A Graph-based Approach to Interpreting Model Predictions'
+  author:
+  - family: Wang
+    given: Jiaxuan
+  - family: Wiens
+    given: Jenna
+  - family: Lundberg
+    given: Scott
+  container-title: Proceedings of the 24th International Conference on Artificial Intelligence and Statistics
+  collection-title: Proceedings of Machine Learning Research
+  volume: '130'
+  page: 721-729
+  URL: https://proceedings.mlr.press/v130/wang21b.html
+  issued:
+    date-parts:
+    - - 2021
+- id: weij2025
+  type: paper-conference
+  title: 'AI Sandbagging: Language Models can Strategically Underperform on Evaluations'
+  author:
+  - family: van der Weij
+    given: Teun
+  - family: Hofstätter
+    given: Felix
+  - family: Jaffe
+    given: Oliver
+  - family: Brown
+    given: Samuel F.
+  - family: Ward
+    given: Francis Rhys
+  container-title: The Thirteenth International Conference on Learning Representations (ICLR 2025)
+  DOI: 10.48550/arXiv.2406.07358
+  issued:
+    date-parts:
+    - - 2025
+- id: witter2026
+  type: article
+  title: Exactly Computing do-Shapley Values
+  author:
+  - family: Witter
+    given: R. Teal
+  - family: Parafita
+    given: Álvaro
+  - family: Garriga
+    given: Tomas
+  - family: Muschalik
+    given: Maximilian
+  - family: Fumagalli
+    given: Fabian
+  - family: Brando
+    given: Axel
+  - family: Rosenblatt
+    given: Lucas
+  DOI: 10.48550/arXiv.2602.07203
+  issued:
+    date-parts:
+    - - 2026
+  number: arXiv:2602.07203
+  container-title: arXiv
+- id: woodward2003
+  type: book
+  title: 'Making Things Happen: A Theory of Causal Explanation'
+  author:
+  - family: Woodward
+    given: James
+  publisher: Oxford University Press
+  publisher-place: New York
+  issued:
+    date-parts:
+    - - 2003
+- id: yang2025
+  type: article
+  title: Understanding and Optimizing Agentic Workflows via Shapley value
+  author:
+  - family: Yang
+    given: Yingxuan
+  - family: Huang
+    given: Bo
+  - family: Qi
+    given: Siyuan
+  - family: Feng
+    given: Chao
+  - family: Hu
+    given: Haoyi
+  - family: Zhu
+    given: Yuxuan
+  - family: Hu
+    given: Jinbo
+  - family: Zhao
+    given: Haoran
+  - family: He
+    given: Ziyi
+  - family: Liu
+    given: Xiao
+  - family: Wen
+    given: Muning
+  - family: Wang
+    given: Zongyu
+  - family: Qiu
+    given: Lin
+  - family: Cao
+    given: Xuezhi
+  - family: Cai
+    given: Xunliang
+  - family: Yu
+    given: Yong
+  - family: Zhang
+    given: Weinan
+  DOI: 10.48550/arXiv.2502.00510
+  issued:
+    date-parts:
+    - - 2025
+  number: arXiv:2502.00510
+  container-title: arXiv
+- id: yeh2022
+  type: paper-conference
+  title: Threading the Needle of On and Off-Manifold Value Functions for Shapley Explanations
+  author:
+  - family: Yeh
+    given: Chih-Kuan
+  - family: Lee
+    given: Kuan-Yun
+  - family: Liu
+    given: Frederick
+  - family: Ravikumar
+    given: Pradeep
+  container-title: Proceedings of the 25th International Conference on Artificial Intelligence and Statistics
+  collection-title: Proceedings of Machine Learning Research
+  volume: '151'
+  page: 1485-1502
+  URL: https://proceedings.mlr.press/v151/yeh22a.html
+  issued:
+    date-parts:
+    - - 2022

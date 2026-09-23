@@ -1,5 +1,16 @@
 # Audit
 
+## 2026-09-23 — structured-evidence migration
+
+Structured-evidence migration (references and claims).
+- references.yaml: 73 CSL entries. 29 matched in Crossref by title, authors and year; 27 resolved through doi.org content negotiation (17 arXiv preprints via DataCite DOIs 10.48550/arXiv.*, 10 journal articles, chapters and books); 17 entered by hand (NeurIPS/ICML/AISTATS papers from proceedings.neurips.cc and proceedings.mlr.press, van der Weij et al. from its ICLR 2025 OpenReview record, books from publisher details). In-text author-year citations converted to Pandoc [@id] syntax; legacy reference list replaced by the citeproc-rendered list (Chicago author-date).
+- Wrong automatic matches replaced: combes2013 had matched a book review of the book; lipsitch2010 had matched the journal's erratum notice.
+- Corrections: hardt2016 fourth author "Wu, M." -> Mary Wootters (DOI 10.1145/2840728.2840730); Manheim and Garrabrant 2019 -> 2018 (arXiv:1803.04585, first posted 2018; id manheim2019 -> manheim2018, in-text year follows); moore1956 pages 129-153 -> 129-154 (De Gruyter record); wang2021 pages 721-729 added (PMLR 130); Bruineberg et al. article number e183 kept with 2022 volume year.
+- claims.yaml: 139 claims (91 computation, 29 source, 9 interpretation, 5 assumption, 3 definition, 2 normative). Every simulation number in the abstract, introduction and Sections 5-8 is bound to simulation/output/results.json; no prose number disagreed with results.json.
+- Source statements not bound (abstract missing or not confirming the full statement): heider1944, barrett2000 (hyperactive agency detection), moore1956/block1981, bruineberg2022 (three objects), krakauer2020 (partitions), crawford1982 (costless announcement), liu2024 (reward component), arghal2026 (capability confound), yang2025 (interactions computed), long2025 (checkpoint question), levin2019 and barandiaran2009 (organ-level agency), atkinson1975 (T-optimality), dwork2015, the dispositions literature (martin1994, lewis1997, johnston1992, bird1998) and the books.
+- Execution receipt: run id agentoscope (uv run python run_all.py); results.json reproduced byte-identically.
+- metadata claims_target: claim-ledger.
+
 ## 2026-09-23 — prose revision
 
 Prose revision against the house standard, with a grid and number audit of the simulation.

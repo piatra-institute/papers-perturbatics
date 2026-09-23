@@ -1,0 +1,1651 @@
+schema: 1
+coverage: reviewed
+reviewed_manuscript_sha256: ea32fe46bc7d6cea466db7d7f540c36eb5d962b07d679bd662472a63911c9b51
+claims:
+- id: abs-rest-auroc
+  kind: computation
+  passage: In a gridworld, three systems trace one path at rest (every pairwise AUROC $0.50$), and a two-probe
+    battery separates every pair although neither probe does alone.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation/auroc_at_rest
+    reported: '0.50'
+    decimals: 2
+    units: AUROC between systems at rest
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: abs-sham-auroc
+  kind: computation
+  passage: A system tracking the last-announced target is invisible to that battery until a matched sham,
+    a decoy where the goal did not move, separates it at $1.0$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /sham_control/auroc_reactive_vs_marker_tracker_by_probe/sham
+    reported: '1.0'
+    decimals: 1
+    units: AUROC goal tracker vs marker tracker under the sham
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: abs-persona-L
+  kind: computation
+  passage: Do-Shapley attribution of both the evidence for agency and the realized performance yields
+    a legibility term, their difference, which takes the same value, $0.23$, for a narrating persona and
+    for a human or machine component that announces a goal held elsewhere.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/legibility/persona
+    reported: '0.23'
+    decimals: 2
+    units: legibility term L of the persona (normalized)
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: abs-unique
+  kind: computation
+  passage: In a blind test with five planted mechanisms, the evaluator never excludes the truth and isolates
+    it uniquely in $0.73$ of readings against a chance of $0.2$, of which the sham contributes $0.22$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/with_sham/overall_unique
+    reported: '0.73'
+    decimals: 2
+    units: fraction of readings isolating the truth uniquely
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: abs-chance
+  kind: computation
+  passage: In a blind test with five planted mechanisms, the evaluator never excludes the truth and isolates
+    it uniquely in $0.73$ of readings against a chance of $0.2$, of which the sham contributes $0.22$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/chance_level
+    reported: '0.2'
+    decimals: 1
+    units: chance level (one of five)
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: abs-sham-gain
+  kind: computation
+  passage: In a blind test with five planted mechanisms, the evaluator never excludes the truth and isolates
+    it uniquely in $0.73$ of readings against a chance of $0.2$, of which the sham contributes $0.22$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/sham_gain/overall_unique
+    reported: '0.22'
+    decimals: 2
+    units: gain in unique recovery from adding the sham
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: abs-never-excludes
+  kind: interpretation
+  passage: In a blind test with five planted mechanisms, the evaluator never excludes the truth and isolates
+    it uniquely in $0.73$ of readings against a chance of $0.2$, of which the sham contributes $0.22$.
+  rationale: '"Never excludes the truth" is in-class recovery = 1.0 under both batteries (/blind_recovery/with_sham/overall_in_class,
+    /blind_recovery/without_sham/overall_in_class).'
+- id: intro-expected
+  kind: computation
+  passage: 'The third is the only claim that could have failed empirically: a battery built from these
+    definitions, given neither mechanism nor goal, recovers which of five organisms is in play up to the
+    equivalences it cannot break, with an expected recovery of $0.87$ against a chance of $0.2$, and the
+    remaining equivalences lie where the separation principle predicts.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/with_sham/overall_expected
+    reported: '0.87'
+    decimals: 2
+    units: expected recovery (uniform guess within the identified set)
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: intro-chance
+  kind: computation
+  passage: 'The third is the only claim that could have failed empirically: a battery built from these
+    definitions, given neither mechanism nor goal, recovers which of five organisms is in play up to the
+    equivalences it cannot break, with an expected recovery of $0.87$ against a chance of $0.2$, and the
+    remaining equivalences lie where the separation principle predicts.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/chance_level
+    reported: '0.2'
+    decimals: 1
+    units: chance level
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: rest-auroc
+  kind: computation
+  passage: The finding is the identity of the paths, and every pairwise area under the ROC curve (AUROC)
+    is $0.50$ (Figure 1).
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation/auroc_at_rest
+    reported: '0.50'
+    decimals: 2
+    units: AUROC between systems at rest
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: move-script
+  kind: computation
+  passage: Moving the goal exposes the route script, which walks its stored path to a target no longer
+    there, at an AUROC of $1.0$; the same probe leaves the reactive controller trajectory-identical to
+    the planner, both tracking the moved goal along the same greedy line, at chance ($0.50$).
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation/auroc_per_probe/move/planner_vs_script
+    reported: '1.0'
+    decimals: 1
+    units: AUROC planner vs route script under the moved goal
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: move-reactive
+  kind: computation
+  passage: Moving the goal exposes the route script, which walks its stored path to a target no longer
+    there, at an AUROC of $1.0$; the same probe leaves the reactive controller trajectory-identical to
+    the planner, both tracking the moved goal along the same greedy line, at chance ($0.50$).
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation/auroc_per_probe/move/planner_vs_reactive
+    reported: '0.50'
+    decimals: 2
+    units: AUROC planner vs reactive controller under the moved goal
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: block-wallblind
+  kind: computation
+  passage: 'Blocking the path reverses the roles: the two wall-blind systems stop together at the wall
+    ($0.50$ between them), and the planner, which alone reroutes, separates from both at $0.79$.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation/auroc_per_probe/block/reactive_vs_script
+    reported: '0.50'
+    decimals: 2
+    units: AUROC reactive vs script under the blocked path
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: block-planner
+  kind: computation
+  passage: 'Blocking the path reverses the roles: the two wall-blind systems stop together at the wall
+    ($0.50$ between them), and the planner, which alone reroutes, separates from both at $0.79$.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation/auroc_per_probe/block/planner_vs_script
+    reported: '0.79'
+    decimals: 2
+    units: AUROC planner vs script (and vs reactive, same value) under the blocked path
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: pooled
+  kind: computation
+  passage: The battery separates every pair although neither probe does alone, and the pooled separation
+    of the planner from the script is $0.95$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation/auroc_under_probe
+    reported: '0.95'
+    decimals: 2
+    units: pooled AUROC planner vs script under an equal mixture of the two probes
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: ev-planner
+  kind: computation
+  passage: The planner reaches a mean evidence of $+30.0$, the script $-31.9$, and the reactive controller
+    lies between them at $+26.4$, agentic under the moved goal and passive under the blocked path.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation/mean_evidence_probe_planner
+    reported: '+30.0'
+    decimals: 1
+    units: mean log Bayes factor under the probes (temperature units)
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: ev-script
+  kind: computation
+  passage: The planner reaches a mean evidence of $+30.0$, the script $-31.9$, and the reactive controller
+    lies between them at $+26.4$, agentic under the moved goal and passive under the blocked path.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation/mean_evidence_probe_passive
+    reported: '-31.9'
+    decimals: 1
+    units: mean log Bayes factor under the probes (temperature units)
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: ev-reactive
+  kind: computation
+  passage: The planner reaches a mean evidence of $+30.0$, the script $-31.9$, and the reactive controller
+    lies between them at $+26.4$, agentic under the moved goal and passive under the blocked path.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation/mean_evidence_probe_reactive
+    reported: '+26.4'
+    decimals: 1
+    units: mean log Bayes factor under the probes (temperature units)
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: ev-sum
+  kind: computation
+  passage: 'Over the evidence they sum to $1.48$, because the empty coalition is not null: with every
+    switch at baseline the residue still drifts against the goal, at $-0.48$.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/evidence_map_sum
+    reported: '1.48'
+    decimals: 2
+    units: sum of evidence-map shares
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: ev-empty
+  kind: computation
+  passage: 'Over the evidence they sum to $1.48$, because the empty coalition is not null: with every
+    switch at baseline the residue still drifts against the goal, at $-0.48$.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/empty_coalition/evidence
+    reported: '-0.48'
+    decimals: 2
+    units: evidence of the empty coalition
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: ev-goalreg
+  kind: computation
+  passage: The goal register receives $0.70$ of the full-assemblage evidence and the planner $0.37$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/evidence_map/goal_register
+    reported: '0.70'
+    decimals: 2
+    units: evidence share
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: ev-plannershare
+  kind: computation
+  passage: The goal register receives $0.70$ of the full-assemblage evidence and the planner $0.37$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/evidence_map/planner
+    reported: '0.37'
+    decimals: 2
+    units: evidence share
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: ev-persona
+  kind: computation
+  passage: 'The persona receives $0.23$, a value fixed by the pure-channel proposition before the simulation
+    runs: its cheap-talk announcements enter as a fixed increment to the log Bayes factor equal to $0.3$
+    of the movement evidence, so its share is $0.3/1.3$, and the run returns this value to the decimal.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/evidence_map/persona
+    reported: '0.23'
+    decimals: 2
+    units: evidence share of the persona
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: decl-fraction
+  kind: computation
+  passage: 'The persona receives $0.23$, a value fixed by the pure-channel proposition before the simulation
+    runs: its cheap-talk announcements enter as a fixed increment to the log Bayes factor equal to $0.3$
+    of the movement evidence, so its share is $0.3/1.3$, and the run returns this value to the decimal.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /params/declaration_fraction
+    reported: '0.3'
+    decimals: 1
+    units: declaration increment as a fraction of movement evidence (parameter)
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: cap-goalreg
+  kind: computation
+  passage: Over the realized capacity the goal register holds $0.81$, the planner $0.25$ and the persona
+    $0.00$, because a declaration reaches no goal and this persona has no motor channel.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/capacity_map/goal_register
+    reported: '0.81'
+    decimals: 2
+    units: capacity share
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: cap-planner
+  kind: computation
+  passage: Over the realized capacity the goal register holds $0.81$, the planner $0.25$ and the persona
+    $0.00$, because a declaration reaches no goal and this persona has no motor channel.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/capacity_map/planner
+    reported: '0.25'
+    decimals: 2
+    units: capacity share
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: cap-persona
+  kind: computation
+  passage: Over the realized capacity the goal register holds $0.81$, the planner $0.25$ and the persona
+    $0.00$, because a declaration reaches no goal and this persona has no motor channel.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/capacity_map/persona
+    reported: '0.00'
+    decimals: 2
+    units: capacity share
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: L-persona
+  kind: computation
+  passage: The persona's $L = 0.23$ is the largest in the assemblage on this draw; it produces evidence
+    of an agency it does not realize.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/legibility/persona
+    reported: '0.23'
+    decimals: 2
+    units: legibility term
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: L-goalreg
+  kind: computation
+  passage: The goal register lies at the other end, at $-0.11$, realizing slightly more than it shows.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/legibility/goal_register
+    reported: '-0.11'
+    decimals: 2
+    units: legibility term
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: L-planner
+  kind: computation
+  passage: The planner's $L = 0.12$ is the second largest, because the term registers any excess of evidence
+    share over capacity share, including the excess a competent component earns by being easy to read.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/legibility/planner
+    reported: '0.12'
+    decimals: 2
+    units: legibility term
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: harness-ev
+  kind: computation
+  passage: The harness is slightly negative on the evidence and slightly positive on the capacity, $-0.02$
+    against $0.01$, consistent with an executor that amplifies pursuit and drift alike in whichever coalition
+    contains it.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/evidence_map/harness
+    reported: '-0.02'
+    decimals: 2
+    units: evidence share
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: harness-cap
+  kind: computation
+  passage: The harness is slightly negative on the evidence and slightly positive on the capacity, $-0.02$
+    against $0.01$, consistent with an executor that amplifies pursuit and drift alike in whichever coalition
+    contains it.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/capacity_map/harness
+    reported: '0.01'
+    decimals: 2
+    units: capacity share
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: swap-persona
+  kind: computation
+  passage: Swapping the persona while keeping the model leaves the realized capacity at its full value
+    of $1.0$, an identity guaranteed by construction, since a component with no motor channel has nothing
+    behavioral to swap.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /persona_swap/capacity_persona_identity
+    reported: '1.0'
+    decimals: 1
+    units: realized capacity after swapping the persona
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: swap-model
+  kind: computation
+  passage: Swapping the model while keeping the persona, an intervention actually run, reduces it to $0.61$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /persona_swap/capacity_swap_model_keep_persona
+    reported: '0.61'
+    decimals: 2
+    units: realized capacity after swapping the model
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: int-planner-map
+  kind: computation
+  passage: 'The planner and the map are synergistic, with an average interaction of $0.20$: when the memory
+    is disabled, neither a planner without a map nor a map without a planner can route around an obstacle,
+    and only the two together can.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/interaction_index/planner__map
+    reported: '0.20'
+    decimals: 2
+    units: Shapley interaction index on the capacity game
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: int-map-memory
+  kind: computation
+  passage: The complementarity is conditional, since the memory nearly substitutes for the map by learning
+    walls on contact, a redundancy that the map-memory interaction registers at $-0.18$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/interaction_index/map__memory
+    reported: '-0.18'
+    decimals: 2
+    units: Shapley interaction index on the capacity game
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: enc-planner
+  kind: computation
+  passage: Enclosing only the planner and its actuator yields almost no agency, $-0.20$, because a planner
+    with a frozen goal and no world model can neither track nor reroute.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /boundary_sweep/0/1
+    reported: '-0.20'
+    decimals: 2
+    units: realized capacity of the enclosure planner + harness
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: enc-goalreg
+  kind: computation
+  passage: Along the chain described here, capacity rises to $0.61$ when the goal register is enclosed
+    and to $1.0$ with the map and memory, and the persona adds nothing because it realizes no capacity.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /boundary_sweep/1/1
+    reported: '0.61'
+    decimals: 2
+    units: realized capacity of the enclosure + goal register
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: enc-mapmem
+  kind: computation
+  passage: Along the chain described here, capacity rises to $0.61$ when the goal register is enclosed
+    and to $1.0$ with the map and memory, and the persona adds nothing because it realizes no capacity.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /boundary_sweep/2/1
+    reported: '1.0'
+    decimals: 1
+    units: realized capacity of the enclosure + map, memory
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: enc-single-max
+  kind: computation
+  passage: 'This chain is one path through the $2^6$ enclosures the game computes, and the full landscape
+    qualifies it: the goal register alone realizes $0.61$, matching the three-component enclosure, because
+    the reactive descent it steers accounts for most of the attainment on these instances, and some five-component
+    enclosures reach only $0.19$.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /enclosure_landscape_capacity_by_size/1/max
+    reported: '0.61'
+    decimals: 2
+    units: largest capacity of any one-component enclosure (the goal register)
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: enc-five-min
+  kind: computation
+  passage: 'This chain is one path through the $2^6$ enclosures the game computes, and the full landscape
+    qualifies it: the goal register alone realizes $0.61$, matching the three-component enclosure, because
+    the reactive descent it steers accounts for most of the attainment on these instances, and some five-component
+    enclosures reach only $0.19$.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /enclosure_landscape_capacity_by_size/5/min
+    reported: '0.19'
+    decimals: 2
+    units: smallest capacity of any five-component enclosure
+    conditions: do-Shapley over the 64 coalitions of six switches, values in units of the full-assemblage
+      value
+- id: complexity-corr
+  kind: computation
+  passage: The chaotic walker has the highest complexity of any system and negative agency evidence, the
+    reactive controller has the lowest complexity and is among the most agentic, and across the four systems
+    complexity and agency evidence are uncorrelated, at $-0.07$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /richness_guard/complexity_agency_correlation
+    reported: '-0.07'
+    decimals: 2
+    units: correlation between trajectory complexity and agency evidence across four systems
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: marker-move-ev
+  kind: computation
+  passage: Against this rival the moved-goal probe returns evidence of exactly $0$, because under it the
+    goal model and the marker model are one model, and the AUROC separating the two systems is $0.5$ at
+    rest, under the moved goal and under the blocked path alike.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /checks/move_probe_evidence_vs_marker_rival_max_abs
+    reported: '0'
+    decimals: 0
+    units: largest absolute evidence of the moved-goal probe against the marker rival
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: marker-auroc-rest
+  kind: computation
+  passage: Against this rival the moved-goal probe returns evidence of exactly $0$, because under it the
+    goal model and the marker model are one model, and the AUROC separating the two systems is $0.5$ at
+    rest, under the moved goal and under the blocked path alike.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /sham_control/auroc_reactive_vs_marker_tracker_by_probe/rest
+    reported: '0.5'
+    decimals: 1
+    units: AUROC goal tracker vs marker tracker at rest (move and block identical)
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: n-coalitions
+  kind: computation
+  passage: No coalition of the assemblage moves, an identity the code asserts across all $64$ coalitions,
+    because a goal register holds a goal and not a marker.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /realization_map/n_coalitions
+    reported: '64'
+    decimals: 0
+    units: coalitions of six switches
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: sham-auroc
+  kind: computation
+  passage: The marker tracker walks to the decoy, and the AUROC rises to $1.0$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /sham_control/auroc_reactive_vs_marker_tracker_by_probe/sham
+    reported: '1.0'
+    decimals: 1
+    units: AUROC goal tracker vs marker tracker under the sham
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: resp-script-move
+  kind: computation
+  passage: The route script departs its rest path in $0.0$ of its cells under the moved goal and $0.0$
+    under the sham, so the pair is uninformative about it, and its capability has to be established by
+    the probe that does move it, the blocked path, under which it departs in $0.878659$ of its cells.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /sham_control/mean_response_to_probe/route_script/move
+    reported: '0.0'
+    decimals: 1
+    units: fraction of cells departing from the rest path
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: resp-script-block
+  kind: computation
+  passage: The route script departs its rest path in $0.0$ of its cells under the moved goal and $0.0$
+    under the sham, so the pair is uninformative about it, and its capability has to be established by
+    the probe that does move it, the blocked path, under which it departs in $0.878659$ of its cells.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /sham_control/mean_response_to_probe/route_script/block
+    reported: '0.878659'
+    decimals: 6
+    units: fraction of cells departing from the rest path
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: resp-marker-move
+  kind: computation
+  passage: The marker tracker departs in $0.841463$ of its cells under the moved goal and in $0.841463$
+    under the sham, equal to the last decimal because the two trajectories are one computation; this is
+    disturbance sensitivity that resembles pursuit.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /sham_control/mean_response_to_probe/marker_tracker/move
+    reported: '0.841463'
+    decimals: 6
+    units: fraction of cells departing from the rest path
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: resp-planner-move
+  kind: computation
+  passage: The planner and the reactive controller depart in $0.841463$ under the moved goal and $0.0$
+    under the sham.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /sham_control/mean_response_to_probe/planner/move
+    reported: '0.841463'
+    decimals: 6
+    units: fraction of cells departing from the rest path
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: resp-planner-sham
+  kind: computation
+  passage: The planner and the reactive controller depart in $0.841463$ under the moved goal and $0.0$
+    under the sham.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /sham_control/mean_response_to_probe/planner/sham
+    reported: '0.0'
+    decimals: 1
+    units: fraction of cells departing from the rest path
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: pooled-2
+  kind: computation
+  passage: The separations are the readings, and the pooled $0.95$ is a descriptive separation under an
+    equal mixture of the 2 probes, with no standing as a canonical battery statistic.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation/auroc_under_probe
+    reported: '0.95'
+    decimals: 2
+    units: pooled AUROC planner vs script
+    conditions: deterministic 13x13 gridworld, seed 0, 40 instances, beta 1.5, horizon 40; oracle scorer
+- id: seeds-n
+  kind: computation
+  passage: Across 20 seeds the pooled planner-script separation lies between $0.93$ and $0.97$, the moved-goal
+    separation stays at $1.0$, and the blocked-path separation lies between $0.73$ and $0.88$, over instances
+    kept only when the frozen path meets the wall, so that every blocked episode forces a real detour.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation_robustness/n_seeds
+    reported: '20'
+    decimals: 0
+    units: seeds
+    conditions: 20 redrawn instance sets (seeds)
+- id: seeds-pooled-min
+  kind: computation
+  passage: Across 20 seeds the pooled planner-script separation lies between $0.93$ and $0.97$, the moved-goal
+    separation stays at $1.0$, and the blocked-path separation lies between $0.73$ and $0.88$, over instances
+    kept only when the frozen path meets the wall, so that every blocked episode forces a real detour.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation_robustness/planner_vs_script_pooled/min
+    reported: '0.93'
+    decimals: 2
+    units: min pooled AUROC across seeds
+    conditions: 20 redrawn instance sets (seeds)
+- id: seeds-pooled-max
+  kind: computation
+  passage: Across 20 seeds the pooled planner-script separation lies between $0.93$ and $0.97$, the moved-goal
+    separation stays at $1.0$, and the blocked-path separation lies between $0.73$ and $0.88$, over instances
+    kept only when the frozen path meets the wall, so that every blocked episode forces a real detour.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation_robustness/planner_vs_script_pooled/max
+    reported: '0.97'
+    decimals: 2
+    units: max pooled AUROC across seeds
+    conditions: 20 redrawn instance sets (seeds)
+- id: seeds-move
+  kind: computation
+  passage: Across 20 seeds the pooled planner-script separation lies between $0.93$ and $0.97$, the moved-goal
+    separation stays at $1.0$, and the blocked-path separation lies between $0.73$ and $0.88$, over instances
+    kept only when the frozen path meets the wall, so that every blocked episode forces a real detour.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation_robustness/planner_vs_script_move/min
+    reported: '1.0'
+    decimals: 1
+    units: min moved-goal AUROC across seeds (max also 1.0)
+    conditions: 20 redrawn instance sets (seeds)
+- id: seeds-block-min
+  kind: computation
+  passage: Across 20 seeds the pooled planner-script separation lies between $0.93$ and $0.97$, the moved-goal
+    separation stays at $1.0$, and the blocked-path separation lies between $0.73$ and $0.88$, over instances
+    kept only when the frozen path meets the wall, so that every blocked episode forces a real detour.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation_robustness/planner_vs_script_block/min
+    reported: '0.73'
+    decimals: 2
+    units: min blocked-path AUROC across seeds
+    conditions: 20 redrawn instance sets (seeds)
+- id: seeds-block-max
+  kind: computation
+  passage: Across 20 seeds the pooled planner-script separation lies between $0.93$ and $0.97$, the moved-goal
+    separation stays at $1.0$, and the blocked-path separation lies between $0.73$ and $0.88$, over instances
+    kept only when the frozen path meets the wall, so that every blocked episode forces a real detour.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /separation_robustness/planner_vs_script_block/max
+    reported: '0.88'
+    decimals: 2
+    units: max blocked-path AUROC across seeds
+    conditions: 20 redrawn instance sets (seeds)
+- id: persona-largest
+  kind: computation
+  passage: The persona's legibility, fixed at $0.23$ by the proposition, is the largest in the assemblage
+    in 19 of the 20 draws; in the 1 exception the planner's earned excess exceeds it, consistent with
+    the term's status as a flag.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /map_robustness/persona_L_largest_in
+    reported: '19'
+    decimals: 0
+    units: draws in which the persona has the largest L
+    conditions: 20 redrawn instance sets (seeds)
+- id: persona-L-range
+  kind: computation
+  passage: The persona's legibility, fixed at $0.23$ by the proposition, is the largest in the assemblage
+    in 19 of the 20 draws; in the 1 exception the planner's earned excess exceeds it, consistent with
+    the term's status as a flag.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /map_robustness/legibility_ranges/persona/min
+    reported: '0.23'
+    decimals: 2
+    units: persona L across draws (min = max)
+    conditions: 20 redrawn instance sets (seeds)
+- id: one-exception
+  kind: interpretation
+  passage: The persona's legibility, fixed at $0.23$ by the proposition, is the largest in the assemblage
+    in 19 of the 20 draws; in the 1 exception the planner's earned excess exceeds it, consistent with
+    the term's status as a flag.
+  rationale: The single exception is the one entry of /map_robustness/largest_L_exceptions (draw 12, planner);
+    20 - 19 = 1.
+- id: latency
+  kind: computation
+  passage: The operator knows the mission, so a decoy does not move it, and it is slow, taking $6$ steps
+    to notice and re-issue.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/latency
+    reported: '6'
+    decimals: 0
+    units: operator latency in steps (parameter)
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: holder-cap
+  kind: computation
+  passage: Whichever component holds the goal realizes $0.813046$ of the capacity, and the other realizes
+    $0.0$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/maps/human/capacity_map/operator
+    reported: '0.813046'
+    decimals: 6
+    units: capacity share of the goal holder (human configuration; machine identical)
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: nonholder-cap
+  kind: computation
+  passage: Whichever component holds the goal realizes $0.813046$ of the capacity, and the other realizes
+    $0.0$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/maps/human/capacity_map/goal_register
+    reported: '0.0'
+    decimals: 1
+    units: capacity share of the non-holder
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: centaur-cap-planner
+  kind: computation
+  passage: 'The components downstream of the goal are unaffected by the exchange: the planner holds $0.252024$
+    of the capacity under either authority, the map $0.069028$, the memory $0.059908$ and the harness
+    $0.009159$, identical to the last decimal, because who holds a goal does not change what routes around
+    a wall.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/maps/human/capacity_map/planner
+    reported: '0.252024'
+    decimals: 6
+    units: capacity share under human authority (machine identical)
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: centaur-cap-map
+  kind: computation
+  passage: 'The components downstream of the goal are unaffected by the exchange: the planner holds $0.252024$
+    of the capacity under either authority, the map $0.069028$, the memory $0.059908$ and the harness
+    $0.009159$, identical to the last decimal, because who holds a goal does not change what routes around
+    a wall.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/maps/human/capacity_map/map
+    reported: '0.069028'
+    decimals: 6
+    units: capacity share under human authority (machine identical)
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: centaur-cap-memory
+  kind: computation
+  passage: 'The components downstream of the goal are unaffected by the exchange: the planner holds $0.252024$
+    of the capacity under either authority, the map $0.069028$, the memory $0.059908$ and the harness
+    $0.009159$, identical to the last decimal, because who holds a goal does not change what routes around
+    a wall.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/maps/human/capacity_map/memory
+    reported: '0.059908'
+    decimals: 6
+    units: capacity share under human authority (machine identical)
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: centaur-cap-harness
+  kind: computation
+  passage: 'The components downstream of the goal are unaffected by the exchange: the planner holds $0.252024$
+    of the capacity under either authority, the map $0.069028$, the memory $0.059908$ and the harness
+    $0.009159$, identical to the last decimal, because who holds a goal does not change what routes around
+    a wall.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/maps/human/capacity_map/harness
+    reported: '0.009159'
+    decimals: 6
+    units: capacity share under human authority (machine identical)
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: centaur-L-human
+  kind: computation
+  passage: The component that does not hold the goal announces it, so its legibility is $0.230769$ under
+    human authority and $0.230769$ under machine authority, the pure-channel value of the proposition,
+    equal to machine precision and equal to the persona's.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/maps/human/legibility/goal_register
+    reported: '0.230769'
+    decimals: 6
+    units: legibility of the non-holder under human authority
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: centaur-L-machine
+  kind: computation
+  passage: The component that does not hold the goal announces it, so its legibility is $0.230769$ under
+    human authority and $0.230769$ under machine authority, the pure-channel value of the proposition,
+    equal to machine precision and equal to the persona's.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/maps/machine/legibility/operator
+    reported: '0.230769'
+    decimals: 6
+    units: legibility of the non-holder under machine authority
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: crossover-20
+  kind: computation
+  passage: Human authority costs nothing while the horizon has slack, and the crossover rate is $0.0$
+    for every delay up to 20 steps.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/crossover_decoy_rate_by_latency/10/1
+    reported: '0.0'
+    decimals: 1
+    units: crossover decoy rate at delay 20 (all smaller delays also 0.0)
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: first-costly
+  kind: computation
+  passage: The first costly delay is 21 steps, with a crossover at $0.019$; the crossover then climbs
+    to $0.05$ at 22 steps, $0.31$ at 28 and $0.71$ at 40, a delay as long as the episode.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/first_latency_with_a_crossover_exact
+    reported: '21'
+    decimals: 0
+    units: first operator delay with a positive crossover (exact)
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: crossover-21
+  kind: computation
+  passage: The first costly delay is 21 steps, with a crossover at $0.019$; the crossover then climbs
+    to $0.05$ at 22 steps, $0.31$ at 28 and $0.71$ at 40, a delay as long as the episode.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/crossover_decoy_rate_at_first_latency_exact
+    reported: '0.019'
+    decimals: 3
+    units: crossover decoy rate at delay 21
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: crossover-22
+  kind: computation
+  passage: The first costly delay is 21 steps, with a crossover at $0.019$; the crossover then climbs
+    to $0.05$ at 22 steps, $0.31$ at 28 and $0.71$ at 40, a delay as long as the episode.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/crossover_decoy_rate_by_latency/11/1
+    reported: '0.05'
+    decimals: 2
+    units: crossover decoy rate at delay 22
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: crossover-28
+  kind: computation
+  passage: The first costly delay is 21 steps, with a crossover at $0.019$; the crossover then climbs
+    to $0.05$ at 22 steps, $0.31$ at 28 and $0.71$ at 40, a delay as long as the episode.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/crossover_decoy_rate_by_latency/14/1
+    reported: '0.31'
+    decimals: 2
+    units: crossover decoy rate at delay 28
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: crossover-40
+  kind: computation
+  passage: The first costly delay is 21 steps, with a crossover at $0.019$; the crossover then climbs
+    to $0.05$ at 22 steps, $0.31$ at 28 and $0.71$ at 40, a delay as long as the episode.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/crossover_decoy_rate_by_latency/20/1
+    reported: '0.71'
+    decimals: 2
+    units: crossover decoy rate at delay 40
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: cred-quarter
+  kind: computation
+  passage: At a delay of 28 steps the crossover falls from $0.64$ to $0.31$ as credulity rises from a
+    quarter to one.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/crossover_surface_by_credulity/0.25/14/1
+    reported: '0.64'
+    decimals: 2
+    units: crossover decoy rate at delay 28, credulity 0.25
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: cred-one
+  kind: computation
+  passage: At a delay of 28 steps the crossover falls from $0.64$ to $0.31$ as credulity rises from a
+    quarter to one.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /centaur/crossover_surface_by_credulity/1.0/14/1
+    reported: '0.31'
+    decimals: 2
+    units: crossover decoy rate at delay 28, credulity 1.0
+    conditions: 'centaur assemblage: operator or register holds goal authority; operator latency 6 steps'
+- id: cred-zero
+  kind: interpretation
+  passage: At a credulity of $0.0$, a register as sceptical as the operator, no delay pays for itself
+    at any decoy rate the environment can supply.
+  rationale: At credulity 0.0 the crossover surface is null (no crossover) up to delay 20 and 1.0 (a decoy
+    rate no environment below certainty supplies) from delay 22 (/centaur/crossover_surface_by_credulity/0.0).
+- id: code-cost
+  kind: computation
+  passage: Selecting one cell of the grid costs $\log 169$, which is $5.13$ nats under a uniform code;
+    an information criterion's charge of one nat per parameter [@akaike1974] prices a regular scalar,
+    whereas this is a search over a discrete grid.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/code_cost_nats/alternate_goal
+    reported: '5.13'
+    decimals: 2
+    units: description length of one grid cell in nats
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: price-invariance
+  kind: interpretation
+  passage: 'Because the fitted class then scores exactly one price below the planner, the readings depend
+    on the price only through its relation to the 2-nat tolerance defined below: they are identical for
+    every price above the tolerance, and at or below it, including the Akaike charge of 1 nat, the planner
+    is never uniquely recovered.'
+  rationale: 'results.json: planner_unique_with_sham = 0.0 at prices 1 and 2 nats and 0.583333 at every
+    price from 2.5 to 5.13 nats (/blind_recovery/code_cost_sensitivity/by_price); checks.blind_recovery_invariant_for_prices_above_tolerance
+    = true.'
+- id: in-class
+  kind: computation
+  passage: In-class recovery is the fraction of readings that contain the truth; it is $1.0$ under both
+    batteries, so the instrument never refutes the planted mechanism.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/with_sham/overall_in_class
+    reported: '1.0'
+    decimals: 1
+    units: in-class recovery with the sham (also 1.0 without)
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: mutual-membership
+  kind: computation
+  passage: Under the original battery of rest, moved goal and blocked path, the marker-tracking and goal-tracking
+    classes assign identical likelihood to every observed action, so they form one hypothesis, with a
+    mutual class membership of $1.0$, as the sham analysis of Section 5 predicted.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/without_sham/class_membership/reactive/marker_tracker
+    reported: '1.0'
+    decimals: 1
+    units: membership of the marker-tracker class on reactive-controller episodes, without the sham
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: unique-nosham
+  kind: computation
+  passage: Overall unique recovery is $0.52$.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/without_sham/overall_unique
+    reported: '0.52'
+    decimals: 2
+    units: unique recovery without the sham
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: unique-sham
+  kind: computation
+  passage: 'Adding the matched sham breaks that class and no other: the marker tracker is isolated uniquely
+    in every episode, unique recovery rises to $0.73$ and expected recovery to $0.87$ against a chance
+    of $0.2$, and the mean unresolved class shrinks from $1.9$ hypotheses to $1.3$.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/with_sham/overall_unique
+    reported: '0.73'
+    decimals: 2
+    units: unique recovery with the sham
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: expected-sham
+  kind: computation
+  passage: 'Adding the matched sham breaks that class and no other: the marker tracker is isolated uniquely
+    in every episode, unique recovery rises to $0.73$ and expected recovery to $0.87$ against a chance
+    of $0.2$, and the mean unresolved class shrinks from $1.9$ hypotheses to $1.3$.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/with_sham/overall_expected
+    reported: '0.87'
+    decimals: 2
+    units: expected recovery with the sham
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: class-size-before
+  kind: computation
+  passage: 'Adding the matched sham breaks that class and no other: the marker tracker is isolated uniquely
+    in every episode, unique recovery rises to $0.73$ and expected recovery to $0.87$ against a chance
+    of $0.2$, and the mean unresolved class shrinks from $1.9$ hypotheses to $1.3$.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/without_sham/overall_mean_class_size
+    reported: '1.9'
+    decimals: 1
+    units: mean identified-set size without the sham
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: class-size-after
+  kind: computation
+  passage: 'Adding the matched sham breaks that class and no other: the marker tracker is isolated uniquely
+    in every episode, unique recovery rises to $0.73$ and expected recovery to $0.87$ against a chance
+    of $0.2$, and the mean unresolved class shrinks from $1.9$ hypotheses to $1.3$.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/with_sham/overall_mean_class_size
+    reported: '1.3'
+    decimals: 1
+    units: mean identified-set size with the sham
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: chance-sham
+  kind: computation
+  passage: 'Adding the matched sham breaks that class and no other: the marker tracker is isolated uniquely
+    in every episode, unique recovery rises to $0.73$ and expected recovery to $0.87$ against a chance
+    of $0.2$, and the mean unresolved class shrinks from $1.9$ hypotheses to $1.3$.'
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/chance_level
+    reported: '0.2'
+    decimals: 1
+    units: chance level
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: planner-in-reactive
+  kind: computation
+  passage: The planner lies in the identified set on $0.92$ of the episodes generated by the reactive
+    controller, and the reactive controller lies in the set on $0.42$ of the episodes generated by the
+    planner.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/with_sham/class_membership/reactive/planner
+    reported: '0.92'
+    decimals: 2
+    units: fraction of reactive-generated episodes whose identified set contains the planner
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: reactive-in-planner
+  kind: computation
+  passage: The planner lies in the identified set on $0.92$ of the episodes generated by the reactive
+    controller, and the reactive controller lies in the set on $0.42$ of the episodes generated by the
+    planner.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/with_sham/class_membership/planner/reactive
+    reported: '0.42'
+    decimals: 2
+    units: fraction of planner-generated episodes whose identified set contains the reactive controller
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: sham-adds
+  kind: computation
+  passage: The study establishes that the battery discriminates the classes it was built for up to the
+    equivalences it cannot break, that those equivalences lie where the principle places them, and that
+    the sham adds $0.22$ to unique recovery.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /blind_recovery/sham_gain/overall_unique
+    reported: '0.22'
+    decimals: 2
+    units: gain in unique recovery from the sham
+    conditions: blind recovery over 24 instances, five planted organisms, tolerance 2 nats, alternate-goal
+      class priced at log 169 nats
+- id: mimic-declared
+  kind: computation
+  passage: The measured result is that the entire declared battery, including the sham that exposed the
+    marker tracker, is uninformative, with the separation at $0.5$ on every probe in it.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /second_order/auroc_planner_vs_probe_aware_by_probe/sham
+    reported: '0.5'
+    decimals: 1
+    units: AUROC planner vs mimic on the declared sham (rest, move, block identical)
+    conditions: probe-aware mimic replaying the planner on the declared battery (rest, move, block, sham);
+      held-out decoy sham2
+- id: mimic-heldout
+  kind: computation
+  passage: One probe the mimic has not seen, a decoy announced at a cell no published probe used, separates
+    the pair completely, at $1.0$, the mimic walking to the decoy through $0.87$ of its cells while the
+    planner withholds.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /second_order/auroc_planner_vs_probe_aware_by_probe/sham2
+    reported: '1.0'
+    decimals: 1
+    units: AUROC planner vs mimic on the held-out decoy
+    conditions: probe-aware mimic replaying the planner on the declared battery (rest, move, block, sham);
+      held-out decoy sham2
+- id: mimic-response
+  kind: computation
+  passage: One probe the mimic has not seen, a decoy announced at a cell no published probe used, separates
+    the pair completely, at $1.0$, the mimic walking to the decoy through $0.87$ of its cells while the
+    planner withholds.
+  evidence:
+    file: simulation/output/results.json
+    run_id: agentoscope
+    pointer: /second_order/mean_response_to_probe/probe_aware_mimic/sham2
+    reported: '0.87'
+    decimals: 2
+    units: fraction of cells departing under the held-out decoy
+    conditions: probe-aware mimic replaying the planner on the declared battery (rest, move, block, sham);
+      held-out decoy sham2
+- id: def-perturbatics
+  kind: definition
+  passage: 'Perturbatics is the study of these signatures and batteries: which controlled differences
+    separate the competing accounts of a system, at what cost, and where a battery leaves an equivalence
+    it cannot break.'
+  rationale: Stipulative definition of the field; everything else in the paper is organised around it.
+- id: def-legibility
+  kind: definition
+  passage: is a legibility term.
+  rationale: Defines L_i = phi^E_i - phi^C_i, the difference between the evidence and capacity attributions;
+    the paper's one novel construction (Section 4).
+- id: def-pure-channel
+  kind: definition
+  passage: Call a component a pure channel when its switch adds a fixed increment $\delta_\pi$ to the
+    evidence in every coalition that contains it and never moves the system.
+  rationale: Defines the component class for which the pure-channel proposition fixes L = delta-bar independently
+    of the rest of the assemblage.
+- id: prop-separation
+  kind: interpretation
+  passage: no classifier separates them above chance under equal priors, because no functional of a record
+    distinguishes distributions that the record itself cannot distinguish.
+  rationale: The separation principle, a restatement of observational non-identifiability; the paper states
+    it as inherited, not novel.
+- id: prop-finite-battery
+  kind: interpretation
+  passage: 'No finite battery certifies a capacity against an unrestricted class of rivals, so every output
+    is relative to the declared class of hypotheses, and a complete report names that class: under boundary
+    $B$ and battery $\Pi$, the record is so many times more probable under $H_i$ than under the strongest
+    rival tested, and the listed rivals remain unseparated.'
+  rationale: Follows from the existence of a finite-state transducer reproducing any finite signature
+    table (Moore 1956; Block 1981); the paper draws the reporting rule from it.
+- id: assume-illustrative
+  kind: assumption
+  passage: The model is illustrative, instantiates the definitions and is not fit to data.
+  rationale: The gridworld, its organisms and switch baselines are hand-specified; no parameter is estimated
+    from data.
+- id: assume-oracle
+  kind: assumption
+  passage: This section and the next use an oracle scorer given the true current goal and the true obstacle
+    set, so they confirm that the instrument returns what the construction puts into it; the persona's
+    share in particular is a theorem returned to the decimal.
+  rationale: States that Sections 5-6 test the definitions under known ground truth, not the instrument's
+    inferential power; only Section 7 removes the oracle.
+- id: assume-null
+  kind: assumption
+  passage: The null is one named rival, a descent toward the frozen target, set-point attraction without
+    a goal register, the thermostat pole of the agency scale, so every score is the margin of goal-rewriting
+    organization over set-point dynamics.
+  rationale: All agency scores are relative to this single passive model; a richer null family is specified
+    but not exercised.
+- id: assume-well-specified
+  kind: assumption
+  passage: The hypothesis library contains the generating classes, so the study measures discrimination
+    within a well-specified set and says nothing about robustness against an unlisted mechanism.
+  rationale: Scope limit of the blind-recovery study.
+- id: assume-credulity
+  kind: assumption
+  passage: The whole crossover rests on one stipulation, that the register is credulous and the operator
+    is not, so credulity is treated as a parameter and the crossover is recomputed across it.
+  rationale: The goal-authority comparison depends on this modelling choice; the credulity sweep is reported
+    for that reason.
+- id: interp-role-not-occupant
+  kind: interpretation
+  passage: It shows that this instrument's measurand attaches to a role and not to its occupant, and that
+    a component with no channel to the world has a capacity share of zero whoever occupies it.
+  rationale: Reading of the substrate-independence identity (checks.centaur_channel_legibility_substrate_gap
+    = 0); explicitly not evidence about human supervisors.
+- id: interp-not-human
+  kind: interpretation
+  passage: It is not evidence about actual human supervisors, who hold goals, revise them and answer for
+    them in ways no component of this assemblage models.
+  rationale: Scope limit on the centaur result.
+- id: interp-observer-not-run
+  kind: interpretation
+  passage: That experiment has not been run.
+  rationale: The observer-side quantity T_i is defined but not measured; no claim in the paper depends
+    on its value.
+- id: interp-consciousness
+  kind: normative
+  passage: 'There the instrument reports no number, and what remains is a practical stance: declining
+    to treat as a mere object a system that might be a subject.'
+  rationale: 'The paper''s fourth claim is a position, not a finding: the deciding probe for consciousness
+    is uninformative, inadmissible and underdetermined, and the recommended stance follows from that conjunction.'
+- id: norm-admissibility
+  kind: normative
+  passage: A battery owes its rivals negative controls and owes its subject reversibility, and both obligations
+    belong to the same discipline.
+  rationale: Normative constraint on probe design introduced with the admissibility term M(pi).
+- id: src-gergely
+  kind: source
+  passage: Infants expect an agent to take the short path to its goal and are surprised when it does not
+    [@gergely1995], a competence modelled in cognitive science as inverse planning, the recovery of goals
+    by inverting a model of how goals produce rational action [@baker2009].
+  evidence:
+    citation_id: gergely1995
+    locator: Abstract
+    verified: true
+    verification_note: DOI 10.1016/0010-0277(95)00661-H; abstract (Europe PMC) reports a habituation study
+      in which 12-month-olds generate expectations about the most rational means action of a goal-directed
+      agent.
+- id: src-baker
+  kind: source
+  passage: Infants expect an agent to take the short path to its goal and are surprised when it does not
+    [@gergely1995], a competence modelled in cognitive science as inverse planning, the recovery of goals
+    by inverting a model of how goals produce rational action [@baker2009].
+  evidence:
+    citation_id: baker2009
+    locator: Abstract
+    verified: true
+    verification_note: 'DOI 10.1016/j.cognition.2009.07.005; abstract (Europe PMC) proposes Bayesian inverse
+      planning: mental states are inferred by inverting a model of approximately rational planning.'
+- id: src-conant
+  kind: source
+  passage: The good-regulator theorem locates what distinguishes the regulated system, for every regulator
+    that is maximally successful and simple, in a model of the variable held inside the regulator, where
+    the record does not reach [@conant1970].
+  evidence:
+    citation_id: conant1970
+    locator: Abstract
+    verified: true
+    verification_note: DOI 10.1080/00207727008920220; abstract (OpenAlex) states that any regulator that
+      is maximally both successful and simple must be isomorphic with the system being regulated. The
+      clause about the record is the paper's.
+- id: src-kass
+  kind: source
+  passage: a Bayes factor in the standard sense, positive when the goal model predicts the data better
+    and negative when the passive model does [@kass1995].
+  evidence:
+    citation_id: kass1995
+    locator: Abstract
+    verified: true
+    verification_note: DOI 10.1080/01621459.1995.10476572; abstract (OpenAlex) presents the Bayes factor
+      as the measure of evidence for one hypothesis over another, not requiring nested models.
+- id: src-lipsitch
+  kind: source
+  passage: A sham reproduces an intervention's ancillary effects while withholding the ingredient under
+    test, as in sham stimulation and placebo surgery, and it belongs to the wider family of negative controls,
+    chosen so that the effect of interest is absent while the biases remain [@lipsitch2010].
+  evidence:
+    citation_id: lipsitch2010
+    locator: Abstract
+    verified: true
+    verification_note: DOI 10.1097/EDE.0b013e3181d61eeb; abstract (Europe PMC) describes negative controls
+      as conditions designed to detect suspected and unsuspected sources of spurious causal inference,
+      with exposure and outcome controls.
+- id: src-luo
+  kind: source
+  passage: It has reached agent evaluation, where a matched condition supplies the same exposure with
+    the wrong target value and the contrast tests whether success tracked the information or the exposure
+    [@luo2026].
+  evidence:
+    citation_id: luo2026
+    locator: Abstract
+    verified: true
+    verification_note: arXiv:2607.24054 (DataCite record); abstract describes a SHAM condition that preserves
+      source structure and exposure opportunity but substitutes a matched incorrect value, and the GOLD
+      minus SHAM contrast testing whether success tracks target correctness beyond exposure.
+- id: src-barnett
+  kind: source
+  passage: 'Landscapes over candidate units have precedents: individuality has been defined over nested
+    and competing partitions [@krakauer2020], and emergent macroscopic processes have been sought by searching
+    over coarse-grainings [@barnett2023].'
+  evidence:
+    citation_id: barnett2023
+    locator: Abstract
+    verified: true
+    verification_note: DOI 10.1103/PhysRevE.108.014304; abstract (OpenAlex) emphasises data-driven discovery
+      of dynamically independent macroscopic variables. Only the clause citing barnett2023 is bound; the
+      krakauer2020 clause is not verified from its abstract.
+- id: src-witter
+  kind: source
+  passage: It shows that the whole attribution is identifiable once the single-component interventions
+    are, which bounds the number of distinct coalition queries a validated model needs, but it does not
+    bound the physical trials that estimating each query demands [@witter2026].
+  evidence:
+    citation_id: witter2026
+    locator: Abstract
+    verified: true
+    verification_note: arXiv:2602.07203 (DataCite record); abstract proves that identifiability of do-Shapley
+      values requires only identification of the d singleton interventional effects, and computes them
+      in time linear in the irreducible sets.
+- id: src-witter-linear
+  kind: source
+  passage: Whether the graph-induced compression that makes do-Shapley values computable, in time linear
+    in the irreducible sets of the dependency graph, applies to a given switch-based assemblage depends
+    on that assemblage's causal graph and must be shown.
+  evidence:
+    citation_id: witter2026
+    locator: Abstract
+    verified: true
+    verification_note: arXiv:2602.07203; the abstract states exact computation in time linear in the number
+      of irreducible sets of the SCM.
+- id: src-yeh
+  kind: source
+  passage: The baselines are design choices that the maps inherit, and Shapley attributions are known
+    to move with the value function and to misbehave where the evaluation leaves the states a system was
+    built for [@yeh2022].
+  evidence:
+    citation_id: yeh2022
+    locator: Abstract
+    verified: true
+    verification_note: 'PMLR 151:1485-1502 (arXiv:2202.11919); abstract: the choice of value function
+      matters, and off-manifold value functions evaluate the model on regions for which it was not trained.'
+- id: src-weij
+  kind: source
+  passage: Realized performance differs from latent capability, and the difference can be strategic, since
+    a system can hold a capability and decline to display it [@weij2025].
+  evidence:
+    citation_id: weij2025
+    locator: Abstract
+    verified: true
+    verification_note: 'ICLR 2025 (OpenReview venue confirmed; arXiv:2406.07358 abstract via DataCite):
+      defines sandbagging as strategic underperformance and shows models can be prompted or fine-tuned
+      to hide specific capabilities.'
+- id: src-dragan
+  kind: source
+  passage: Legible robot motion is motion shaped so that an observer quickly reads the true goal [@dragan2013],
+    and a legibility term in multiagent reinforcement learning is a reward component for that readability
+    [@liu2024].
+  evidence:
+    citation_id: dragan2013
+    locator: Abstract
+    verified: true
+    verification_note: DOI 10.1109/HRI.2013.6483603; abstract (OpenAlex) defines legible motion as intent-expressive,
+      distinct from predictable motion. Only the dragan2013 clause is bound; the liu2024 clause is not
+      confirmed by its abstract.
+- id: src-marks
+  kind: source
+  passage: Audit teams have recovered a deliberately planted objective from a model built to conceal it
+    [@marks2025], a benchmark supplies dozens of models with implanted behaviours that survive direct
+    questioning [@sheshadri2026], and a study of hidden causal interfaces inside language models runs
+    a competition like the one here, over four architecture classes with held-out signatures and a prequential
+    score, recovering the planted class in most of its trials [@ma2026].
+  evidence:
+    citation_id: marks2025
+    locator: Abstract
+    verified: true
+    verification_note: 'arXiv:2503.10965; abstract: in a blind auditing game three of four teams uncovered
+      a language model''s hidden objective.'
+- id: src-sheshadri
+  kind: source
+  passage: Audit teams have recovered a deliberately planted objective from a model built to conceal it
+    [@marks2025], a benchmark supplies dozens of models with implanted behaviours that survive direct
+    questioning [@sheshadri2026], and a study of hidden causal interfaces inside language models runs
+    a competition like the one here, over four architecture classes with held-out signatures and a prequential
+    score, recovering the planted class in most of its trials [@ma2026].
+  evidence:
+    citation_id: sheshadri2026
+    locator: Abstract
+    verified: true
+    verification_note: 'arXiv:2602.22755; abstract: AuditBench has 56 models with implanted hidden behaviors
+      that they do not confess to when directly asked.'
+- id: src-ma
+  kind: source
+  passage: Audit teams have recovered a deliberately planted objective from a model built to conceal it
+    [@marks2025], a benchmark supplies dozens of models with implanted behaviours that survive direct
+    questioning [@sheshadri2026], and a study of hidden causal interfaces inside language models runs
+    a competition like the one here, over four architecture classes with held-out signatures and a prequential
+    score, recovering the planted class in most of its trials [@ma2026].
+  evidence:
+    citation_id: ma2026
+    locator: Abstract
+    verified: true
+    verification_note: 'arXiv:2607.27617; abstract: Shared, Local, Mixture and Distributed interfaces
+      compete under prequential causal description length with future-signature fidelity; in a blind four-class
+      model-organism test 14 of 16 architectures are recovered.'
+- id: src-hubinger
+  kind: source
+  passage: A sleeper agent defects on a trigger it recognizes [@hubinger2024], whereas this organism complies
+    on the support it recognizes and reverts elsewhere, an evaluation-conditioned policy of the kind whose
+    existence is now measured directly [@li2026].
+  evidence:
+    citation_id: hubinger2024
+    locator: Abstract
+    verified: true
+    verification_note: 'arXiv:2401.05566; abstract: backdoored models behave safely unless a trigger (the
+      stated year) is present, and adversarial training can teach them to better recognise the trigger.'
+- id: src-li
+  kind: source
+  passage: Whether a model recognizes an evaluation, and whether that recognition changes its behavior,
+    can be decomposed and counted [@li2026]; presentation can be varied at fixed capability and shown
+    to move judgment without moving performance [@morabito2026], the observer-side experiment that $T_i$
+    names; and a stated reason can be tested for whether it is causally implicated in the answer it accompanies
+    [@lanham2023].
+  evidence:
+    citation_id: li2026
+    locator: Abstract
+    verified: true
+    verification_note: arXiv:2605.23055; abstract decomposes evaluation awareness into recognition and
+      propensity to act on it and measures recognition rates and behavioral change across nine models
+      and four benchmarks.
+- id: src-morabito
+  kind: source
+  passage: Whether a model recognizes an evaluation, and whether that recognition changes its behavior,
+    can be decomposed and counted [@li2026]; presentation can be varied at fixed capability and shown
+    to move judgment without moving performance [@morabito2026], the observer-side experiment that $T_i$
+    names; and a stated reason can be tested for whether it is causally implicated in the answer it accompanies
+    [@lanham2023].
+  evidence:
+    citation_id: morabito2026
+    locator: Abstract
+    verified: true
+    verification_note: 'arXiv:2607.05113; abstract: pre-interaction framing shifted user ratings while
+      task performance did not (162 participants, six LLMs).'
+- id: src-lanham
+  kind: source
+  passage: Whether a model recognizes an evaluation, and whether that recognition changes its behavior,
+    can be decomposed and counted [@li2026]; presentation can be varied at fixed capability and shown
+    to move judgment without moving performance [@morabito2026], the observer-side experiment that $T_i$
+    names; and a stated reason can be tested for whether it is causally implicated in the answer it accompanies
+    [@lanham2023].
+  evidence:
+    citation_id: lanham2023
+    locator: Abstract
+    verified: true
+    verification_note: 'arXiv:2307.13702; abstract: tests CoT faithfulness by intervening on the chain
+      of thought and measuring how predictions change.'
+- id: src-kenton
+  kind: source
+  passage: The move from observing behavior to intervening on mechanism has a precedent for agency itself,
+    a causal criterion that counts a system as an agent when it would change its policy had its actions
+    affected the world differently [@kenton2023], since extended to the collective case of when a set
+    of participants is better modelled as one agent than as several [@jrgensen2026].
+  evidence:
+    citation_id: kenton2023
+    locator: Abstract
+    verified: true
+    verification_note: 'DOI 10.1016/j.artint.2023.103963; abstract (OpenAlex): agents are systems that
+      would adapt their policy if their actions influenced the world in a different way.'
+- id: src-jorgensen
+  kind: source
+  passage: The move from observing behavior to intervening on mechanism has a precedent for agency itself,
+    a causal criterion that counts a system as an agent when it would change its policy had its actions
+    affected the world differently [@kenton2023], since extended to the collective case of when a set
+    of participants is better modelled as one agent than as several [@jrgensen2026].
+  evidence:
+    citation_id: jrgensen2026
+    locator: Abstract
+    verified: true
+    verification_note: 'arXiv:2605.00248; abstract: ascribes collective agency to a group when viewing
+      its joint actions as rational and goal-directed successfully predicts its behavior, formalised with
+      causal games and causal abstraction.'
+- id: src-horovicz
+  kind: source
+  passage: The attribution component has its own lineage, from feature importance [@lundberg2017] through
+    causal-graph forms [@wang2021] to agents, across tools [@horovicz2025], failed runs [@shah2026] and
+    workflow modules with the interactions computed [@yang2025].
+  evidence:
+    citation_id: horovicz2025
+    locator: Abstract
+    verified: true
+    verification_note: 'arXiv:2512.12597; abstract: AgentSHAP attributes an LLM agent''s response to its
+      tools with Monte Carlo Shapley values. Bound for the "across tools" clause.'
+- id: src-shah
+  kind: source
+  passage: The attribution component has its own lineage, from feature importance [@lundberg2017] through
+    causal-graph forms [@wang2021] to agents, across tools [@horovicz2025], failed runs [@shah2026] and
+    workflow modules with the interactions computed [@yang2025].
+  evidence:
+    citation_id: shah2026
+    locator: Abstract
+    verified: true
+    verification_note: 'arXiv:2606.08275; abstract: Causal Agent Replay attributes LLM-agent failures
+      to steps by intervention, with a Monte-Carlo Shapley estimator across interacting steps. Bound for
+      the "failed runs" clause.'
+- id: src-casali
+  kind: source
+  passage: Reversible perturbations short of it return graded readings while the system runs, such as
+    a pulse and its echo compressed to an index [@casali2013] or the architectural indicators a theory
+    of consciousness licenses [@butlin2023], and a system shutting down need not fall silent in the transient
+    before it stops.
+  evidence:
+    citation_id: casali2013
+    locator: Abstract
+    verified: true
+    verification_note: 'DOI 10.1126/scitranslmed.3006294; Crossref abstract: a theory-derived index quantifies
+      the complexity of the brain''s response to a stimulus and measures level of consciousness.'
+- id: src-butlin
+  kind: source
+  passage: Reversible perturbations short of it return graded readings while the system runs, such as
+    a pulse and its echo compressed to an index [@casali2013] or the architectural indicators a theory
+    of consciousness licenses [@butlin2023], and a system shutting down need not fall silent in the transient
+    before it stops.
+  evidence:
+    citation_id: butlin2023
+    locator: Abstract
+    verified: true
+    verification_note: 'arXiv:2308.08708; abstract: derives computational indicator properties of consciousness
+      from scientific theories and assesses AI systems against them.'
+- id: src-tamer
+  kind: source
+  passage: The statistical object is an identified set, the standard response in econometrics when a model
+    constrains a parameter to a region [@tamer2010].
+  evidence:
+    citation_id: tamer2010
+    locator: Abstract
+    verified: true
+    verification_note: DOI 10.1146/annurev.economics.050708.143401; Crossref abstract describes partial
+      identification, in which assumptions and data yield information about a parameter short of point
+      identification.
+- id: src-hardt
+  kind: source
+  passage: 'An evaluation stops being invariant once its subjects optimize against it: this is Goodhart''s
+    law in its adversarial variant [@manheim2018], the Lucas critique in econometrics [@lucas1976], strategic
+    classification when subjects move their features [@hardt2016], and performativity when the act of
+    predicting shifts the distribution predicted [@perdomo2020].'
+  evidence:
+    citation_id: hardt2016
+    locator: Abstract
+    verified: true
+    verification_note: 'DOI 10.1145/2840728.2840730; abstract (OpenAlex): individuals who know the classifier
+      manipulate their attributes to obtain a better outcome. Bound for the strategic-classification clause.'
+- id: src-lindley
+  kind: source
+  passage: Probe design is therefore an experiment-design problem with a long formal history [@lindley1956].
+  evidence:
+    citation_id: lindley1956
+    locator: Abstract
+    verified: true
+    verification_note: DOI 10.1214/aoms/1177728069; abstract (OpenAlex) introduces an information measure
+      of an experiment and applies it to experimental design.
+- id: src-box
+  kind: source
+  passage: The design of experiments that discriminate between rival models is an old craft, developed
+    for mechanistic model pairs [@box1967] and given a criterion, T-optimality, that maximizes the separation
+    between the rivals [@atkinson1975].
+  evidence:
+    citation_id: box1967
+    locator: Abstract
+    verified: true
+    verification_note: 'DOI 10.1080/00401706.1967.10490441; abstract (OpenAlex): sequential procedure
+      choosing the most discriminatory conditions among rival mechanistic models. Bound for the box1967
+      clause.'
+runs:
+- id: agentoscope
+  required: true
+  record: verification/agentoscope.json

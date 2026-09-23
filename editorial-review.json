@@ -1,10 +1,10 @@
 {
-  "manuscript_sha256": "a5f4fbb7c97b7a42c197278e1067485be9f239a5377adf0e93c67ab0d1765ea1",
+  "manuscript_sha256": "ea32fe46bc7d6cea466db7d7f540c36eb5d962b07d679bd662472a63911c9b51",
   "full_read": true,
   "argument_review": true,
   "structure_review": true,
   "voice_review": true,
   "source_review": true,
   "final_read": true,
-  "notes": "Prose revision against the house standard for plain, declarative scientific writing. The manuscript was reread in full and rewritten paragraph by paragraph with every equation, figure, citation and result preserved. The epigraph section of bare imperatives ('Probes') was folded into a prose Introduction that states each probe operation and the question it asks, and section titles were made descriptive and numbered ('Agency theater cannot be read at rest' merged into '1. Introduction'; 'Perturbatics' became '3. Object, probe grammar and matched shams'; 'The centaur agentoscope' became '4. An instrument for human-machine assemblages'; 'What the construction returns' became '5. A gridworld demonstrator'; 'The centaur condition' became '6. Goal authority in a human-machine assemblage'; 'The one reading made blind' became '7. Blind recovery of planted mechanisms'; 'What a system does once it knows the battery' became '8. Probe-aware systems and battery decay'; 'What Perturbatics is not' became '9. Relation to existing methods'; 'The unperformable probe' became '10. Inadmissible probes and consciousness'), and a Reproducibility section was added. Removed 'rather than' (39 to 0), 'not X but Y' (6 to 0), self-reference ('the paper', 11 to 0), 'merely/simply', meta-commentary, epigrammatic closers (the italic shutdown quotation, 'the hurricane and the liver', 'a stock and not an asset'), and first-person-singular remnants. The appendix 'The Perturbatic Atlas', which named eight other institute papers by title, and the in-text mention of 'faultization' were removed under the rule that papers stand alone and never mention other institute papers. The abstract was cut from about 520 to 260 words. Three numerical statements were corrected (see audit)."
+  "notes": "Structured-evidence migration: inline bibliography converted to references.yaml (CSL) with Pandoc [@id] citations; claims.yaml ledger added; prose unchanged apart from the corrected year of Manheim and Garrabrant (2019 -> 2018)."
 }
